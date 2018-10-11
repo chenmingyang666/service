@@ -1,0 +1,356 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <title>项目信息管理</title>
+    <style>
+        .layui-laypage-right {
+            float: right !important;
+        }
+
+        label.layui-form-label {
+            padding: 9px 0 !important;
+        }
+    </style>
+    <script src="../../js/layui.js"></script>
+    <script src="../../js/lay/modules/jquery.js"></script>
+    <script src="../../js/global.js"></script>
+</head>
+
+<body>
+
+
+    <form class="layui-form layui-layer-border" style="  padding: 10px 0 0;background-color: white" lay-filter="searchBox">
+        <div class="layui-form-item" style="margin-bottom: 0">
+            <div class="layui-inline">
+                <label class="layui-form-label">项目名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required placeholder="输入名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">负责人：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="principal" required placeholder="输入学校/社区" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">联系方式：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="phone" required placeholder="输入学校/社区" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <!-- <div class="layui-inline">
+                <label class="layui-form-label">是否启用：</label>
+                <div class="layui-input-block">
+                    <select name="status" lay-verify="">
+                        <option value="">全部</option>
+                        <option value="0">启动</option>
+                        <option value="1">关闭</option>
+                    </select>
+                </div>
+            </div> -->
+
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-sm" lay-submit lay-filter="searchBox">查询</button>
+                <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+            </div>
+
+        </div>
+    </form>
+    <!-- 结果显示表格 -->
+    <div class="layui-form">
+        <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
+            <div class="demoTable" style="text-align: right;margin: 10px 0 0">
+                <button class="layui-btn layui-btn-primary" data-type="addInfo">+新增</button>
+                <button class="layui-btn layui-btn-primary" data-type="delete">删除</button>
+                <!-- <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出</button> -->
+
+            </div>
+        </table>
+        <!-- 分页控件 -->
+        <div id="laypage"></div>
+    </div>
+
+    <script type="text/html" id="toolBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <!-- 设备分类 -->
+    <script type="text/html" id="deviceCate">
+        {{# if(d.cate == "01"){ }}
+        <span>洗衣机</span>
+        {{# } else if(d.cate == "02"){ }}
+        <span>吹风机</span>
+        {{# } else if(d.cate == "03"){ }}
+        <span>饮水机</span>
+        {{# } else if(d.cate == "04"){ }}
+        <span>充电桩</span>
+        {{# } else if(d.cate == "05"){ }}
+        <span>洗鞋机</span>
+        {{# } }}
+    </script>
+    <script type="text/html" id="buttonTpl">
+        {{# if(d.state == '已处理'){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">已处理</button>
+        {{# } else if(d.state == '未分配'){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">未分配</button>
+        {{# } else{ }}
+        <button class="layui-btn layui-btn-warm layui-btn-xs">处理中</button>
+        {{# } }}
+    </script>
+    <script type="text/html" id="checkboxTpl">
+        {{# if(d.status ==0){ }}
+        <input type="checkbox" checked='' value="{{d.status}}" name="open" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# }else{ }}
+        <input type="checkbox" name="{{d.status}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# } }}
+    </script>
+
+    <!-- <script src="../data.js"></script> -->
+    <script>
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage'], function () {
+            var $ = layui.$,
+                layer = layui.layer,
+                form = layui.form,
+                table = layui.table,
+                element = layui.element,
+                layEvent = layui.event,
+                laypage = layui.laypage,
+                common = layui.common,
+                active = {
+                    getCheckData: function () { //获取选中数据
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        if (data.length == 0) {
+                            return layer.msg('请选择数据')
+                        }
+                        layer.alert(JSON.stringify(data));
+                    },
+                    getCheckLength: function () { //获取选中数目
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        // layer.msg('选中了：' + data.length + ' 个');
+                    },
+                    isAll: function () { //验证是否全选
+                        var checkStatus = table.checkStatus('data_demo');
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    },
+                    addInfo: function () { //新增设备
+                        window.location.href = 'addInfo.html?isTrue=1';
+                    },
+                    delete: function () {
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        var ids = [];
+                        data.forEach(function (ele, index) {
+                            ids.push(ele.id);
+                        });
+                        // ids=ids.toString();
+                        console.log(ids.toString());
+                        if (ids == '') {
+                            layer.msg('请选择要删除的项目信息')
+                        } else {
+                            parent.layer.confirm('确认删除吗?', function () {
+                                common.deleteProjectInfos(ids.toString(), function (res) {
+                                    if (res.code == 200) {
+                                        productsearch(param, curnum, limitcount);
+                                        layer.msg('已删除');
+                                        parent.layer.closeAll();
+                                    } else {
+                                        layer.msg('删除失败');
+                                        parent.layer.closeAll();
+                                    }
+                                });
+                            })
+                        }
+
+                    }
+
+                };
+
+            var limitcount = 10,
+                curnum = 1,
+                param = {
+                    page: 1,
+                    size: 10
+                };
+            //列表查询方法
+            function productsearch(param, start, limitsize) {
+                common.getProjectList(param, function (res) {
+                    console.log(res);
+                    // 展示搜索结果的表格
+                    table.render({
+                        elem: '#data_demo',
+                        cols: [
+                            [{
+                                    checkbox: true,
+                                    fixed: true
+                                }, {
+
+                                    title: '序号',
+                                    templet: function (d) {
+                                        return d.LAY_TABLE_INDEX + 1
+                                    }
+                                }, {
+                                    field: 'name',
+                                    title: '项目名称',
+                                    sort: true,
+                                }, {
+                                    field: 'contract',
+                                    title: '合同编码',
+                                }, {
+                                    field: 'principal',
+                                    title: '负责人',
+                                    sort: true
+                                }, {
+                                    field: 'phone',
+                                    title: '联系方式',
+                                }, {
+                                    field: 'community',
+                                    title: '校区/社区',
+                                }, {
+                                    field: 'address',
+                                    title: '项目地址',
+                                    sort: true,
+                                }, {
+                                    field: 'cate',
+                                    title: '项目类型',
+                                    sort: true,
+                                },
+                                 {
+                                    field: 'status',
+                                    title: '是否上线',
+                                    templet: '#checkboxTpl',
+                                    width: 135
+                                },
+                                {
+                                    fixed: 'right',
+                                    width: 150,
+                                    align: 'center',
+                                    title: '操作',
+                                    toolbar: '#toolBar',
+                                }
+                            ]
+                        ],
+                        cellMinWidth: 80,
+                        data: res.content,
+                        limit: limitcount,
+                        done: function (res1, curr, count) {
+                            console.log(res1);
+                            //如果是异步请求数据方式，res即为你接口返回的信息。
+                            //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                            laypage.render({
+                                elem: 'laypage',
+                                count: res.totalElements,
+                                curr: param.page,
+                                limit: limitcount,
+                                theme: 'right',
+                                limits: [10, 20, 50, 100],
+                                layout: ['prev', 'page', 'next', 'skip', 'count',
+                                    'limit'
+                                ],
+                                jump: function (obj, first) {
+                                    if (!first) {
+                                        curnum = obj.curr;
+                                        limitcount = obj.limit;
+                                        param.page = obj.curr;
+                                        param.size = obj.limit;
+                                        productsearch(param, curnum,
+                                            limitcount);
+                                    }
+                                }
+                            });
+                        }
+
+                    });
+                })
+            }
+            productsearch(param, curnum, limitcount);
+            element.render();
+            form.render();
+            //表单查询提交
+            form.on('submit(searchBox)', function (data) {
+                var needData = data.field,
+                    param = {
+                        page: 1,
+                        pageSize: 10,
+                        size: 10
+                    };
+                var obj = Object.assign(param, needData);
+                console.log(obj);
+                productsearch(obj, curnum, limitcount);
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+            // 全选和反选
+            form.on('checkbox(allChoose)', function (data) {
+                console.log(data);
+                var child = $(data.elem).parents('table').find('tbody input[name="singItem"]');
+                child.each(function (index, item) {
+                    item.checked = data.elem.checked;
+                });
+                form.render('checkbox');
+            });
+            form.on('checkbox(itemChoose)', function (data) {
+                var sib = $(data.elem).parents('table').find('tbody input[name="singItem"]:checked').length;
+                var total = $(data.elem).parents('table').find('tbody input[name="singItem"]').length;
+                if (sib == total) {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                        true);
+                    form.render();
+                } else {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                        false);
+                    form.render();
+                }
+            });
+            //监听工具条
+            table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                if (layEvent === 'edit') { //查看
+                    //do somehing
+                    window.location.href = 'editInfo.html?id=' + data.id;
+                } else if (layEvent === 'del') {
+                    console.log(data.id);
+
+                    parent.layer.confirm('确认删除项目"' + data.name + '"吗？', function (index) {
+                        common.deleteProjectInfo(data.id, function (res) {
+                            if (res.code == 200) {
+                                obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                                layer.msg('删除成功')
+                                parent.layer.closeAll();
+                            } else {
+                                layer.msg(res.message);
+                            }
+                        })
+                        parent.layer.close(index);
+                    });
+                }
+            });
+            // 监听表格内编辑
+            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                console.log(obj.value); //得到修改后的值
+                console.log(obj.field); //当前编辑的字段名
+                console.log(obj.data); //所在行的所有相关数据  
+                layer.msg('编辑保存')
+            });
+            //    设备控制开关
+            form.on('switch(deviceControl)', function (data) {
+                console.log($(data.elem).parents('tr').attr('data-'));
+                console.log(data.elem.checked); //开关是否开启，true或者false
+                console.log(data.value); //开关value值，也可以通过data.elem.value得到
+                console.log(data.othis); //得到美化后的DOM对象
+                layer.tips(this.value + ' ' + this.name + '：' + data.elem.checked, data.othis);
+            });
+            $('body').on('click', '.demoTable .layui-btn', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+    </script>
+</body>
+
+</html>

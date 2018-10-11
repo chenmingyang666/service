@@ -1,0 +1,686 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css" rel="stylesheet">
+
+    <title>设备列表</title>
+    <style>
+        .layui-laypage-right {
+            float: right !important;
+        }
+        .w150{
+            width: auto
+        }
+        .layui-side-menu,
+        .layadmin-pagetabs .layui-tab-title li:after,
+        .layadmin-pagetabs .layui-tab-title li.layui-this:after,
+        .layui-layer-admin .layui-layer-title,
+        .layadmin-side-shrink .layui-side-menu .layui-nav>.layui-nav-item>.layui-nav-child {
+            background-color: #20222A !important;
+        }
+
+        .layui-nav-tree .layui-this,
+        .layui-nav-tree .layui-this>a,
+        .layui-nav-tree .layui-nav-child dd.layui-this,
+        .layui-nav-tree .layui-nav-child dd.layui-this a {
+            /* background-color: #009688 !important; */
+            background-color: #1890ff !important;
+        }
+
+        .layui-nav-tree .layui-nav-bar {
+            width: 5px;
+            height: 0;
+            background-color: #1890ff !important;
+        }
+
+        .layui-nav .layui-this:after,
+        .layui-nav-bar,
+        .layui-nav-tree .layui-nav-itemed:after {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 5px;
+            background-color: #1890ff !important;
+            transition: all .2s;
+            -webkit-transition: all .2s;
+        }
+
+        .layui-layout-admin .layui-logo {
+            background-color: #20222A !important;
+        }
+
+        .layui-laypage .layui-laypage-curr .layui-laypage-em {
+            background-color: #1890ff !important;
+        }
+
+        .layui-form-select dl dd.layui-this {
+            background-color: #1890ff !important;
+            color: #fff;
+        }
+
+        cite::before {
+            content: '('
+        }
+
+        cite::after {
+            content: ')'
+        }
+    </style>
+    <script src="../../js/layui.js"></script>
+</head>
+
+<body>
+    <div class="layui-tab layui-tab-card searchmenu">
+        <ul class="layui-tab-title">
+            <li class="allDevice layui-this" data-status=''>全部设备
+                <span>
+                    <cite>0</cite>
+                </span>
+            </li>
+            <li class="idle" data-status='0'>空闲
+                <span>
+                    <cite>0</cite>
+                </span>
+            </li>
+            <li class="lock" data-status='1'>支付中
+                <span>
+                    <cite>0</cite>
+                </span>
+            </li>
+            <li class="using" data-status='2'>使用中
+                <span>
+                    <cite>0</cite>
+                </span>
+            </li>
+            <li class="offline" data-status='3'>离线
+                <span>
+                    <cite>0</cite>
+                </span>
+            </li>
+            <li class="maintain" data-status='4'>故障
+                <span>
+                    <cite>0</cite>
+                </span>
+            </li>
+            <button class="layui-btn layui-btn-warm layui-border-box refresh" style="float: right;">刷新</button>
+        </ul>
+    </div>
+    <form class="layui-form layui-layer-border" style=" padding: 10px 0 15px;background-color: white" lay-filter="searchBox">
+        <div class="layui-form-item" style="margin-bottom:0">
+            <div class="layui-inline">
+                <label class="layui-form-label">设备名称：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" placeholder="输入名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">设备分类：</label>
+                <div class="layui-input-inline">
+                    <select name="cate" lay-filter="cate" lay-verify="">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">设备品牌：</label>
+                <div class="layui-input-inline">
+                    <select name="brandName" lay-filter="brandName" lay-verify="">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">设备型号：</label>
+                <div class="layui-input-inline">
+                    <div class="layui-input-inline">
+                        <select name="brandCode" lay-filter="brandCode" lay-verify="">
+
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-bottom:0">
+            <div class="layui-inline">
+                <label class="layui-form-label w150">唯一识别码：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="number" placeholder="输入设备识别码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label w150">二维码编号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="qrCode" placeholder="输入二维码编号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label w150">物联网卡号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="simCode" placeholder="输入物联网卡" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">是否上线：</label>
+                <div class="layui-input-inline">
+                    <select name="status" id="chooseStatus" lay-filter="status" lay-verify="">
+                        <option value="">全部</option>
+                        <option value="0">空闲</option>
+                        <option value="1">支付中</option>
+                        <option value="2">使用中</option>
+                        <option value="3">离线</option>
+                        <option value="4">故障</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-sm" lay-submit lay-filter="searchBox">查询</button>
+                <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+            </div>
+        </div>
+    </form>
+    <!-- 结果显示表格 -->
+    <div class="layui-form">
+        <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
+            <div class="demoTable" style="text-align: right;margin: 10px 0 0">
+                <button class="layui-btn layui-btn-primary" data-type="addDevice">+新增设备</button>
+                <button class="layui-btn layui-btn-primary" data-type="delete">删除</button>
+                <!-- <button class="layui-btn layui-btn-primary" data-type="batchEnable">批量启用</button>
+                <button class="layui-btn layui-btn-primary" data-type="batchDisable">批量禁用</button> -->
+                <button class="layui-btn layui-btn-primary" data-type="importData">导入</button>
+                <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出</button>
+
+            </div>
+        </table>
+        <!-- 分页控件 -->
+        <div id="laypage"></div>
+    </div>
+
+    <script type="text/html" id="toolBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <!-- 设备分类 -->
+    <script type="text/html" id="deviceCate">
+        {{# if(d.cate == "01"){ }}
+        <span>洗衣机</span>
+        {{# } else if(d.cate == "02"){ }}
+        <span>吹风机</span>
+        {{# } else if(d.cate == "03"){ }}
+        <span>饮水机</span>
+        {{# } else if(d.cate == "04"){ }}
+        <span>充电桩</span>
+        {{# } else if(d.cate == "05"){ }}
+        <span>洗鞋机</span>
+        {{# } }}
+    </script>
+    <!-- 设备状态 -->
+    <script type="text/html" id="deviceState">
+        {{# if(d.status == 0){ }}
+        <span>空闲</span>
+        {{# } else if(d.status == 1){ }}
+        <span>支付中</span>
+        {{# } else if(d.status == 2){ }}
+        <span>使用中</span>
+        {{# } else if(d.status == 3){ }}
+        <span>离线</span>
+        {{# } else if(d.status == 4){ }}
+        <span>故障</span>
+        {{# } else if(d.status == 5){ }}
+        <span>禁用</span>
+        {{# } else if(d.status == 6){ }}
+        <span>删除</span>
+
+        {{# } }}
+    </script>
+    <script type="text/html" id="checkboxTpl">
+        {{# if(d.status ===1){ }}
+        <input type="checkbox" checked='' value="{{d.status}}" name="open" lay-skin="switch" lay-text="启用|关闭" lay-filter="deviceControl"> {{# }else{ }}
+        <input type="checkbox" name="close" lay-skin="switch" lay-text="启用|关闭" lay-filter="deviceControl"> {{# } }}
+    </script>
+    <script src="../../js/global.js"></script>
+    <script src="../../js/lay/modules/projectRelate.js"></script>
+    <script>
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laytpl', 'laypage'], function () {
+            var $ = layui.jquery,
+                layer = layui.layer,
+                form = layui.form,
+                table = layui.table,
+                element = layui.element,
+                layEvent = layui.event,
+                laytpl = layui.laytpl,
+                laypage = layui.laypage,
+                common = layui.common,
+                active = {
+                    getCheckData: function () { //获取选中数据
+                        parent.layer.confirm('确认导出设备?', {
+                            icon: 3,
+                            title: '提示',
+                            btn: ['确认', '取消'],
+                            yes: function (index) {
+                                var cate = $(
+                                        "select[name='cate']").next().find(
+                                        'dl dd.layui-this').attr('lay-value'),
+                                    brand_name = $("select[name='brandName']").next().find(
+                                        '.layui-select-title input').val(),
+                                    brand_code = $(
+                                        "select[name='brandCode']").next().find(
+                                        '.layui-select-title input').val(),
+                                    status = $("select[name='status']").next().find(
+                                        'dl dd.layui-this').attr('lay-value'),
+                                    name = $('input[name="name"]').val(),
+                                    number = $('input[name="number"]').val(),
+                                    qrCode = $('input[name="qrCode "]').val(),
+                                    simCode = $('input[name="simCode"]').val();
+                                var urlStr = common.baseUrl +
+                                    'device/export?userId=' +
+                                    layui.sessionData('id').id + '&cate=' + cate +
+                                    '&brandName=' + brand_name +
+                                    '&brandCode=' + brand_code +
+                                    '&status=' + status + '&name=' + name + '&number=' +
+                                    number + '&qrCode=' + qrCode + '&simCode=' + simCode;
+                                urlStr = urlStr.replace(/undefined/g, '');
+                                console.log(urlStr);
+                                window.location.href = urlStr;
+                                parent.layer.closeAll()
+                            },
+                            btn2: function (index) {
+                                parent.layer.closeAll()
+                            }
+                        });
+                    },
+                    getCheckLength: function () { //获取选中数目
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        // layer.msg('选中了：' + data.length + ' 个');
+                    },
+                    isAll: function () { //验证是否全选
+                        var checkStatus = table.checkStatus('data_demo');
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    },
+                    addDevice: function () { //新增设备
+                        window.location.href = 'addDevice.html?isTrue=1';
+                    },
+                    delete: function () { //新增设备
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        var ids = [];
+                        data.forEach(function (ele, index) {
+                            ids.push(ele.id);
+                        });
+                        // ids=ids.toString();
+                        console.log(ids.toString());
+                        // parent.layer.confirm('确认删除吗?', function () {
+                        //     common.deleteAddresses(ids.toString(), function (res) {
+                        //         if (res.code == 200) {
+                        //             productsearch(param, curnum, limitcount);
+                        //             layer.msg('已删除');
+                        //             parent.layer.closeAll();
+                        //         } else {
+                        //             layer.msg('删除失败');
+                        //             parent.layer.closeAll();
+                        //         };
+
+                        //     });
+
+                        // })
+                    },
+                    importData: function () { //新增设备
+                        layer.msg('导入设备未开发')
+                    },
+
+                    batchEnable: function () { //批量启用
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        console.log(data);
+                        var ids = [];
+                        data.forEach(function (ele, index) {
+                            ids.push(ele.id);
+                        });
+                        console.log(ids);
+                        if (data.length > 0) {
+                            layer.alert(JSON.stringify(ids))
+                        } else {
+                            layer.msg('请先勾选设备')
+                        }
+                    },
+                    batchDisable: function () { //批量禁用
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        console.log(data);
+                        var ids = [];
+                        data.forEach(function (ele, index) {
+                            ids.push(ele.id);
+                        });
+                        console.log(ids);
+                        if (data.length > 0) {
+                            layer.alert(JSON.stringify(ids))
+                        } else {
+                            layer.msg('请先勾选设备');
+                        }
+                    }
+
+                };
+
+
+            // 拼配3级联动
+            common.getDeviceLinked(function (res) {
+                console.log(res);
+                pca.init(res.data, 'select[name=cate]', 'select[name=brandName]',
+                    'select[name=brandCode]', '', '', '');
+
+            });
+            var limitcount = 10,
+                curnum = 1,
+                param = {
+                    page: 1,
+                    size: 10
+                };
+            //列表查询方法
+            function productsearch(param, start, limitsize) {
+                common.getDeviceList(param, function (res) {
+                    console.log(res);
+                    $('.allDevice span cite').text(res.data.全部);
+                    $('.using span cite').text(res.data.使用中);
+                    $('.idle span cite').text(res.data.空闲);
+                    $('.maintain span cite').text(res.data.维修);
+                    $('.offline span cite').text(res.data.离线);
+                    $('.lock span cite').text(res.data.锁定);
+                    table.render({
+                        elem: '#data_demo',
+                        cols: [
+                            [{
+                                    checkbox: true,
+                                    fixed: 'left',
+                                }, {
+
+                                    title: '序号',
+                                    templet: function (d) {
+                                        return d.LAY_TABLE_INDEX + 1
+                                    },
+                                    width: 80
+                                }, {
+                                    field: 'name',
+                                    title: '设备名称<i class="fa fa-edit" style="margin-left:5px"></i>',
+                                    edit: true,
+                                }
+                                // , {
+                                //     field: 'dev_seq',
+                                //     title: '设备编号<i class="fa fa-edit" style="margin-left:5px"></i>',
+                                //     edit: true,
+                                // }
+                                , {
+                                    field: 'cate',
+                                    title: '设备分类',
+                                    templet: '#deviceCate'
+                                }, {
+                                    field: 'brand_name',
+                                    title: '设备品牌',
+                                    sort: true,
+                                }, {
+                                    field: 'brand_code',
+                                    title: '设备型号',
+                                }, {
+                                    field: 'number',
+                                    title: '主板编号',
+                                }, {
+                                    field: 'code',
+                                    title: '二维码编号',
+                                    sort: true,
+                                }, {
+                                    field: 'sim_id',
+                                    title: '物联网卡号',
+                                    sort: true,
+                                }, {
+                                    field: 'rssi',
+                                    title: '信号值',
+                                    align: 'center',
+                                },
+                                {
+                                    field: 'status',
+                                    title: '设备状态',
+                                    align: 'center',
+                                    templet: '#deviceState'
+                                }, {
+                                    field: 'status',
+                                    title: '是否上线',
+                                    templet: '#checkboxTpl',
+                                    align: 'center'
+                                }, {
+                                    fixed: 'right',
+                                    width: 150,
+                                    align: 'center',
+                                    title: '操作',
+                                    toolbar: '#toolBar',
+                                }
+                            ]
+                        ],
+                        cellMinWidth: 80,
+                        data: res.data.list.content,
+                        limit: limitcount,
+                        done: function (res1, curr, count) {
+                            console.log(res1);
+                            //如果是异步请求数据方式，res即为你接口返回的信息。
+                            //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                            laypage.render({
+                                elem: 'laypage',
+                                count: res.data.list.totalElements,
+                                curr: param.page,
+                                limit: limitcount,
+                                theme: 'right',
+                                limits: [10, 20, 50, 100],
+                                layout: ['prev', 'page', 'next', 'skip', 'count',
+                                    'limit'
+                                ],
+                                jump: function (obj, first) {
+                                    if (!first) {
+                                        curnum = obj.curr;
+                                        limitcount = obj.limit;
+                                        param.page = obj.curr;
+                                        param.size = obj.limit;
+                                        productsearch(param, curnum,
+                                            limitcount);
+                                    }
+                                }
+                            });
+                        },
+                        text: {
+                            none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                        }
+                    });
+                });
+            }
+            productsearch(param, curnum, limitcount);
+            element.render();
+            form.render();
+            //表单查询提交
+            form.on('submit(searchBox)', function (data) {
+                // console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
+                // console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
+                // console.log(data.field); //当前容器的全部表单字段，名值对形式：{name: value}
+                var needData = data.field;
+                var param = {
+                    page: 1,
+                    pageSize: 10,
+                    size: 10
+                };
+                var obj = Object.assign(needData, param);
+                console.log(obj);
+
+                productsearch(obj, curnum, limitcount);
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+            // 全选和反选
+            form.on('checkbox(allChoose)', function (data) {
+                console.log(data);
+                var child = $(data.elem).parents('table').find('tbody input[name="singItem"]');
+                child.each(function (index, item) {
+                    item.checked = data.elem.checked;
+                });
+                form.render('checkbox');
+            });
+            form.on('checkbox(itemChoose)', function (data) {
+                var sib = $(data.elem).parents('table').find('tbody input[name="singItem"]:checked').length;
+                var total = $(data.elem).parents('table').find('tbody input[name="singItem"]').length;
+                if (sib == total) {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                        true);
+                    form.render();
+                } else {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                        false);
+                    form.render();
+                }
+            });
+            //监听工具条
+            table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                if (layEvent === 'edit') { //查看
+                    window.location.href = 'editDevice.html?id=' + data.id;
+                } else if (layEvent === 'del') {
+                    parent.layer.confirm('确认删除该设备?', function (index) {
+
+                        //向服务端发送删除指令
+                        common.deleteDevice(data.id, function (res) {
+                            if (res.code == 200) {
+                                obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+
+                                layer.msg('设备已删除');
+                                parent.layer.closeAll();
+                            } else {
+                                layer.msg(res.message);
+                                parent.layer.closeAll();
+
+                            }
+                        });
+                    });
+                }
+            });
+            // 监听表格内编辑
+            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                console.log(obj.value); //得到修改后的值
+                console.log(obj.field); //当前编辑的字段名
+                console.log(obj.data); //所在行的所有相关数据  
+                var needData = {};
+                needData.id = obj.data.id;
+                if (obj.field == 'dev_seq') {
+                    needData.devSeq = obj.data.dev_seq
+                } else if (obj.field == 'name') {
+                    needData.name = obj.data.name
+                }
+                common.updateDeviceHeaderInfo(needData, function (res) {
+                    console.log(res);
+                    if (res.code == 200) {
+                        layer.msg('编辑已保存');
+                    } else {
+                        if (res.message != null) {
+                            layer.msg(res.message);
+                            productsearch(param, curnum, limitcount);
+                        } else {
+                            layer.msg('编辑保存失败');
+                            productsearch(param, curnum, limitcount);
+
+                        }
+
+                    }
+                });
+            });
+            //    设备控制开关
+            form.on('switch(deviceControl)', function (data) {
+                console.log($(data.elem).parents('tr').attr('data-index'));
+                console.log(data.elem.checked); //开关是否开启，true或者false
+                console.log(data.value); //开关value值，也可以通过data.elem.value得到
+                console.log(data.othis); //得到美化后的DOM对象
+                layer.tips(this.value + ' ' + this.name + '：' + data.elem.checked, data.othis);
+            });
+            $('body').on('click', '.searchmenu ul li', function (e) {
+                var select = $(this).index();
+                var status = $(this).attr('data-status');
+                $('#chooseStatus').siblings("div.layui-form-select").find('dl dd').eq(select).click();
+                if ($(this).hasClass('allDevice')) {
+                    common.getDeviceStatusLength(curnum, limitcount, status,
+                        function (res) {
+                            console.log(res);
+                            table.reload('data_demo', {
+                                data: res.data.list.content,
+                                done: function (res1, curr, count) {
+                                    console.log(res1);
+                                    //如果是异步请求数据方式，res即为你接口返回的信息。
+                                    //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                                    laypage.render({
+                                        elem: 'laypage',
+                                        count: res.data.list.totalElements,
+                                        curr: 1,
+                                        limit: limitcount,
+                                        theme: 'right',
+                                        limits: [10, 20, 50, 100],
+                                        layout: ['prev', 'page', 'next', 'skip',
+                                            'count',
+                                            'limit'
+                                        ],
+                                        jump: function (obj, first) {
+                                            if (!first) {
+                                                curnum = obj.curr;
+                                                limitcount = obj.limit;
+                                                productsearch(curnum,
+                                                    limitcount);
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        });
+                } else if ($(this).hasClass('using')) {
+
+                    var param = {
+                        page: 1,
+                        size: 10,
+                        status: status
+                    };
+                    productsearch(param, curnum, limitcount);
+                } else if ($(this).hasClass('idle')) {
+                    var param = {
+                        page: 1,
+                        size: 10,
+                        status: status
+                    };
+                    productsearch(param, curnum, limitcount);
+                } else if ($(this).hasClass('maintain')) {
+                    var param = {
+                        page: 1,
+                        size: 10,
+                        status: status
+                    };
+                    productsearch(param, curnum, limitcount);
+                } else if ($(this).hasClass('offline')) {
+                    var param = {
+                        page: 1,
+                        size: 10,
+                        status: status
+                    };
+                    productsearch(param, curnum, limitcount);
+                } else if ($(this).hasClass('lock')) {
+                    var param = {
+                        page: 1,
+                        size: 10,
+                        status: status
+                    };
+                    productsearch(param, curnum, limitcount);
+                }
+            }).on('click', '.demoTable .layui-btn', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            }).on('click', '.refresh', function () {
+                window.location.reload()
+            }).on('click', '[type="reset"]', function () {
+                $('select[name="cate"').next().find("[lay-value='']").click()
+            });
+        });
+    </script>
+</body>
+
+</html>

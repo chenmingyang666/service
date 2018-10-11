@@ -1,0 +1,712 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+
+    <title>编辑设备</title>
+    <style>
+        .site-title fieldset {
+            border: none;
+            padding: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .site-title fieldset legend {
+            margin-left: 20px;
+            padding: 0 10px;
+            font-size: 22px;
+            font-weight: 300;
+        }
+
+        .layui-laypage-right {
+            float: right !important;
+        }
+
+        .layui-form-label {
+            width: 150px;
+        }
+
+        .layui-word-aux {
+            color: red
+        }
+    </style>
+    <style>
+        .layui-side-menu,
+        .layadmin-pagetabs .layui-tab-title li:after,
+        .layadmin-pagetabs .layui-tab-title li.layui-this:after,
+        .layui-layer-admin .layui-layer-title,
+        .layadmin-side-shrink .layui-side-menu .layui-nav>.layui-nav-item>.layui-nav-child {
+            background-color: #20222A !important;
+        }
+
+        .layui-nav-tree .layui-this,
+        .layui-nav-tree .layui-this>a,
+        .layui-nav-tree .layui-nav-child dd.layui-this,
+        .layui-nav-tree .layui-nav-child dd.layui-this a {
+            /* background-color: #009688 !important; */
+            background-color: #1890ff !important;
+        }
+
+        .layui-nav-tree .layui-nav-bar {
+            width: 5px;
+            height: 0;
+            background-color: #1890ff !important;
+        }
+
+        .layui-nav .layui-this:after,
+        .layui-nav-bar,
+        .layui-nav-tree .layui-nav-itemed:after {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 5px;
+            background-color: #1890ff !important;
+            transition: all .2s;
+            -webkit-transition: all .2s;
+        }
+
+        .layui-layout-admin .layui-logo {
+            background-color: #20222A !important;
+        }
+
+        .layui-laypage .layui-laypage-curr .layui-laypage-em {
+            background-color: #1890ff !important;
+        }
+
+        .layui-form-select dl dd.layui-this {
+            background-color: #1890ff !important;
+            color: #fff;
+        }
+    </style>
+    <script src="../../js/layui.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="../../js/tool.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-suggest.min.js"></script>
+</head>
+
+<body>
+    <div class="layui-form-item">
+        <button class="layui-btn layui-btn-sm layui-btn-danger  back">返回</button>
+    </div>
+
+    <form class="layui-form" lay-filter="searchBox">
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-card" style="border:1px solid #f6f6f6;">
+                    <div class="layui-card-header">编辑设备</div>
+                    <div class="layui-card-body" style="padding: 15px;display: flex;">
+                        <div class="layui-col-md5">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备名称：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="name" autocomplete="off" class="layui-input">
+                                    <input type="hidden" name="hidNumber" value="">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备分类：</label>
+                                <div class="layui-input-inline">
+                                    <select name="cate" lay-filter="cate" id="cate" lay-verify="">
+                                    </select>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备品牌：</label>
+                                <div class="layui-input-inline">
+                                    <select name="brandName" lay-filter="brandName" id="brandName" lay-verify="">
+                                    </select>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备型号：</label>
+                                <div class="layui-input-inline">
+                                    <select name="brandCode" lay-filter="brandCode" id="brandCode" lay-verify="">
+                                    </select>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备编号：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="'layui-form-mid  layui-word-aux">*必填</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备点名称：</label>
+                                <div class="layui-input-inline" style="width:50%">
+                                    <select name="locateId" id="locateId" lay-filter="locateId" lay-search lay-verify="">
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="layui-col-md7">
+                            <div class="layui-form-item">
+                                <div class="showPingtai">
+                                    <label class="layui-form-label">物联卡卡号：</label>
+                                    <div class="layui-input-inline" style="width: 50%;">
+                                        <select name="simId" id="simCode" lay-filter="simCard">
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                                <div class="showSelf" style="display: none">
+                                    <label class="layui-form-label">物联卡卡号：</label>
+                                    <div class="layui-input-inline" style="width: 50%;">
+                                        <input type="text" name="simCode" placeholder="输入自有物联卡卡号" id="simSelf" class="layui-input">
+                                        <!-- <input type="hidden" name="source" value="1"> -->
+                                    </div>
+                                </div>
+                                <div class="layui-btn-container layui-input-inline">
+                                    <a class="layui-btn layui-btn-primary layui-btn-danger layui-btn-xs showPingtaibtn">平台</a>
+                                    <a class="layui-btn  layui-btn-primary layui-btn-xs showSelfbtn">自有</a>
+                                </div>
+                            </div>
+                            <!-- <div class="layui-form-item">
+                                <label class="layui-form-label">主板串号：</label>
+                                <div class="layui-input-block">
+                                    <div class="input-group" style="width: 80%">
+                                        <input type="text" class="form-control layui-input" name="number" id="taobao">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-white dropdown-toggle" style="height: 34px;" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="layui-form-item" id="showMainBoard">
+                                <label class="layui-form-label">唯一识别码：</label>
+                                <div class="layui-input-inline" style="width: 50%; height: 50px;">
+                                    <select name="number" lay-filter="number" id="number" lay-verify="">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item " id="slots" style="display: none;">
+
+                                <label class="layui-form-label">端口（槽位）：</label>
+                                <div class="layui-input-inline" style="width: 50%; height: 50px;">
+                                    <input type="radio" id="slot1" name="slots" value="1" title="1号" lay-skin="primary">
+                                    <input type="radio" id="slot2" name="slots" value="2" title="2号" lay-skin="primary">
+                                </div>
+
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">二维码编号：</label>
+                                <div class="layui-input-inline" style="width:50%">
+                                    <select name="qrCode" lay-filter="qrCode" lay-verify="" id="qrCode">
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- <div class="layui-card" style="border:1px solid #f6f6f6;">
+                    <div class="layui-card-header">编辑二维码</div>
+                    <div class="layui-card-body">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">二维码编号：</label>
+                            <div class="layui-input-inline" style="width:50%">
+                                <select name="qrCode" lay-filter="qrCode" lay-verify="" id="qrCode">
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div> -->
+                <!-- <div class="layui-card" style="border:1px solid #f6f6f6;">
+                    <div class="layui-card-header">编辑地址</div>
+                    <div class="layui-card-body">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">设备点名称：</label>
+                            <div class="layui-input-inline" style="width:50%">
+                                <select name="locateId" id="locateId" lay-filter="locateId" lay-search lay-verify="">
+                                </select>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                </div> -->
+                <div class="layui-card" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button class="layui-btn layui-btn-danger" lay-submit lay-filter="searchBox">保存</button>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+    <!-- <script src="../../js/lay/modules/projectRelate.js"></script> -->
+
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'common'], function () {
+            var table = layui.table,
+                $ = layui.jquery,
+                layer = layui.layer,
+                laytpl = layui.laytpl,
+                form = layui.form,
+                common = layui.common,
+                simId, simCode, qrId, rid, locateId, number,pingtai,fuwushang;
+            var url = location.href;
+            // 此处为layui的bug，我想监听form(cate)的下拉列表事件，但是在页面上可能是作用域问题所以监听不到，只能如此
+            (function ($) {
+                var pca = {};
+                pca.keys = {};
+                pca.ckeys = {};
+                pca.init = function (initData, province, city, area, initprovince, initcity, initarea) { //jQuery选择器, 省-市-区
+                    if (!province || !$(province).length)
+                        return;
+                    $(province).html('');
+                    $(province).append('<option value="" selected>请选择设备分类</option>');
+                    for (var i in initData) {
+
+                        $(province).append('<option value="0' + (Number(i) + Number(1)) + '">' +
+                            initData[i].name + '</option>');
+                        pca.keys[initData[i].name] = initData[i];
+                    }
+                    form.render();
+                    if (initprovince)
+                        $(province).next().find('[lay-value="' + initprovince + '"]').click();
+                    if (!city || !$(city).length)
+                        return;
+                    pca.formRender(city);
+                    form.on('select(cate)', function (data) {
+                        if (data.value == '') {
+                            $(city)
+                                .next()
+                                .find('dl dd')
+                                .eq(0)
+                                .click();
+                        } else {
+                            var cs = pca.keys[
+                                $(data.elem)
+                                .find('option[value=' + data.value + ']')
+                                .text()
+                            ];
+                        };
+                        if (data.value == '02') {
+                            $('#slots').show()
+                        } else {
+                            $('#slots').hide()
+                        };
+                        $(city).html('');
+                        $(city).append('<option value="" selected>请选择设备品牌</option>');
+                        if (cs) {
+                            cs = cs.brand;
+                            for (var i in cs) {
+                                $(city).append('<option>' + cs[i].name + '</option>');
+                                pca.ckeys[cs[i].name] = cs[i];
+                            }
+                            $(city)
+                                .find('option:eq(1)')
+                                .attr('selected', true);
+                        }
+                        form.render();
+                        $(city)
+                            .next()
+                            .find('.layui-this')
+                            .removeClass('layui-this')
+                            .click();
+                        pca.formHidden('cate', data.value);
+                    });
+                    if (initprovince)
+                        $(province).next().find('[lay-value="' + initprovince + '"]').click();
+                    if (initcity)
+                        $(city).next().find('[lay-value="' + initcity + '"]').click();
+                    if (!area || !$(area).length)
+                        return;
+                    pca.formRender(area);
+                    form.on('select(brandName)', function (data) {
+                        var cs = pca.ckeys[data.value];
+                        $(area).html('');
+                        $(area).append('<option value="" selected>请选择设备型号</option>');
+                        if (cs) {
+                            cs = cs.model;
+                            for (var i in cs) {
+                                $(area).append('<option>' + cs[i] + '</option>');
+                            }
+                            $(area)
+                                .find('option:eq(1)')
+                                .attr('selected', true);
+                        }
+                        form.render();
+                        $(area)
+                            .next()
+                            .find('.layui-this')
+                            .removeClass('layui-this')
+                            .click();
+                        pca.formHidden('brandName', data.value);
+                    });
+                    form.on('select(brandCode)', function (data) {
+                        pca.formHidden('brandCode', data.value);
+                        // useDevice();
+                    });
+                    if (initprovince)
+                        $(province).next().find('[lay-value="' + initprovince + '"]').click();
+                    if (initcity)
+                        $(city).next().find('[lay-value="' + initcity + '"]').click();
+                    if (initarea)
+                        $(area).next().find('[lay-value="' + initarea + '"]').click();
+                }
+                pca.formRender = function (obj) {
+                    $(obj).html('');
+                    // $(obj).append('<option>全部</option>');
+                    form.render();
+                }
+                pca.formHidden = function (obj, val) {
+                    if (!$('#pca-hide-' + obj).length)
+                        $('body').append('<input id="pca-hide-' + obj + '" type="hidden" value="' + val +
+                            '" />');
+                    else
+                        $('#pca-hide-' + obj).val(val);
+                }
+                window.pca = pca;
+                return pca;
+            })($);
+            $('body').on('click', '.back', function () {
+                window.history.back();
+            }).on('click', '.showPingtaibtn', function () {
+                $(this).addClass('layui-btn-danger').siblings('a').removeClass('layui-btn-danger');
+                $('.showPingtai').show().siblings('.showSelf').hide();
+
+            }).on('click', '.showSelfbtn', function () {
+                $(this).addClass('layui-btn-danger').siblings('a').removeClass('layui-btn-danger');
+                $('.showSelf').show().siblings('.showPingtai').hide();
+            });
+            var trData = parseURL(url);
+            common.getSingDeviceInfo(trData.id, function (res) {
+                console.log(res);
+                form.render();
+                form.val("searchBox", {
+                    "name": res.data.name,
+                    'cate': res.data.cate,
+                    'brandname': res.data.brandname,
+                    'brand_code': res.data.brand_code,
+                    'devSeq': res.data.dev_seq,
+                    'number': res.data.number,
+                    'code': res.data.code,
+                    'hidNumber': res.data.number
+                });
+                if (res.data.slot.length > 1) {
+                    var slotArr = res.data.slot.split(",");
+                    console.log(slotArr);
+                    slotArr.forEach(function (ele, index) {
+                        $('#slot' + ele).prop('checked', true);
+                    })
+                } else {
+                    $('#slot' + res.data.slot).prop('checked', true);
+                }
+                form.render();
+                deviceId = res.data.id;
+                qrId = res.data.qrid;
+                simId = res.data.simid;
+                simCode = res.data.sim_id;
+                locateId = res.data.locateid;
+                number = res.data.number;
+                $('#number').append("<option value=" + res.data.number + " selected>" + res.data.number +
+                    "</option>");
+                // $('#simCode').append("<option value=" + res.data.simid + " selected>" + res.data.sim_id +
+                //     "</option>");
+                $('#qrCode').append("<option value=" + res.data.qrid + " selected>" + res.data.qrcode +
+                    "</option>");
+                $('#locateId').append("<option value=" + res.data.locateid + " selected>" + res.data.locatename +
+                    "</option>");
+                form.render();
+                common.getSimDropList(function (resSim) {
+                    console.log(resSim);
+                    if (res.data.source == 0) {
+                        $('#simCode').html('');
+                        resSim.data.forEach(function (ele, index) {
+                            if (ele.simCode == res.data.sim_id) {
+                                $('#simCode').append("<option value=" + ele.id +
+                                    " selected>" + ele.simCode +
+                                    "</option>");
+                            } else {
+                                $('#simCode').append("<option value=" + ele.id + ">" +
+                                    ele.simCode +
+                                    "</option>");
+                            }
+                        });
+                        form.render();
+                    } else {
+                        resSim.data.forEach(function (ele, index) {
+                            if (ele.simCode == res.data.sim_id) {
+                                $('#simCode').append("<option value=" + ele.id +
+                                    " selected>" + ele.simCode +
+                                    "</option>");
+                            } else {
+                                $('#simCode').append("<option value=" + ele.id + ">" +
+                                    ele.simCode +
+                                    "</option>");
+                            }
+                        });
+                        form.render();
+                    }
+
+                });
+                //    source   0：平台 1：服务商
+                if (res.data.source == 0) {
+                    // 物联卡下拉列表
+                    pingtai=true;
+                    $('.showPingtaibtn').click();
+                    form.render()
+                } else {
+                    fuwushang=true;
+                    $('.showSelfbtn').click();
+                    $('#simSelf').val(res.data.sim_id);
+                };
+                // 品牌的3级联动
+                common.getDeviceLinked(function (res1) {
+                    console.log(res1);
+                    pca.init(res1.data, 'select[name=cate]', 'select[name=brandName]',
+                        'select[name=brandCode]', res.data.cate, res.data.brandname,
+                        res.data.brand_code);
+                    $('#cate').attr('disabled', true);
+                    $('#brandName').attr('disabled', true);
+                    $('#brandCode').attr('disabled', true);
+
+                    form.render();
+                });
+                // 二维码
+                common.getQrDropList(function (res2) {
+                    console.log(res2);
+                    res2.data.forEach(function (ele, index) {
+                        $('#qrCode').append("<option value=" + ele.id + ">" + ele.qrCode +
+                            "</option>");
+                    });
+                    form.render();
+                });
+                // 设备点下拉列表
+                common.getLocateDropList(function (res3) {
+                    console.log(res3);
+                    res3.data.forEach(function (ele, index) {
+                        $('#locateId').append("<option value=" + ele.id + ">" + ele.name +
+                            "</option>");
+                    });
+                    form.render();
+                });
+                $('#simCode').siblings(
+                    "div.layui-form-select").find('.layui-this').click();
+                $('#qrCode').siblings(
+                    "div.layui-form-select").find('.layui-this').click();
+                $('#locateId').siblings(
+                    "div.layui-form-select").find('.layui-this').click();
+                $('#number').siblings(
+                    "div.layui-form-select").find('.layui-this').click();
+            });
+
+            function useDevice() {
+                var urlStr = {
+                    'cate': $('#cate').siblings(
+                        "div.layui-form-select").find(
+                        'dl dd.layui-this').attr('lay-value'),
+                    'brandCode': $('#brandCode').siblings(
+                        "div.layui-form-select").find(
+                        'dl dd.layui-this').attr('lay-value'),
+                    'brandName': $('#brandName').siblings(
+                        "div.layui-form-select").find(
+                        'dl dd.layui-this').attr('lay-value'),
+                };
+                // 获取可用设备下拉列表内容
+                common.getDeviceDropList(urlStr, function (res) {
+                    // $('#number').html('');
+                    res.data.forEach(function (ele) {
+                        if (ele.number == number) {
+                            $('#number').append("<option value=" + ele.number + " selected>" +
+                                ele.number +
+                                "</option>");
+                        } else {
+                            $('#number').append("<option value=" + ele.number + ">" + ele.number +
+                                "</option>");
+                        }
+                    });
+                    form.render();
+                    console.log(number);
+                });
+            };
+            useDevice();
+            form.on('select(simCard)', function (data) {
+                // console.log(data.value)
+                simId = data.value;
+            });
+            form.on('select(qrCode)', function (data) {
+                qrId = data.value;
+            });
+            form.on('select(locateId)', function (data) {
+                locateId = data.value;
+            });
+            form.on('select(number)', function (data) {
+                common.getBindByNumber(data.value, function (res) {
+                    var data = res.data;
+                    console.log(data);
+                    if ($.isEmptyObject(data)) {
+                        $('#simCode').find('option[selected]').remove();
+                        $('#qrCode').find('option[selected]').remove();
+                        $('#locateId').find('option[selected]').remove();
+                        $('#simCode').removeAttr('disabled');
+                        $('#qrCode').removeAttr('disabled');
+                        $('#locateId').removeAttr('disabled');
+                        form.render();
+                    } else {
+                        if (!$('select#simCode').siblings("div.layui-form-select").find('dl dd')
+                            .is('[lay-value=' + data.simId + ']') && pingtai) {
+                            $('#simCode').append("<option value='" + data.simId +
+                                "' selected >" + data.simCode +
+                                "</option>");
+                            form.render();
+                        } else {
+                            $('select#simCode').siblings("div.layui-form-select").find(
+                                'dl dd[lay-value=' +
+                                data.simCode + ']').click();
+                            form.render();
+                        }
+                        if (!$('select#qrCode').siblings("div.layui-form-select").find('dl dd')
+                            .is('[lay-value=' +
+                                data.qrId + ']')) {
+                            $('#qrCode').append("<option value='" + data.qrId + "'selected >" +
+                                data.qrCode +
+                                "</option>");
+                            form.render()
+
+                        } else {
+                            $('select#qrCode').siblings("div.layui-form-select").find(
+                                'dl dd[lay-value=' +
+                                data.qrId + ']').click()
+                            form.render()
+
+                        }
+                        if (!$('select#locateId').siblings("div.layui-form-select").find(
+                                'dl dd').is('[lay-value=' +
+                                data.locateId + ']')) {
+                            $('#locateId').append("<option value='" + data.locateId +
+                                "'selected >" + data.locateName +
+                                "</option>");
+                            form.render()
+
+                        } else {
+                            $('select#locateId').siblings("div.layui-form-select").find(
+                                'dl dd[lay-value=' +
+                                data.locateId + ']').click();
+                            form.render()
+
+                        }
+                        // $('#simCode').attr('disabled', true);
+                        // $('#qrCode').attr('disabled', true);
+                        // $('#locateId').attr('disabled', true);
+                        form.render();
+                    }
+
+                })
+            });
+            form.on('submit(searchBox)', function (data) {
+                data.field.qrId = qrId;
+                data.field.qrCode = $('#qrCode').siblings(
+                    "div.layui-form-select").find('.layui-this').text();
+                // console.log(data.field.qrCode);
+                console.log($('#qrCode').siblings(
+                    "div.layui-form-select").find('.layui-this').text());
+                data.field.locateId = locateId;
+                //    source   0：平台 1：服务商
+                if ($('.showSelf').is(':hidden')) {
+                    data.field.source = 0;
+                    data.field.simId = simId;
+                    data.field.simCode = $('#simCode').siblings(
+                        "div.layui-form-select").find('.layui-this').text();
+                } else {
+                    delete data.field.simId;
+                    data.field.simCode = $('#simSelf').val();
+                    data.field.source = 1;
+
+                };
+                // 槽位处理
+                if (data.field.cate == '02') {
+                    if ($('#slot1').next('.layui-unselect').is('.layui-form-radioed') && !$(
+                            '#slot2').next(
+                            '.layui-unselect').is('.layui-form-radioed')) {
+                        delete data.field.slots;
+                        data.field.slots = $('#slot1').val();
+                    } else if ($('#slot2').next('.layui-unselect').is('.layui-form-radioed') &&
+                        !$(
+                            '#slot1').next('.layui-unselect').is('.layui-form-radioed')) {
+                        delete data.field.slots;
+
+                        data.field.slots = $('#slot2').val();
+                    } else if ($('#slot1').next('.layui-unselect').is('.layui-form-radioed') &&
+                        $('#slot2').next('.layui-unselect').is('.layui-form-radioed')) {
+                        delete data.field.slots;
+                        data.field.slots = $('#slot1').val() + ',' + $('#slot2').val();
+                    }
+                } else {
+                    delete data.field.slots;
+                }
+                delete data.field.brandName;
+                delete data.field.brandCode;
+                console.log(JSON.stringify(data.field));
+                parent.layer.open({
+                    content: '确定保存编辑内容?',
+                    btn: ['确定', '取消'],
+                    yes: function (index, layero) {
+                        //do something
+                        parent.layer.closeAll();
+                        common.updateDeviceInfo(data.field, function (res) {
+                            if (res.code == 200) {
+                                parent.layer.closeAll();
+                                parent.layer.confirm('保存成功，继续编辑设备?', {
+                                    icon: 3,
+                                    title: '提示',
+                                    btn: ['确定', '返回设备列表'],
+                                    yes: function (index) {
+                                        parent.layer.closeAll()
+                                    },
+                                    btn2: function (index) {
+                                        parent.layer.closeAll();
+                                        window.location.href =
+                                            'pages/Device/list.html';
+                                    }
+                                });
+                            } else {
+                                if (res.message != null || res.message != '') {
+                                    layer.msg(res.message);
+                                } else {
+                                    layer.msg('保存失败');
+                                }
+                            }
+                        });
+                    },
+                    btn2: function (index) {
+                        parent.layer.closeAll();
+                    },
+                    cancel: function (index) {
+                        parent.layer.closeAll();
+                    }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+    </script>
+</body>
+
+</html>

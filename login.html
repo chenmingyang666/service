@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- IE兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- 国产浏览器兼容模式 -->
+    <meta name="renderer" content="webkit">
+    <meta name="author" content="Cmy">
+    <title>集优科技-服务商登录</title>
+    <meta name="keywords" content="集优科技">
+    <meta name="description" content="集优科技">
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/layui.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/animate.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css" rel="stylesheet">
+    <script type='text/javascript' src="js/jquery.min.js"></script>
+    <!-- 登录页线粒背景 -->
+    <script type='text/javascript' src='js/jquery.particleground.min.js'></script>
+    <style>
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <script>
+        // 背景canvas
+        $(document).ready(function () {
+            $('#particles').particleground({
+                dotColor: '#1890ff',
+                lineColor: '#1890ff'
+            });
+        });
+    </script>
+</head>
+
+<body class="layui-layout-body">
+    <div id="particles">
+
+        <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+
+            <div class="layadmin-user-login-main">
+
+                <div class="layadmin-user-login-box layadmin-user-login-header">
+                    <h2>集优生活</h2>
+                    <p>集优科技官方出品的后台管理系统</p>
+                </div>
+                <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+                    <div class="layui-form-item">
+                        <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+                        <input type="text" name="account" id="LAY-user-login-username" lay-verify="required|account"
+                            placeholder="注册手机号" class="layui-input">
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+                        <input type="password" name="password" id="LAY-user-login-password" lay-verify="required|password"
+                            placeholder="密码" class="layui-input">
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-row">
+                            <div class="layui-col-xs7">
+                                <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+                                <input type="text" name="vrifyCode" id="LAY-user-login-vercode" lay-verify="required"
+                                    placeholder="图形验证码" class="layui-input">
+                            </div>
+                            <div class="layui-col-xs5">
+                                <div style="margin-left: 10px;">
+                                    <img class="layadmin-user-login-codeimg" id="LAY-user-get-vercode">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="LAY-user-login-submit">登 入</button>
+                    </div>
+                    <div class="layui-trans layui-form-item layadmin-user-login-other">
+
+                        <a href="forget.html" class="layadmin-user-jump-change layadmin-link forgetBtn" style="float: left;margin-left: 10px;color: #1890ff !important">忘记密码？</a>
+                        <a class="layadmin-user-jump-change layadmin-link regBtn" style="float: right;margin-right: 10px;color: #1890ff !important">注册帐号</a>
+                    </div>
+                </div>
+            </div>
+            <div class="layadmin-user-login-main" id="passForget">
+
+            </div>
+            <div class="layui-trans layadmin-user-login-footer">
+                <p>© 2018
+                    <a href="http://jiyoukeji.cn" target="_blank">gelives.com</a>
+                </p>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <script type='text/javascript' src="js/layui.js"></script>
+
+
+    <script type='text/javascript' src="js/global.js"></script>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        layui.use(['form', 'element', 'common', 'jquery'], function () {
+            var form = layui.form,
+                $ = layui.jquery,
+                element = layui.element,
+                common = layui.common;
+            form.render();
+            $('#LAY-user-get-vercode').attr("src", common.baseUrl + 'vender/getKaptcha');
+            $('body').on("click", "#LAY-user-get-vercode", function () {
+                this.src = common.baseUrl + "vender/getKaptcha";
+            });
+            if (layui.sessionData('token').token) {
+                window.location.href = 'index.html'
+            }
+            //提交
+            form.on('submit(LAY-user-login-submit)', function (obj) {
+                var field = obj.field;
+                //请求登入接口
+                common.loginRequest(field, function (res) {
+                    console.log(res);
+                    if (res.data) {
+
+                        layui.sessionData('token', {
+                            key: 'token',
+                            value: res.data.token
+                        });
+                        layui.sessionData('nickName', {
+                            key: 'nickName',
+                            value: res.data.nickName
+                        });
+                        layui.sessionData('account', {
+                            key: 'account',
+                            value: res.data.account
+                        });
+                        layui.sessionData('id', {
+                            key: 'id',
+                            value: res.data.id
+                        });
+                    }
+                    if (res.code == 200) {
+                        layer.msg('登入成功', {
+                            offset: '15px',
+                            icon: 1,
+                            time: 1000
+                        }, function () {
+                            location.href = 'index.html'; //后台主页
+                        });
+                    } else {
+                        if (res.message) {
+                            $("#LAY-user-get-vercode").click();
+                            layer.msg(res.message);
+                        } else {
+                            $("#LAY-user-get-vercode").click();
+                            layer.msg('登录失败');
+                        }
+                    }
+                });
+            });
+
+            // 注册部分
+            $('.regBtn').on('click', function () {
+                layer.open({
+                    type: 2,
+                    area: ['60%', '60%'],
+                    content: 'protocol.html',
+                    btn: ['已阅读并接受'],
+                    btnAlign: 'c',
+                    title: '请您阅读服务商注册协议',
+                    yes: function () {
+                        window.location.href = "reg.html"
+                    }
+                })
+            })
+        })
+    </script>
+
+</body>
+
+</html>

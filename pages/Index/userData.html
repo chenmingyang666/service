@@ -1,0 +1,221 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <!-- <link rel="stylesheet" href="../../css/main.css"> -->
+    <title>物联网卡管理</title>
+    <style>
+        .layui-form-label{
+            width: 190px!important;
+        }
+        .layui-input{
+            width: 50%;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+    <script src="../../js/layui.js"></script>
+    <script src="../../js/lay/modules/jquery.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="../../js/tool.js"></script>
+</head>
+
+<body>
+    <!-- 结果显示表格 -->
+    <div class="layui-form infoTable">
+        <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
+
+        </table>
+
+    </div>
+    <div id="view" style="display:none"></div>
+    <script type="text/html" id="formTpl">
+        <form class="layui-form layui-form-pane">
+        <button class="layui-btn layui-btn-sm layui-btn-danger  back">返回</button>
+            <div class="layui-form-item">
+            <label class="layui-form-label">服务商名称：</label>
+            <div class="layui-input-block">
+                <div  class="layui-input">{{d.name}}</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所在城市：</label>
+            <div class="layui-input-block">
+                
+                <div  class="layui-input">{{d.province}}/{{d.city}}/{{d.area}}</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司地址：</label>
+            <div class="layui-input-block">
+                <div  class="layui-input">{{d.address}}</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">税号：</label>
+            <div class="layui-input-block">
+                <div  class="layui-input">{{d.duty}}</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">营业执照编号：</label>
+            <div class="layui-input-block">
+                <div  class="layui-input">{{d.busLicense}}</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">法人身份证：</label>
+            <div class="layui-input-block">         
+                       <div  class="layui-input">{{d.cardNumber}}</div>
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">银行账号：</label>
+            <div class="layui-input-block">
+                       <div  class="layui-input">{{d.bankAccount}}</div>             
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">开户银行：</label>
+            <div class="layui-input-block">
+                       <div  class="layui-input">{{d.bankOpenAccount}}</div>             
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系人：</label>
+            <div class="layui-input-block">
+                       <div  class="layui-input">{{d.principal}}</div>             
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话：</label>
+            <div class="layui-input-block">
+                       <div  class="layui-input">{{d.phone}}</div>             
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱：</label>
+            <div class="layui-input-block">
+                    {{# if(d.email != null){ }}
+                       <div  class="layui-input">{{d.email}}</div> 
+                       {{# } else{ }}
+                       <div  class="layui-input">无</div>                          
+                     {{# } }}            
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核状态：</label>
+            <div class="layui-input-block">
+                       {{# if(d.status == '0'){ }}
+                       <div  class="layui-input"><button class="layui-btn layui-btn-normal layui-btn-xs">待审核</button></div>     
+                          {{# } else if(d.status == '1'){ }}
+                             <div  class="layui-input"><button class="layui-btn layui-btn-info layui-btn-xs">审核通过</button></div>       
+                             {{# } else{ }}
+                          <div  class="layui-input"> <button class="layui-btn layui-btn-warm layui-btn-xs">审核拒绝</button></div>     
+                            {{# } }}
+            </div>
+        </div>
+    </form>
+
+</script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/html" id="buttonTpl">
+        {{# if(d.status == '0'){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">待审核</button>
+        {{# } else if(d.status == '1'){ }}
+        <button class="layui-btn layui-btn-info layui-btn-xs">审核通过</button>
+        {{# } else{ }}
+        <button class="layui-btn layui-btn-warm layui-btn-xs">审核拒绝</button>
+        {{# } }}
+    </script>
+    <script type="text/html" id="toolBar">
+        <a class="layui-btn layui-btn-xs" lay-event="check">查看</a>
+    </script>
+    <script>
+        layui.use(['form', 'element', 'table', 'common', 'jquery', 'laytpl'], function () {
+            var form = layui.form,
+                $ = layui.jquery,
+                element = layui.element,
+                common = layui.common,
+                laytpl = layui.laytpl,
+                table = layui.table;
+            common.userInfo(function (res) {
+                console.log(res);
+                var data1 = [res.data];
+                table.render({
+                    elem: '#data_demo',
+                    data: data1,
+                    cols: [
+                        [{
+                                field: 'id',
+                                title: '服务商ID'
+                            }, {
+                                field: 'name',
+                                title: '服务商名称',
+                            }, {
+                                field: '',
+                                title: '所在城市',
+                                templet: function (d) {
+                                    return d.province + '/' + d.city + '/' + d.area
+                                }
+                            }, {
+                                field: 'address',
+                                title: '公司地址',
+                            }, {
+                                field: 'updateDate',
+                                title: '申请时间',
+                                templet: function (d) {
+                                    return timeChange(d.updateDate)
+                                }
+                            }, {
+                                field: 'status',
+                                title: '审核状态',
+                                templet: '#buttonTpl'
+                            },
+                            {
+                                fixed: 'right',
+                                width: 150,
+                                align: 'center',
+                                title: '操作',
+                                toolbar: '#toolBar',
+                            }
+                        ]
+                    ],
+                });
+                var getTpl = formTpl.innerHTML,
+                    view = document.getElementById('view');
+                laytpl(getTpl).render(res.data, function (html) {
+                    view.innerHTML = html;
+                });
+            });
+            table.render();
+            form.render();
+            //监听工具条
+            table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                if (layEvent === 'check') { //查看
+                    //同步更新缓存对应的值
+                    $('.infoTable').hide();
+                    $('#view').show();
+                }
+            });
+            $('#view .back').on('click', function () {
+                alert('aa');
+                $('.infoTable').show();
+                $('#view').hide();
+            })
+        })
+    </script>
+
+</body>
+
+</html>

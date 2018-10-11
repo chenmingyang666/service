@@ -1,0 +1,396 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <title>主板管理</title>
+    <style>
+        .layui-laypage-right {
+            float: right !important;
+        }
+
+        label.layui-form-label {
+            padding: 9px 0 !important;
+        }
+    </style>
+    <style>
+        .layui-side-menu,
+        .layadmin-pagetabs .layui-tab-title li:after,
+        .layadmin-pagetabs .layui-tab-title li.layui-this:after,
+        .layui-layer-admin .layui-layer-title,
+        .layadmin-side-shrink .layui-side-menu .layui-nav>.layui-nav-item>.layui-nav-child {
+            background-color: #20222A !important;
+        }
+
+        .layui-nav-tree .layui-this,
+        .layui-nav-tree .layui-this>a,
+        .layui-nav-tree .layui-nav-child dd.layui-this,
+        .layui-nav-tree .layui-nav-child dd.layui-this a {
+            /* background-color: #009688 !important; */
+            background-color: #1890ff !important;
+        }
+
+        .layui-nav-tree .layui-nav-bar {
+            width: 5px;
+            height: 0;
+            background-color: #1890ff !important;
+        }
+
+        .layui-nav .layui-this:after,
+        .layui-nav-bar,
+        .layui-nav-tree .layui-nav-itemed:after {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 5px;
+            background-color: #1890ff !important;
+            transition: all .2s;
+            -webkit-transition: all .2s;
+        }
+
+        .layui-layout-admin .layui-logo {
+            background-color: #20222A !important;
+        }
+
+        .layui-laypage .layui-laypage-curr .layui-laypage-em {
+            background-color: #1890ff !important;
+        }
+
+        .layui-form-select dl dd.layui-this {
+            background-color: #1890ff !important;
+            color: #fff;
+        }
+    </style>
+    <script src="../../js/layui.js"></script>
+    <script src="../../js/lay/modules/jquery.js"></script>
+    <script src="../../js/global.js"></script>
+</head>
+
+<body>
+
+
+    <form class="layui-form layui-layer-border" style=" padding: 10px;background-color: white" lay-filter="searchBox">
+        <div class="layui-form-item" style="margin-bottom: 0">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width:100px ;">设备类型：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="cate" placeholder="输入类型" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width:100px ;">品牌：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="brandName" placeholder="输入品牌" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width:100px ;">主板类型：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="id" placeholder="输入类型" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width:100px ;">主板编码：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="id" placeholder="输入编码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+           
+            <div class="layui-inline">
+                <label class="layui-form-label">状态：</label>
+                <div class="layui-input-inline" style="width: 80px;">
+                    <select name="device_state" lay-filter="state" lay-verify="">
+                        <option value="">全部</option>
+                        <option value="0">未使用</option>
+                        <option value="1">使用中</option>
+                        <option value="2">已损坏</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline" style="float: right;">
+                <button class="layui-btn layui-btn-sm" lay-submit lay-filter="searchBox">查询</button>
+                <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+            </div>
+
+        </div>
+
+
+    </form>
+    <!-- 结果显示表格 -->
+    <div class="layui-form">
+        <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
+            <div class="demoTable" style="text-align: right;margin: 10px 0 0">
+                <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出</button>
+
+            </div>
+        </table>
+    </div>
+    <script type="text/html" id="stateTpl">
+        {{# if(d.state == '已处理'){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">未使用</button>
+        {{# } else if(d.state == '未分配'){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">使用中</button>
+        {{# } else{ }}
+        <button class="layui-btn layui-btn-warm layui-btn-xs">已损坏</button>
+        {{# } }}
+    </script>
+    <script type="text/html" id="toolBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+
+    <script src="../data.js"></script>
+    <script>
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage'], function () {
+            var $ = layui.$,
+                layer = layui.layer,
+                form = layui.form,
+                table = layui.table,
+                element = layui.element,
+                laydate = layui.laydate,
+                layEvent = layui.event,
+                laypage = layui.laypage,
+                common = layui.common,
+                active = {
+                    getCheckData: function () { //获取选中数据
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        // if (data.length == 0) {
+                        //     return layer.msg('请选择数据')
+                        // }
+                        parent.layer.confirm('确认导出物联网卡数据?', {
+                            icon: 3,
+                            title: '提示',
+                            btn: ['确认', '取消'],
+                            yes: function (index) {
+                                var simCode = $("input[name='simCode']").val(),
+                                    status = $("select[name='status']").next().find(
+                                        'dl dd.layui-this').attr('lay-value'),
+                                    activeTimeStart = $("input[name='activeTimeStart']").val(),
+                                    activeTimeEnd = $("input[name='activeTimeEnd']").val();
+                                var urlStr = common.baseUrl +
+                                    'common/exportSim?userId=' +
+                                    layui.sessionData('id').id + '&simCode=' +
+                                    simCode +
+                                    '&activeTimeStart=' +
+                                    activeTimeStart +
+                                    '&activeTimeEnd=' + activeTimeEnd +
+                                    '&status=' + status + '&source=' + $(
+                                        "select[name='source']").next().find(
+                                        'dl dd.layui-this').attr('lay-value');
+                                urlStr = urlStr.replace(/undefined/g, '');
+                                console.log(urlStr);
+                                window.location.href = urlStr;
+                                parent.layer.closeAll()
+                            },
+                            btn2: function (index) {
+                                parent.layer.closeAll()
+
+                            }
+
+                        });
+
+                    },
+                    getCheckLength: function () { //获取选中数目
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        // layer.msg('选中了：' + data.length + ' 个');
+                    },
+                    isAll: function () { //验证是否全选
+                        var checkStatus = table.checkStatus('data_demo');
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    }
+
+
+                };
+            // 日期
+            laydate.render({
+                elem: '#beginTime',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                theme: '#393D49',
+            });
+            laydate.render({
+                elem: '#endTime',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                theme: '#393D49',
+            });
+            var limitcount = 10,
+                curnum = 1,
+                param = {
+                    page: 1,
+                    size: 10
+                };
+            //列表查询方法
+            function productsearch(param, start, limitsize) {
+                common.getSimList(param, function (res) {
+                    console.log(res);
+                    // 展示搜索结果的表格
+                    table.render({
+                        elem: '#data_demo',
+                        cols: [
+                            [{
+                                checkbox: true,
+                                fixed: 'left',
+                                width: 80
+                            }, {
+                                title: '序号',
+                                templet: function (d) {
+                                    return d.LAY_TABLE_INDEX + 1
+                                }
+                            }, {
+                                field: 'simCode',
+                                title: '设备归属方',
+                            }, {
+                                field: 'source',
+                                title: '品牌',
+                                templet: '#'
+                            }, {
+                                field: 'status',
+                                title: '主板类型',
+                                templet: '#',
+                            }, {
+                                field: 'activeTime',
+                                title: '主板编号',
+
+                            }, {
+                                field: 'expire',
+                                title: '主板型号',
+
+                            }, {
+                                field: 'period',
+                                title: '设备状态',
+                                sort: true,
+                                templet: '#stateTpl'
+                            }, {
+                                fixed: 'right',
+                                width: 150,
+                                align: 'center',
+                                title: '操作',
+                                toolbar: '#toolBar',
+                            }]
+                        ],
+                        cellMinWidth: 80,
+                        data: res.content,
+                        limit: limitcount,
+                        done: function (res1, curr, count) {
+                            console.log(res1);
+                            //如果是异步请求数据方式，res即为你接口返回的信息。
+                            //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                            laypage.render({
+                                elem: 'laypage',
+                                count: res.totalElements,
+                                curr: param.page,
+                                limit: limitcount,
+                                theme: 'right',
+                                limits: [10, 20, 50, 100],
+                                layout: ['prev', 'page', 'next', 'skip', 'count',
+                                    'limit'
+                                ],
+                                jump: function (obj, first) {
+                                    if (!first) {
+                                        curnum = obj.curr;
+                                        limitcount = obj.limit;
+                                        param.page = obj.curr;
+                                        param.size = obj.limit;
+                                        productsearch(param, curnum,
+                                            limitcount);
+                                    }
+                                }
+                            });
+                        }
+
+                    });
+                });
+            }
+            productsearch(param, curnum, limitcount);
+            element.render();
+            form.render();
+            //表单查询提交
+            form.on('submit(searchBox)', function (data) {
+                console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
+                console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
+                console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
+                var needData = data.field,
+                    param = {
+                        page: 1,
+                        pageSize: 10,
+                        size: 10
+                    };
+                var obj = Object.assign(param, needData);
+                console.log(obj);
+                productsearch(obj, curnum, limitcount);
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+            // 全选和反选
+            form.on('checkbox(allChoose)', function (data) {
+                console.log(data);
+                var child = $(data.elem).parents('table').find('tbody input[name="singItem"]');
+                child.each(function (index, item) {
+                    item.checked = data.elem.checked;
+                });
+                form.render('checkbox');
+            });
+            form.on('checkbox(itemChoose)', function (data) {
+                var sib = $(data.elem).parents('table').find('tbody input[name="singItem"]:checked').length;
+                var total = $(data.elem).parents('table').find('tbody input[name="singItem"]').length;
+                if (sib == total) {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                        true);
+                    form.render();
+                } else {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                        false);
+                    form.render();
+                }
+            });
+            //监听工具条
+            table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                if (layEvent === 'edit') { //查看
+                    //do somehing
+                    //同步更新缓存对应的值
+                    obj.update({
+                        username: '123',
+                        title: 'xxx'
+                    });
+                } else if (layEvent === 'del') {
+                    console.log(data.id);
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        layer.close(index);
+                        //向服务端发送删除指令
+                    });
+                }
+            });
+            // 监听表格内编辑
+            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                console.log(obj.value); //得到修改后的值
+                console.log(obj.field); //当前编辑的字段名
+                console.log(obj.data); //所在行的所有相关数据  
+                layer.msg('编辑保存')
+            });
+            //    设备控制开关
+            form.on('switch(deviceControl)', function (data) {
+                console.log($(data.elem).parents('tr').attr('data-index'));
+                console.log(data.elem.checked); //开关是否开启，true或者false
+                console.log(data.value); //开关value值，也可以通过data.elem.value得到
+                console.log(data.othis); //得到美化后的DOM对象
+                layer.tips(this.value + ' ' + this.name + '：' + data.elem.checked, data.othis);
+            });
+            $('body').on('click', '.demoTable .layui-btn', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+    </script>
+</body>
+
+</html>

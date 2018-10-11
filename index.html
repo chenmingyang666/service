@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- IE兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- 国产浏览器兼容模式 -->
+    <meta name="renderer" content="webkit">
+    <meta name="author" content="Cmy">
+    <title>集优科技-管理</title>
+    <meta name="keywords" content="集优科技">
+    <meta name="description" content="集优科技">
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/layui.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/animate.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css" rel="stylesheet">
+    <style>
+        #setInfo{
+            margin: 0 auto;
+            width: 60%;
+            height: 75%;
+            overflow: auto;
+        }
+        #setInfo .layui-form-label {
+            width: 100px !important;
+        }
+
+        #setInfo .layui-form-item .layui-input-inline {
+            width: 220px !important;
+        }
+        .userData{
+            width: 100%;height: 100%;position: fixed;top: 5%; z-index: 10001;display: none;
+        }
+        .shadeBg{
+            z-index: 10000; background-color: rgb(0, 0, 0);opacity: 0.3;display: none;
+        }
+    </style>
+
+</head>
+
+<body class="layui-layout-body">
+    <!-- 顶部导航栏 -->
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">
+                <img alt="image" class="mainlogo" style="width:135px;height: 49px;" src="images/main_logo.png">
+                <img alt="image" class="layui-nav-img minlogo" style="width:50px;height: 45px;display: none;" src="images/logo.png">
+
+            </div>
+            <ul class="layui-nav layui-layout-left flex_button">
+                <li class="layui-nav-item layadmin-flexible" lay-unselect="">
+                    <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                        <i class="layui-icon layui-icon-shrink-right" style="font-size:18px;" id="LAY_app_flexible"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- 头部右侧 -->
+            <ul class="layui-nav layui-layout-right top-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="images/direct.png" class="layui-nav-img">
+                        <span class="nickName">Gelives</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="pages/Index/userData.html" data-url="pages/Index/userData.html" data-id="pages/Index/userData.html"
+                                data-title="基本资料">基本资料</a>
+                        </dd>
+                        <dd>
+                            <a href="pages/Index/forgetPass.html" data-url="pages/Index/forgetPass.html" data-id="pages/Index/forgetPass.html"
+                                data-title="修改密码">修改密码</a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="" class="quit">退出</a>
+                </li>
+            </ul>
+        </div>
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed layui-this">
+
+                        <a style="cursor: pointer;" data-url="pages/Index/index.html" data-id="pages/Index/index.html">
+
+                            <i class="fa fa-desktop"></i>
+                            <span>服务商首页</span>
+                        </a>
+
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="fa fa-product-hunt"></i>
+                            <span>项目管理</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="pages/Project/entry.html" data-url="pages/Project/entry.html" data-id="pages/Project/entry.html"
+                                    data-title="引导式录入">
+                                    <span>引导式录入</span>
+                                </a>
+
+                            </dd>
+                            <dd>
+                                <a href="pages/Project/info.html" data-url="pages/Project/info.html" data-id="pages/Project/info.html"
+                                    data-title="项目列表管理">
+                                    <span>项目列表管理</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Project/list.html" data-url="pages/Project/list.html" data-id="pages/Project/list.html"
+                                    data-title="项目设备管理">
+                                    <span>项目设备管理</span>
+                                </a>
+
+                            </dd>
+                            <dd>
+                                <a href="pages/Project/hours.html" data-url="pages/Project/hours.html" data-id="pages/Project/hours.html"
+                                    data-title="营业时间管理">
+                                    <span>营业时间管理</span>
+                                </a>
+
+                            </dd>
+                            <!-- <dd>
+                                    <a href="pages/Project/addInfo.html" data-url="pages/Project/addInfo.html" data-id="pages/Project/addInfo.html" data-title="新增项目信息">
+                                        <span>新增项目信息</span>
+                                    </a>
+                                </dd> -->
+                            <dd>
+                                <a href="pages/Project/price.html" data-url="pages/Project/price.html" data-id="pages/Project/price.html"
+                                    data-title="产品价格管理">
+                                    <span>产品价格管理</span>
+                                </a>
+                            </dd>
+                            <!-- <dd>
+                                    <a href="pages/Project/addPrice.html" data-url="pages/Project/addPrice.html" data-id="pages/Project/addPrice.html" data-title="新增产品价格">
+                                        <span>新增产品价格</span>
+                                    </a>
+                                </dd> -->
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="fa fa-user-plus"></i>
+                            <span>订单管理</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="pages/Order/list.html" data-url="pages/Order/list.html" data-id="pages/Order/list.html"
+                                    data-title="订单列表">
+                                    <span>订单列表</span>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="fa fa-drivers-license"></i>
+                            <span>设备管理</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="pages/Device/list.html" data-url="pages/Device/list.html" data-id="pages/Device/list.html"
+                                    data-title="设备列表">
+                                    <span>设备列表</span>
+                                </a>
+                            </dd>
+                            <!-- <dd>
+                                <a href="pages/Device/addDevice.html" data-url="pages/Device/addDevice.html" data-id="pages/Device/addDevice.html" data-title="新增设备">
+                                    <span>新增设备</span>
+                                </a>
+                            </dd> -->
+                            <dd>
+                                <a href="pages/Device/address.html" data-url="pages/Device/address.html" data-id="pages/Device/address.html"
+                                    data-title="设备点管理">
+                                    <span>设备点管理</span>
+                                </a>
+                            </dd>
+                            <!-- <dd>
+                                <a href="pages/Device/addAddress.html" data-url="pages/Device/addAddress.html" data-id="pages/Device/addAddress.html" data-title="新增地址">
+                                    <span>新增地址</span>
+                                </a>
+                            </dd> -->
+                            <dd>
+                                <a href="pages/Device/motherboard.html" data-url="pages/Device/motherboard.html"
+                                    data-id="pages/Device/motherboard.html" data-title="主板管理">
+                                    <span>主板管理</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Device/host.html" data-url="pages/Device/host.html" data-id="pages/Device/host.html"
+                                    data-title="主机管理">
+                                    <span>主机管理</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Device/thingscard.html" data-url="pages/Device/thingscard.html" data-id="pages/Device/thingscard.html"
+                                    data-title="物联网卡管理">
+                                    <span>物联网卡管理</span>
+                                </a>
+                            </dd>
+
+                            <dd>
+                                <a href="pages/Device/ewm.html" data-url="pages/Device/ewm.html" data-id="pages/Device/ewm.html"
+                                    data-title="二维码管理">
+                                    <span>二维码管理</span>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+
+
+                    <!-- <li class="layui-nav-item airManage">
+                        <a href="javascript:;">
+                            <i class="fa  fa-flag"></i>
+                            <span>空调租赁</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="pages/Air/order.html" data-url="pages/Air/order.html" data-id="pages/Air/order.html"
+                                    data-title="订单列表">
+                                    <span>订单列表</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Air/airCondition.html" data-url="pages/Air/airCondition.html" data-id="pages/Air/airCondition.html"
+                                    data-title="空调管理">
+                                    <span>空调管理</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Air/user.html" data-url="pages/Air/user.html" data-id="pages/Air/user.html"
+                                    data-title="用户管理">
+                                    <span>用户管理</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Air/room.html" data-url="pages/Air/room.html" data-id="pages/Air/room.html"
+                                    data-title="宿舍管理">
+                                    <span>宿舍管理</span>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li> -->
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="fa fa-line-chart"></i>
+                            <span>报表统计</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="pages/Report/classify.html" data-url="pages/Report/classify.html" data-id="pages/Report/classify.html"
+                                    data-title="订单分类统计">
+                                    <span>订单分类统计</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Report/profit.html" data-url="pages/Report/profit.html" data-id="pages/Report/profit.html"
+                                    data-title="项目收益统计">
+                                    <span>项目收益统计</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Report/orderStatic.html" data-url="pages/Report/orderStatic.html"
+                                    data-id="pages/Report/orderStatic.html" data-title="订单统计">
+                                    <span>订单统计</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Report/state.html" data-url="pages/Report/state.html" data-id="pages/Report/state.html"
+                                    data-title="设备状态统计">
+                                    <span>设备状态统计</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Report/activity.html" data-url="pages/Report/activity.html" data-id="pages/Report/activity.html"
+                                    data-title="设备活跃度统计">
+                                    <span>设备活跃度统计</span>
+                                </a>
+                            </dd>
+
+
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="fa fa-dollar"></i>
+                            <span>财务管理</span>
+                        </a>
+                        <dl class="layui-nav-child">
+
+                            <dd>
+                                <a href="pages/Finance/refundRequest.html" data-url="pages/Finance/refundRequest.html"
+                                    data-id="pages/Finance/refundRequest.html" data-title="退款申请列表">
+                                    <span>退款申请列表</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Finance/settlement.html" data-url="pages/Finance/settlement.html"
+                                    data-id="pages/Finance/settlement.html" data-title="结算管理">
+                                    <span>结算管理</span>
+                                </a>
+                            </dd>
+                            <!-- <dd>
+                                <a href="pages/Finance/summary.html" data-url="pages/Finance/summary.html" data-id="pages/Finance/summary.html"
+                                    data-title="结算管理">
+                                    <span>结算管理</span>
+                                </a>
+                            </dd> -->
+
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="fa fa-warning"></i>
+                            <span>人员管理</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="pages/Personnel/person.html" data-url="pages/Personnel/person.html" data-id="pages/Personnel/person.html"
+                                    data-title="人员管理">
+                                    <span>人员管理</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Personnel/assignPermission.html" data-url="pages/Personnel/assignPermission.html"
+                                    data-id="pages/Personnel/assignPermission.html" data-title="分配人员权限">
+                                    <span>分配人员权限</span>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="layui-body">
+            <!-- 页面标签 -->
+            <div class="layadmin-pagetabs" id="LAY_app_tabs">
+                <div class="layui-icon layadmin-tabs-control layui-icon-prev" lay-event="leftPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-next" lay-event="rightPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                    <ul class="layui-nav  layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                        <li class="layui-nav-item">
+                            <a href="javascript:;">
+                                <span class="layui-nav-more"></span>
+                            </a>
+                            <dl class="layui-nav-child tabmenu">
+                                <dd data-type="closeThisTabs">
+                                    <a href="javascript:;">关闭当前标签页</a>
+                                </dd>
+                                <dd data-type="closeOtherTabs">
+                                    <a href="javascript:;">关闭其它标签页</a>
+                                </dd>
+                                <dd data-type="closeAllTabs" class="">
+                                    <a href="javascript:;">关闭全部标签页</a>
+                                </dd>
+                            </dl>
+                        </li>
+                        <span class="layui-nav-bar" style="left: 20px; top: 35px; width: 0px; opacity: 0;"></span>
+                    </ul>
+                </div>
+                <div class="layui-tab" lay-allowclose="true" lay-filter="layadmin-layout-tabs">
+                    <ul class="layui-tab-title" style="left: 0px;" id="LAY_app_tabsheader" style="overflow: none;">
+                        <li lay-id="pages/Index/index.html" data-attr="pages/Index/index.html" class="layui-this">
+                            <i class="layui-icon layui-icon-home"></i>
+                            <i class="layui-icon layui-unselect layui-tab-close">ဆ</i>
+                        </li>
+                    </ul>
+                    <!-- 内容主体区域 -->
+                    <div class="main-content layui-tab-content" id="LAY_tabs_body">
+                        <div class="layui-tab-item layui-show">
+                            <iframe data-frameid="pages/Index/index.html" scrolling="auto" frameborder="0" src="pages/Index/index.html"
+                                style="height: 100%;width:100%;"></iframe>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            <p style="text-align: center;">© 2018
+                <a href="http://jiyoukeji.cn" target="_blank">gelives.com</a> - 集优生活服务商管理平台
+            </p>
+        </div>
+    </div>
+    <div class="shadeBg layui-layer-shade"> </div>
+    <!-- 完善服务商资料 -->
+    <div class="userData">
+        <form class="layui-form" lay-filter="sendInfo" id="setInfo">
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-body" pad15>
+                                <div class="layui-card-header" style="font-size:18px;font-weight: bolder">请完善服务商信息</div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">服务商名称：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name" autocomplete="off" lay-verify="required" class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>(服务商名称请按照营业执照填写)</div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">所在城市：</label>
+                                    <div class="layui-input-inline">
+                                        <select name="province" lay-verify="required" lay-filter="province" class="province">
+                                            <option value="">请选择省</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-input-inline">
+                                        <select name="city" lay-verify="required" lay-filter="city">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-input-inline">
+                                        <select name="area" lay-verify="required" lay-filter="area">
+                                            <option></option>
+                                        </select>
+
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>
+                                    </div>
+
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">公司地址：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" name="address"
+                                            class="layui-input">
+
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>
+                                    </div>
+
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">税号：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" name="duty" class="layui-input">
+
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>
+                                    </div>
+
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">营业执照编码：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" name="busLicense"
+                                            class="layui-input">
+
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>
+                                    </div>
+
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">法人身份证号：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required|identity" autocomplete="off" name="cardNumber"
+                                            class="layui-input">
+
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>
+                                    </div>
+
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">银行账号：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" name="bankAccount"
+                                            class="layui-input">
+
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>
+                                    </div>
+
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">开户银行：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" autocomplete="off" name="bankOpenAccount"
+                                            class="layui-input">
+
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>
+                                    </div>
+
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">联系人：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required" name="principal" autocomplete="off"
+                                            class="layui-input">
+
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">电话：</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" lay-verify="required|phone" name="phone" value=""
+                                            autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">
+                                        <span style="color: red">*</span>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">邮箱:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="email" id="email" value="" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button type="button" class="layui-btn setInfo" lay-filter="sendInfo"
+                                            lay-submit>确认修改</button>
+                                        <button type="reset" class="layui-btn layui-btn-primary">重新填写</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="js/layui.js"></script>
+    <script src="js/lay/modules/jquery.js"></script>
+    <script src="js/global.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+    <script src="js/indexPage.js"> </script>
+</body>
+
+</html>

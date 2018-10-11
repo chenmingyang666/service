@@ -1,0 +1,246 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <title>引导式录入</title>
+    <style>
+        .site-title fieldset {
+            border: none;
+            padding: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .site-title fieldset legend {
+            margin-left: 20px;
+            padding: 0 10px;
+            font-size: 22px;
+            font-weight: 300;
+        }
+
+        .layui-laypage-right {
+            float: right !important;
+        }
+
+        .layui-form-label {
+            width: 100px;
+        }
+
+        .layui-card-body .layui-form-label {
+            text-align: left;
+        }
+
+        .layui-form-item .layui-input-inline {
+            width: auto;
+        }
+
+        .layui-word-aux {
+            color: red !important;
+        }
+
+        .layui-timeline {
+            display: flex;
+        }
+
+        .hrLine {
+            width: 20%;
+            height: 1px;
+            background: #e1e1e1;
+            display: inline-block;
+        }
+
+        .layui-tab-title li {
+            line-height: 100%;
+            display: inline-flex;
+        }
+
+        .layui-tab-title li .icon {
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            text-align: center;
+            border-radius: 50%;
+            background: inherit;
+            border: 1px solid #e1e1e1;
+            /* color: #e1e1e1; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .layui-this .icon {
+            background: #1890ff !important;
+            color: white;
+        }
+
+        .btnGroup {
+            overflow: hidden;
+            border: 1px solid #f6f6f6;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding-left: 10%;
+            border: none;
+        }
+    </style>
+    <script src="../../js/layui.js"></script>
+    <!-- <script src="../../js/lay/modules/jquery.js"></script> -->
+    <script src="../../js/global.js"></script>
+    <script src="../../js/tool.js"></script>
+</head>
+
+<body>
+    <div class="layui-tab layui-tab-brief">
+        <ul class="layui-tab-title" style="text-align: center;border: none">
+            <li class="layui-this">
+                <div class="icon">1</div>
+                <div>
+                    <p>步骤一</p>
+                    <p style="font-weight:bolder">新增项目</p>
+                </div>
+            </li>
+            <div class="hrLine"></div>
+            <li class="">
+                <div class="icon">2</div>
+                <div>
+                    <p>步骤二</p>
+                    <p style="font-weight:bolder">设置价格</p>
+                </div>
+            </li>
+            <div class="hrLine"></div>
+            <li class="">
+                <div class="icon">3</div>
+                <div>
+                    <p>步骤三</p>
+                    <p style="font-weight:bolder">添加设备点</p>
+                </div>
+            </li>
+            <div class="hrLine"></div>
+            <li class="">
+                <div class="icon">4</div>
+                <div>
+                    <p>步骤四</p>
+                    <p style="font-weight:bolder">新增设备</p>
+                </div>
+            </li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item  layui-show">
+
+            </div>
+            <div class="layui-tab-item">
+
+            </div>
+            <div class="layui-tab-item">
+
+            </div>
+            <div class="layui-tab-item">
+
+            </div>
+        </div>
+        <div class="layui-form-item btnGroup">
+            <button class="layui-btn layui-btn-warm hide prevBtn">上一步</button>
+            <button class="layui-btn layui-btn-success nextBtn">下一步</button>
+            <button class="layui-btn layui-btn-primary hide finish">完成</button>
+        </div>
+    </div>
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'common', 'laydate', 'address'], function () {
+            var table = layui.table,
+                $ = layui.jquery,
+                layer = layui.layer,
+                laytpl = layui.laytpl,
+                // element = layui.element,
+                common = layui.common,
+                laydate = layui.laydate,
+                form = layui.form,
+                address = layui.address();
+            // element.render();
+            $('.nextBtn').show();
+            var iframArr = [
+                '<iframe scrolling="auto" frameborder="0" src="../../pages/Project/addInfo.html" name="entryProject" id="entryProject" style="width:100%;height:100%"></iframe>',
+                '<iframe scrolling="auto" frameborder="0" src="../../pages/Project/addPrice.html" name="entryPrice" id="entryPrice" style="width:100%;height:100%"></iframe>',
+                '<iframe scrolling="auto" frameborder="0" src="../../pages/Device/addAddress.html" name="entryAddress" id="entryAddress" style="width:100%;height:100%"></iframe>',
+                '<iframe scrolling="auto" frameborder="0" src="../../pages/Device/addDevice.html" name="entryDevice" id="entryDevice" style="width:100%;height:100%"></iframe>'
+            ];
+            var index = 0;
+            $('.layui-tab-item').eq(index).append(iframArr[index]);
+            $('body').on('click', '.btnGroup .nextBtn', function () {
+                index++;
+                if (index == 0) {
+                    $('.prevBtn').hide();
+                    $('.nextBtn').show();
+                } else if (index == 3) {
+                    $('.finish').show();
+                    $('.prevBtn').show();
+                    $('.nextBtn').hide();
+
+                } else if (0 < index < 3) {
+                    $('.finish').hide();
+                    $('.nextBtn').show();
+                    $('.prevBtn').show();
+                }
+                if (index < 4) {
+                    console.log(index);
+                    $('.layui-tab-title li').eq(index).addClass('layui-this').siblings().removeClass(
+                        'layui-this');
+                    $('.layui-tab-item').eq(index).addClass('layui-show').siblings().removeClass(
+                        'layui-show');
+                    if ($('.layui-tab-item').eq(index).find('iframe').length == 0) {
+                       
+
+                        if (index == 1) {
+                            
+                            $('.layui-tab-item').eq(index).append('<iframe scrolling="auto" frameborder="0" src="../../pages/Project/addPrice.html?isEntry=1" name="entryPrice" id="entryPrice" style="width:100%;height:100%"></iframe>');
+                        }else{
+                            $('.layui-tab-item').eq(index).append(iframArr[index]);
+                        }
+                    }
+
+                } else {
+                    return false;
+                }
+
+            }).on('click', '.prevBtn', function () {
+                index--;
+                if (index == 0) {
+                    $('.prevBtn').hide();
+                    $('.nextBtn').show();
+                } else if (index == 3) {
+                    $('.finish').show();
+                    $('.prevBtn').show();
+                    $('.nextBtn').hide();
+                } else if (0 < index < 3) {
+                    $('.finish').hide();
+                    $('.nextBtn').show();
+                    $('.prevBtn').show();
+                }
+                if (index >= 0) {
+                    $('.layui-tab-title li').eq(index).addClass('layui-this').siblings().removeClass(
+                        'layui-this');
+                    $('.layui-tab-item').eq(index).addClass('layui-show').siblings().removeClass(
+                        'layui-show');
+                    if ($('.layui-tab-item').eq(index).find('iframe').length == 0) {
+                        $('.layui-tab-item').eq(index).append(iframArr[index]);
+                    }
+                } else {
+                    return false;
+                }
+            }).on('click', '.finish', function () {
+
+            });
+
+            // 添加产品价格
+
+            // 添加设备点
+
+            // 新增设备
+
+        });
+    </script>
+</body>
+
+</html>

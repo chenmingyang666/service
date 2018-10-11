@@ -1,0 +1,406 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <title>编辑地址</title>
+    <style>
+        .site-title fieldset {
+            border: none;
+            padding: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .site-title fieldset legend {
+            margin-left: 20px;
+            padding: 0 10px;
+            font-size: 22px;
+            font-weight: 300;
+        }
+
+        .layui-laypage-right {
+            float: right !important;
+        }
+
+        .layui-form-label {
+            width: 100px;
+        }
+
+        .layui-word-aux {
+            color: red
+        }
+
+        /* 高德地图样式 */
+
+        #container {
+            width: 1150px;
+            height: 400px;
+            margin-left: 130px;
+        }
+
+        .amap-logo {
+            display: none !important;
+        }
+
+        .amap-copyright {
+            bottom: -100px;
+            display: none;
+            visibility: hidden;
+        }
+
+        .amap-scalecontrol {
+            position: absolute;
+            bottom: 0 !important;
+            z-index: 150;
+        }
+    </style>
+
+
+    <script type="text/javascript" src="../../js/layui.js"></script>
+    <script type="text/javascript" src="../../js/lay/modules/jquery.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="../../js/tool.js"></script>
+    <!-- <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.8&key=9fa1c31547f05ea9816437cbb7b891e1"></script> -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.8&key=699aee3265c5dba08b66d0d9400e86d1"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/ui/1.0/main.js"></script>
+</head>
+
+<body>
+    <div class="layui-form-item">
+        <button class="layui-btn layui-btn-sm layui-btn-danger  back">返回</button>
+    </div>
+
+    <form class="layui-form" lay-filter="searchBox">
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-card" style="border:1px solid #f6f6f6;">
+                    <div class="layui-card-header">编辑地址</div>
+                    <div class="layui-card-body" style="padding: 15px;">
+                        <div class="layui-col-md5">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备点名称：</label>
+                                <div class="layui-input-inline" style="width: 50%;">
+                                    <input type="text" name="name" autocomplete="off" class="layui-input">
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">省份：</label>
+                                <div class="layui-input-inline" style="width: 50%;">
+                                    <select name="province" lay-filter="province" lay-verify="required" class="province">
+                                        <option value="">请选择省</option>
+                                    </select>
+
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
+
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">城市：</label>
+                                <div class="layui-input-inline" style="width: 50%;">
+                                    <select name="city" lay-verify="required" lay-filter="city">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
+
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">区县：</label>
+                                <div class="layui-input-inline" style="width: 50%;">
+                                    <select name="area" lay-verify="required" lay-filter="area">
+                                        <option></option>
+                                    </select>
+
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
+
+                            </div>
+                        </div>
+                        <div class="layui-col-md7">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label"></label>
+                                <div class="layui-input-inline">
+                                    <input type="text" autocomplete="off" class="layui-input" style="visibility: hidden;">
+                                </div>
+                            </div>
+
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">学校/社区：</label>
+                                <div class="layui-input-inline" style="width: 50%;">
+                                    <select name="community" lay-verify="required" lay-filter="community">
+                                    </select>
+                                    <!-- <input type="text" name="community" autocomplete="off" class="layui-input"> -->
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">地址定位：</label>
+                            <div class="layui-input-inline" style="width: 50%;">
+                                <input type="text" autocomplete="off" name="locate" class="layui-input address" id="searchAddress">
+                            </div>
+                            <!-- <a type="button" class="layui-btn layui-btn-sm locateBtn">定位</a> -->
+                        </div>
+                        <div class="layui-form-item">
+
+                            <div id="container"></div>
+                            <div id="tip"></div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">坐标：</div>
+                            <div class="layui-input-inline" style="width: 50%">
+                                <input type="text" name="coordinate" autocomplete="off" class="layui-input showCoordinate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="layui-card" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button class="layui-btn layui-btn-danger" lay-submit lay-filter="searchBox">保存</button>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+
+    <script>
+        layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'common', 'address'], function () {
+            // 地图加载
+            function initMap(longitude, latitude) {
+                //加载PositionPicker，loadUI的路径参数为模块名中 'ui/' 之后的部分
+                AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+                    console.log(longitude, latitude);
+                    var map = new AMap.Map('container', {
+                            resizeEnable: true,
+                            center: [longitude, latitude],
+                            zoom: 16
+                        }),
+                        geolocation, positionPicker = new PositionPicker({
+                            mode: 'dragMap', //设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
+                            map: map //依赖地图对象
+                        });
+                    //TODO:事件绑定、结果处理等
+                    positionPicker.on('success', function (positionResult) {
+                        console.log(positionResult);
+                        document.querySelector('.showCoordinate').value = positionResult.position;
+                        document.querySelector('.address').value = positionResult.address;
+                    });
+                    positionPicker.on('fail', function (positionResult) {
+                        // 海上或海外无法获得地址信息
+                        // layer.msg('海上无法定位，请重试')
+                    });
+                    positionPicker.start();
+                    // 地图插件的使用
+                    map.plugin(['AMap.Scale', 'AMap.ToolBar', 'AMap.Geolocation',
+                        'AMap.Autocomplete', 'AMap.PlaceSearch'
+                    ], function () { //异步加载插件
+                        var scale = new AMap.Scale({
+                                visible: true
+                            }),
+                            toolBar = new AMap.ToolBar({
+                                visible: true
+                            });
+                        geolocation = new AMap.Geolocation({
+                            enableHighAccuracy: true, //是否使用高精度定位，默认:true
+                            timeout: 10000, //超过10秒后停止定位，默认：无穷大
+                            buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                            zoomToAccuracy: true, //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                            buttonPosition: 'RB'
+                        });
+                        map.addControl(scale);
+                        map.addControl(toolBar);
+                        map.addControl(geolocation);
+                        // geolocation.getCurrentPosition();
+                        AMap.event.addListener(geolocation, 'complete', onComplete); //返回定位信息
+                        AMap.event.addListener(geolocation, 'error', onError); //返回定位出错信息
+                        // // 输入提示
+                        var autoOptions = {
+                            input: 'searchAddress'
+                        };
+                        var auto = new AMap.Autocomplete(autoOptions);
+                        var placeSearch = new AMap.PlaceSearch({
+                            map: map
+                        });
+                        AMap.event.addListener(auto, "select", select); //注册监听，当选中某条记录时会触发
+                        function select(e) {
+                            placeSearch.setCity(e.poi.adcode);
+                            placeSearch.search(e.poi.name); //关键字查询查询
+                        }
+                    });
+                    //解析定位结果
+                    function onComplete(data) {
+                        var str = ['定位成功'];
+                        console.log(data);
+                        // str.push('经度：' + data.position.getLng());
+                        // str.push('纬度：' + data.position.getLat());
+                        // if (data.accuracy) {
+                        //     str.push('精度：' + data.accuracy + ' 米');
+                        // } //如为IP精确定位结果则没有精度信息
+                        // str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
+                        document.getElementById('tip').innerHTML = str.join('<br>');
+                        document.querySelector('.showCoordinate').value = data.position;
+
+                    }
+                    //解析定位错误信息
+                    function onError(data) {
+                        document.getElementById('tip').innerHTML = '定位失败';
+                    }
+                    // map.on('click', function (e) {
+                    //     $('.showCoordinate').val(e.lnglat);
+                    // });
+
+                });
+            };
+            var table = layui.table,
+                $ = layui.jquery,
+                layer = layui.layer,
+                laytpl = layui.laytpl,
+                address = layui.address(),
+                form = layui.form,
+                community,
+                common = layui.common;
+            var url = location.href;
+            $('body').on('click', '.back', function () {
+                window.history.back();
+            });
+            var data = parseURL(url);
+            console.log(data);
+            var id = data.id;
+            common.getSinLocateInfo(data.id, function (res) {
+                console.log(res);
+                if (res.code == 200) {
+                    form.val("searchBox", {
+                        "name": res.data.name,
+                        "province": res.data.province,
+                        "city": res.data.city,
+                        "area": res.data.area,
+                        "community": res.data.community,
+                        "locate": res.data.locate,
+                        "cordinate": res.data.latitude + res.data.longitude,
+                    });
+                    $('select[name="province"]').next().find('[lay-value="' + res.data.province + '"]')
+                        .click();
+                    $('select[name="city"]').next().find('[lay-value="' + res.data.city + '"]').click();
+                    $('select[name="area"]').next().find('[lay-value="' + res.data.area + '"]').click();
+                    community = res.data.community;
+                    initMap(res.data.longitude, res.data.latitude);
+                    getSchool();
+                    // 监听完区县然后加载学校
+                    form.on('select(area)', function (data) {
+                        getSchool()
+                    });
+
+                    function getSchool() {
+                        var data = {
+                            'province': $('select[name="province"]').siblings(
+                                "div.layui-form-select").find(
+                                'dl dd.layui-this').text(),
+                            'city': $('select[name="city"]').siblings(
+                                "div.layui-form-select").find(
+                                'dl dd.layui-this').text(),
+                            'area': $('select[name="area"]').siblings(
+                                "div.layui-form-select").find(
+                                'dl dd.layui-this').text(),
+                        }
+                        common.getSchoolList(data, function (res) {
+                            console.log(res);
+                            console.log(community);
+                            $('select[name=community]').html('');
+                            res.data.forEach(ele => {
+                                if (ele.name == community) {
+                                    $('select[name="community"]').append(
+                                        '<option value=' +
+                                        ele.name +
+                                        ' data-address=' + ele.address +
+                                        ' data-province=' + ele.province +
+                                        ' data-city=' + ele.city +
+                                        ' data-area=' + ele.area + ' selected>' +
+                                        ele.name +
+                                        '</option>')
+                                } else {
+                                    $('select[name="community"]').append(
+                                        '<option value=' +
+                                        ele.name +
+                                        ' data-address=' + ele.address +
+                                        ' data-province=' + ele.province +
+                                        ' data-city=' + ele.city +
+                                        ' data-area=' + ele.area + '>' + ele.name +
+                                        '</option>')
+                                }
+                            });
+                            form.render()
+                        })
+                    };
+                    // 监听学校选择 
+                    form.on('select(community)', function (data) {
+                        $('#searchAddress').val($('select[name="community"]').find(
+                            'option[value="' + data.value +
+                            '"]').attr('data-address'));
+                        form.render();
+                    });
+                } else {
+                    layer.msg('获取数据失败，请重试')
+                }
+            });
+
+            form.on('submit(searchBox)', function (data) {
+                var position = data.field.coordinate.split(',');
+                data.field.longitude = position[0];
+                data.field.latitude = position[1];
+                data.field.id = id;
+                console.log(data.field); //当前容器的全部表单字段，名值对形式：{'name': value}
+                parent.layer.open({
+                    content: '确定保存编辑内容?',
+                    btn: ['确定', '取消'],
+                    yes: function (index, layero) {
+                        parent.layer.closeAll();
+                        common.updateAddress(data.field, function (res) {
+                            if (res.code == 200) {
+                                parent.layer.confirm('保存成功，继续编辑?', {
+                                    icon: 3,
+                                    title: '提示',
+                                    btn: ['确定', '返回地址列表'],
+                                    yes: function (index) {
+                                        parent.layer.closeAll()
+                                    },
+                                    btn2: function (index) {
+                                        parent.layer.closeAll()
+                                        window.location.href =
+                                            'pages/Device/address.html';
+                                    }
+                                });
+
+                            }
+                        });
+
+                    },
+                    btn2: function (index) {
+                        parent.layer.closeAll()
+                    },
+                    cancel: function (index) {
+                        parent.layer.closeAll()
+                    }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+    </script>
+</body>
+
+</html>

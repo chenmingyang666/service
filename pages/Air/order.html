@@ -1,0 +1,323 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <title>订单列表</title>
+    <style>
+        .layui-laypage-right {
+            float: right !important;
+        }
+
+        cite::before {
+            content: '('
+        }
+
+        cite::after {
+            content: ')'
+        }
+    </style>
+    <script src="../../js/layui.js"></script>
+    <script src="../../js/lay/modules/jquery.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="../../js/tool.js"></script>
+</head>
+<body>
+    <form class="layui-form layui-layer-border" style=" padding: 10px 0 15px;background-color: white" lay-filter="searchBox">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">订单编号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="order_num" placeholder="输入编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">姓名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" placeholder="输入用户" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">手机号：</label>
+            <div class="layui-input-block">
+                    <input type="text" name="phone" placeholder="输入手机号" autocomplete="off" class="layui-input">                
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">订单状态：</label>
+            <div class="layui-input-block">
+                <select name="status" id="chooseStatus" lay-verify="status">
+                    <option value="">全部</option>
+                    <option value="0">未支付</option>
+                    <option value="1">已支付</option>
+                    <option value="2">已退款</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn layui-bg-blue" lay-submit lay-filter="searchBox">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+    <!-- 结果显示表格 -->
+    <div class="layui-form">
+        <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
+            <div class="demoTable">
+                <button class="layui-btn layui-btn-primary" style="float: right;margin: 5px;" data-type="getCheckData">导出订单</button>
+            </div>
+        </table>
+        <div id="laypage"></div>
+    </div>
+    <script type="text/html" id="sexTpl">
+        {{# if(d.sex === '女'){ }}
+        <span style="color: #F581B1;">{{ d.sex }}</span>
+        {{# } else { }} {{ d.sex }} {{# } }}
+    </script>
+    <script type="text/html" id="detailBar">
+        <a style="cursor:pointer;" class="layui-btn layui-btn-xs" lay-event="details">订单详情</a>
+    </script>
+    <script type="text/html" id="status">
+        {{# if(d.status == 0){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">未支付</button>
+        {{# } else if(d.status == 1){ }}
+        <button class="layui-btn layui-btn-info layui-btn-xs">已支付</button>
+        {{# } else if(d.status == 2){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">已退款</button>
+        {{# } }}
+    </script> 
+    <script>
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage'], function () {
+            var $ = layui.$,
+                layer = layui.layer,
+                form = layui.form,
+                table = layui.table,
+                element = layui.element,
+                layEvent = layui.event,
+                common = layui.common,
+                laypage = layui.laypage,
+                active = {
+                    getCheckData: function () { //获取选中数据
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                         
+                        parent.layer.confirm('确认导出订单?', {
+                            icon: 3,
+                            title: '提示',
+                            btn: ['确认', '取消'],
+                            yes: function (index) {
+                                var order_num = $(
+                                        "input[name='order_num']").val(),
+                                    phone = $(
+                                        "input[name='phone']").val(),
+                                    source = $(
+                                        "select[name='source']").next().find(
+                                        'dl dd.layui-this').attr('lay-value'),
+                                    order_status = $("select[name='order_status']").next().find(
+                                        'dl dd.layui-this').attr('lay-value');
+                                var urlStr = common.baseUrl +
+                                    'order/export?userId=' +
+                                    layui.sessionData('id').id + '&order_num=' + order_num +
+                                    '&phone=' + phone +
+                                    '&source=' + source +
+                                    '&order_status=' + order_status;
+                                    urlStr = urlStr.replace(/undefined/g, '');
+                                console.log(urlStr);
+                                parent.layer.closeAll();
+                                window.location.href = urlStr;
+                            },
+                            btn2: function (index) {
+                                parent.layer.closeAll()
+                            }
+
+                        });
+
+                    },
+                    getCheckLength: function () { //获取选中数目
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        layer.msg('选中了：' + data.length + ' 个');
+                    },
+                    isAll: function () { //验证是否全选
+                        var checkStatus = table.checkStatus('data_demo');
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    }
+                };
+            // 订单导航栏数量
+            var limitcount = 10,
+                curnum = 1,
+                param = {
+                    page: 1,
+                    size: 10,
+                    pageSize: 10
+                };
+            //列表查询方法
+            function productsearch(param, start, limitsize) {
+                // param.page = start;
+                // param.pageSize = limitsize;
+                param.vendor_id = layui.sessionData('id').id;
+                common.getAirOrder(param, function (res) {
+                    // 展示搜索结果的表格
+                    table.render({
+                        elem: '#data_demo',
+                        cols: [
+                            [{
+                                checkbox: true,
+                                fixed: 'left',
+                                width: 80
+                            }, {
+                                field: 'order_num',
+                                title: '订单编号',
+                                fixed: true,
+                            }, {
+                                field: 'name',
+                                title: '姓名',
+                            }, {
+                                field: 'phone',
+                                title: '手机号',
+                            }, {
+                                field: 'dorm_info',
+                                title: '宿舍',
+                            }, {
+                                field: 'deposit',
+                                title: '押金',
+                            }, {
+                                field: 'user_fee',
+                                title: '使用费',
+                            }, {
+                                field: 'money',
+                                title: '订单金额',
+                            }, {
+                                field: 'buyer_pay_amount',
+                                title: '实付金额',
+                                templet:function (d) {
+                                    if(!d.buyer_pay_amount){
+                                        return '无'
+                                    }else{
+                                        return d.buyer_pay_amount
+                                    }
+                                }
+                            },  {
+                                field: 'status',
+                                title: '订单状态',
+                                templet: '#status',
+                                sort: true,
+                                align: 'center'
+                            }, {
+                                field: 'create_date',
+                                title: '下单时间',
+                                align: 'center',
+                                templet:function(d){
+                                    return timeChange(d.create_date)
+                                }
+                            }
+                            // , {
+                            //     fixed: 'right',
+                            //     width: 150,
+                            //     align: 'center',
+                            //     title: '操作',
+                            //     toolbar: '#detailBar',
+                            // }
+                        ]
+                        ],
+                        cellMinWidth: 80,
+                        data: res.data.list,
+                        limit:limitcount,
+                        done: function (res1, curr, count) {
+                            console.log(res1);
+                            //如果是异步请求数据方式，res即为你接口返回的信息。
+                            //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                            laypage.render({
+                                elem: 'laypage',
+                                count: res.data.count,
+                                curr: curnum,
+                                limit: limitcount,
+                                theme: 'right',
+                                limits: [10, 20, 50, 100],
+                                layout: ['prev', 'page', 'next', 'skip', 'count',
+                                    'limit'
+                                ],
+                                jump: function (obj, first) {
+                                    if (!first) {
+                                        curnum = obj.curr;
+                                        limitcount = obj.limit;
+                                        param.page = obj.curr;
+                                        param.pageSize = obj.limit;
+                                        productsearch(param, curnum,
+                                            limitcount);
+                                    }
+                                }
+                            });
+                        },
+                        text: {
+                            none: '暂无相关数据' 
+                        }
+                    });
+                });
+            }
+            productsearch(param, curnum, limitcount);
+
+            element.render();
+            form.render();
+            //表单查询提交
+            form.on('submit(searchBox)', function (data) {
+                var needData = data.field;
+                var param = {
+                    page: 1,
+                    pageSize: 10,
+                    size:10
+                };
+                var obj = Object.assign(needData,param );
+                console.log(obj);
+                productsearch(obj, curnum, limitcount);
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+            // 全选和反选
+            form.on('checkbox(allChoose)', function (data) {
+                console.log(data);
+                var child = $(data.elem).parents('table').find('tbody input[name="singItem"]');
+                child.each(function (index, item) {
+                    item.checked = data.elem.checked;
+                });
+                form.render('checkbox');
+            });
+            form.on('checkbox(itemChoose)', function (data) {
+                var sib = $(data.elem).parents('table').find('tbody input[name="singItem"]:checked')
+                    .length;
+                var total = $(data.elem).parents('table').find('tbody input[name="singItem"]').length;
+                if (sib == total) {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop(
+                        "checked",
+                        true);
+                    form.render();
+                } else {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop(
+                        "checked",
+                        false);
+                    form.render();
+                }
+            });
+            //监听工具条
+            table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                if (layEvent === 'details') { //查看
+                    //do somehing
+                    window.location.href = 'orderDetail.html?order_num=' + data.order_num;
+                }
+            });
+            $('body').on('click', '.demoTable .layui-btn', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            }).on('click', '.refresh', function () {
+                window.location.reload()
+            });
+        });
+    </script>
+</body>
+
+</html>

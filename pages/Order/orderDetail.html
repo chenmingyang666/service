@@ -1,0 +1,436 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <title>订单列表</title>
+    <style>
+        .site-title fieldset {
+            border: none;
+            padding: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .site-title fieldset legend {
+            margin-left: 20px;
+            padding: 0 10px;
+            font-size: 22px;
+            font-weight: 300;
+        }
+
+        .layui-col-md5 .layui-form-item,
+        .layui-col-md7 .layui-form-item {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+    <script src="../../js/layui.js"></script>
+    <script src="../../js/lay/modules/jquery.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="../../js/tool.js"></script>
+</head>
+<body>
+    <button class="layui-btn layui-btn-danger  back">返回</button>
+    <div class="site-title orderTitle">
+        <fieldset>
+            <legend>
+                <a>订单信息</a>
+            </legend>
+        </fieldset>
+        <table class="layui-table" id="orderDetail" style="margin: 0;"></table>
+    </div>
+
+    <div class="site-title payTitle" style="display:none">
+        <fieldset>
+            <legend>
+                <a>支付信息</a>
+            </legend>
+        </fieldset>
+        <table class="layui-table" id="payDetail" style="margin: 0;"></table>
+    </div>
+    <!-- <div class="site-title">
+        <fieldset>
+            <legend>
+                <a>抵扣信息</a>
+            </legend>
+        </fieldset>
+        <table class="layui-table" id="countDetail" style="margin: 0;"></table>
+
+    </div> -->
+    <div class="site-title deviceTitle">
+        <fieldset>
+            <legend>
+                <a>设备信息</a>
+            </legend>
+        </fieldset>
+        <table class="layui-table" id="deviceDetail" style="margin: 0;"></table>
+
+    </div>
+    <!-- <div class="site-title">
+        <fieldset>
+            <legend>
+                <a>操作记录</a>
+            </legend>
+        </fieldset>
+        <table class="layui-table" id="operateDetail" style="margin: 0;"></table>
+
+    </div> -->
+    <!-- <script type="text/html" id="orderStatus">
+        {{# if(d.order_status == 1){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">未支付</button>
+        {{# } else if(d.order_status == 2){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">使用中</button>
+        {{# } else if(d.order_status == 3){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">已完成</button>
+        {{# } else if(d.order_status == 4){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">已退款</button>
+        {{# } }}
+    </script> -->
+    <script type="text/html" id="orderSource">
+        {{# if(d.source == 4){ }}
+        <button class="layui-btn layui-btn-normal layui-bg-green layui-btn-xs">支付宝扫码下单</button>
+        {{# } else if(d.source == 3){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">微信扫码下单</button>
+        {{# } else if(d.source == 1){ }}
+        <button class="layui-btn layui-btn-normal layui-bg-orange layui-btn-xs">APP下单</button>
+        {{# } else if(d.source == 2){ }}
+        <button class="layui-btn layui-btn-normal layui-bg-gray layui-btn-xs">APP扫码下单</button>
+        {{# } }}
+    </script>
+    <script type="text/html" id="buttonTpl">
+        {{# if(d.cause == 1){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">手动取消</button>
+        {{# } else if(d.cause == 2){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">超时未支付</button>
+        {{# } else if(d.cause == 3){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">退款申请</button>
+        {{# } else if(d.cause == 4){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">设备故障</button>
+        {{# } else if(d.cause == 5){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">退款中</button>
+        {{# } else if(d.cause == 6){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">已退款</button>
+        {{# } else if(d.cause == 7){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">自动取消</button>
+        {{# } else if(d.order_status==2){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">使用中</button>
+        {{# } else if(d.cause == 10){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">已完成</button>
+        {{# } else if((d.order_status==1 && d.cause==null) || d.cause==8){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">未支付</button>
+        {{# } }}
+    </script>
+    <script type="text/html" id="isRefund">
+        {{# if(d.cause == 6){ }}
+        <button class="layui-btn layui-btn-normal layui-bg-green layui-btn-xs">是</button>
+        {{# } else{ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">否</button>
+        
+        {{# } }}
+    </script>
+<!-- <script src="../data.js"></script> -->
+    <script>
+        layui.use(['table', 'jquery', 'common'], function () {
+            var table = layui.table,
+                $ = layui.jquery,
+                common = layui.common;
+            var url = location.href;
+            $('body').on('click', '.back', function () {
+                window.history.back()
+            });
+
+            var order_num = parseURL(url).order_num,
+                giveData = new Array();
+            common.getOrderDetail(order_num, function (res) {
+                
+                giveData.push(res.data[0]);
+                console.log(giveData[0]);
+                if (res.code == 200) {
+                    // 订单信息
+
+                    table.render({
+                        elem: '#orderDetail',
+                        cols: [
+                            [{
+                                field: 'order_num',
+                                title: '订单编号',
+                                align: 'center',
+                            }, {
+                                field: 'phone',
+                                title: '用户',
+                                align: 'center',
+                            }, {
+                                field: 'order_status',
+                                title: '订单状态',
+                                align: 'center',
+                                templet: '#buttonTpl'
+                            }, {
+                                field: 'source',
+                                title: '订单来源',
+                                align: 'center',
+                                templet: '#orderSource'
+                            }, {
+                                field: 'create_date',
+                                title: '下单时间',
+                                align: 'center',
+                                templet:function(d){
+                                    if(d.create_date){
+                                          return timeChange(d.create_date)
+                                    }
+                                }
+                            },{
+                                field: 'use_value',
+                                title: '接水量/运行时间',
+                                templet:function(d){
+                                    if(d.order_type=="03"){
+                                       if(d.user_value!=null){
+                                            return d.user_value+'毫升'
+                                       }else{
+                                           return '0'
+                                       }
+                                       
+                                    }else{
+                                        if(d.user_value!=null){
+                                            return d.user_value+'分钟'
+                                       }else{
+                                           return '0'
+                                       }
+                                       
+
+                                    }
+                                }
+                            }]
+                        ],
+                        cellMinWidth: 80,
+                        data: giveData,
+                    });
+                  
+                    // 支付信息  cause=1,2,7不显示
+                    if(!(giveData[0].cause==1 || giveData[0].cause==2 ||giveData[0].cause==7 || (giveData[0].order_status==1))){
+                        $('.site-title.payTitle').show();
+                        table.render({
+                        elem: '#payDetail',
+                        cols: [
+                            [{
+                                field: 'trade_no',
+                                title: '支付流水号',
+                                align: 'center',
+                                fixed: true
+                            }, {
+                                field: 'buyer_logon_id',
+                                title: '支付账号',
+                                align: 'center',
+                            }, {
+                                field: 'pay_way',
+                                title: '支付方式',
+                                align: 'center',
+                                templet: function (d) {
+                                    if (d.pay_way == '01') {
+                                      return  d.pay_way = '微信支付'
+                                    }else if (d.pay_way == '02') {
+                                        return d.pay_way = '支付宝支付'
+                                    }
+                                    else if (d.pay_way == '03') {
+                                        return d.pay_way = '余额支付'
+                                    }else if(d.pay_way=='04'){
+                                        return d.pay_way = '公众号支付'
+                                    }
+                                }
+                            }, {
+                                field: 'buyer_pay_amount',
+                                title: '支付金额(元)',
+                                align: 'center',
+                                templet: function (d) {
+                                    if(d.buyer_pay_amount){
+                                       return '￥' + d.buyer_pay_amount 
+                                    }else{
+                                        return '0'
+                                    }
+                                }
+                            }, 
+                            // {
+                            //     field: 'order_status',
+                            //     title: '支付状态',
+                            //     align: 'center',
+                            //     templet: '#buttonTpl'
+                            // } ,
+                             {
+                                field: 'pay_time',
+                                title: '支付时间',
+                                align: 'center',
+                                templet:function(d){
+                                    if(d.pay_time){
+                                        return timeChange(d.pay_time)
+                                    }else{
+                                        return '0'
+                                    }  
+                                }
+                            },{
+                                field: 'refund_time',
+                                title: '退款时间',
+                                align: 'center',
+                                templet:function(d){
+                                    if(d.refund_time){
+                                        return timeChange(d.refund_time)
+                                    }else{
+                                        return '未退款'
+                                    }
+                                    
+                                }
+                            }, {
+                                field: 'score',
+                                title: '是否退款',
+                                align: 'center',
+                                templet:'#isRefund'
+                            }]
+                        ],
+                        data: giveData,
+                    });
+                    }
+                    
+                    // 抵扣信息
+                    // table.render({
+                    //     elem: '#countDetail',
+                    //     cols: [
+                    //         [{
+                    //             field: 'id',
+                    //             title: '订单总金额',
+                    //             align: 'center',
+                    //             style: 'color:#F04844',
+                    //             templet: function (d) {
+                    //                 return '￥' + d.id
+                    //             }
+                    //         }, {
+                    //             field: 'username',
+                    //             title: '优惠券',
+                    //             style: 'color:#F04844',
+                    //             align: 'center',
+                    //         }, {
+                    //             field: 'sex',
+                    //             title: '优惠券编号',
+                    //             align: 'center',
+                    //         }, {
+                    //             field: 'city',
+                    //             title: '积分抵扣金额',
+                    //             align: 'center',
+                    //         }, {
+                    //             field: 'sign',
+                    //             title: '抵扣积分',
+                    //             style: 'color:gree',
+                    //             align: 'center',
+                    //         }, {
+                    //             field: 'buyer_pay_amount',
+                    //             title: '实付金额',
+                    //             style: 'color:#F04844',
+                    //             align: 'center',
+                    //         }]
+                    //     ],
+                    //     data: giveData,
+                    // });
+                    // 设备信息
+                    table.render({
+                        elem: '#deviceDetail',
+                        cols: [
+                            [{
+                                field: 'device_name',
+                                title: '设备名称',
+                                align: 'center',
+                            }, {
+                                field: 'run_start',
+                                title: '开始运行时间',
+                                align: 'center',
+                                templet:function(d){
+                                    if(d.run_start){
+                                        return timeChange(d.run_start)
+                                    }else{
+                                        return '无数据'
+                                    }
+                                }
+                            }, {
+                                field: 'run_end',
+                                title: '停止运行时间',
+                                align: 'center',
+                                templet:function(d){
+                                    if(d.run_end){
+                                        return timeChange(d.run_end)
+                                    }else{
+                                        return '无数据'
+                                    }
+                                     
+                                }
+                            }, {
+                                field: 'server_name',
+                                title: '商品名称',
+                                align: 'center',
+                            }, {
+                                field: 'position',
+                                title: '设备位置',
+                                align: 'center',
+                            }, {
+                                field: 'dev_seq',
+                                title: '设备编号',
+                                align: 'center',
+                            }
+                            // , {
+                            //     field: 'task_status',
+                            //     title: '设备状态',
+                            //     align: 'center',
+                            // }
+                        ]
+                        ],
+                        data: giveData,
+                    });
+                    // 操作记录
+                    // table.render({
+                    //     elem: '#operateDetail',
+                    //     cols: [
+                    //         [{
+                    //             field: 'id',
+                    //             title: '订单编号',
+                    //             align: 'center',
+                    //             fixed: true
+                    //         }, {
+                    //             field: 'username',
+                    //             title: '操作记录号',
+                    //             align: 'center',
+                    //         }, {
+                    //             field: 'sex',
+                    //             title: '操作人',
+                    //             align: 'center',
+                    //         }, {
+                    //             field: 'city',
+                    //             title: '操作时间',
+                    //             align: 'center',
+                    //         }, {
+                    //             field: 'sign',
+                    //             title: '操作内容',
+                    //             align: 'center',
+                    //         }, {
+                    //             field: 'experience',
+                    //             title: '状态',
+                    //             align: 'center',
+                    //         }, {
+                    //             field: 'score',
+                    //             title: '详情',
+                    //             align: 'center',
+                    //         }]
+                    //     ],
+                    //     data: giveData,
+                    // });
+                } else {
+                    layer.msg('订单数据缺失，请重试')
+                }
+
+
+
+            });
+
+
+
+        });
+    </script>
+</body>
+
+</html>

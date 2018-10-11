@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- IE兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- 国产浏览器兼容模式 -->
+    <meta name="renderer" content="webkit">
+    <meta name="author" content="Cmy">
+    <title>集优科技-找回密码</title>
+    <meta name="keywords" content="集优科技">
+    <meta name="description" content="集优科技">
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/layui.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/animate.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css" rel="stylesheet">
+    <script type='text/javascript' src="js/jquery.min.js"></script>
+    <!-- 登录页线粒背景 -->
+    <script type='text/javascript' src='js/jquery.particleground.min.js'></script>
+    <script>
+        // 背景canvas
+        $(document).ready(function () {
+            $('#particles').particleground({
+                dotColor: '#1890ff',
+                lineColor: '#1890ff'
+            });
+        });
+    </script>
+</head>
+
+<body class="layui-layout-body">
+    <div id="particles">
+
+        <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+
+            <div class="layadmin-user-login-main">
+
+                <div class="layadmin-user-login-box layadmin-user-login-header">
+                    <h2>集优生活</h2>
+                    <p>集优科技官方出品的后台管理系统</p>
+                </div>
+                <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+                    <div class="layui-form-item">
+                        <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+                        <input type="text" name="account" id="LAY-user-login-cellphone" lay-verify="required|account" placeholder="输入注册时手机号" class="layui-input">
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+                        <input type="password" name="password" id="LAY-user-login-password" lay-verify="required|password" placeholder="输入密码" class="layui-input">
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+                        <input type="password" name="surepassword" lay-verify="required|password" placeholder="再次输入密码" class="layui-input">
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-row">
+                            <div class="layui-col-xs7">
+                                <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+                                <input type="text" name="code" id="LAY-user-login-vercode" lay-verify="required" placeholder="验证码" class="layui-input">
+                            </div>
+                            <div class="layui-col-xs5">
+                                <div style="margin-left: 10px;">
+                                    <input type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode" value="获取验证码">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="LAY-user-login-submit">找回密码</button>
+                    </div>
+                    <div class="layui-trans layui-form-item layadmin-user-login-other">
+
+                        <a href="login.html" class="layadmin-user-jump-change layadmin-link" style="float: left;margin-left: 10px;color: #1890ff !important">返回登录</a>
+                        <a href="reg.html" class="layadmin-user-jump-change layadmin-link" style="float: right;margin-right: 10px;color: #1890ff !important">注册帐号</a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-trans layadmin-user-login-footer">
+                <p>© 2018
+                    <a href="http://jiyoukeji.cn" target="_blank">gelives.com</a>
+                </p>
+            </div> 
+          
+        </div>
+
+    </div>
+
+
+    <script type='text/javascript' src="js/layui.js"></script>
+    <script type='text/javascript' src="js/global.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        layui.use(['form', 'element', 'common', 'jquery'], function () {
+            var form = layui.form,
+                $ = layui.jquery,
+                element = layui.element,
+                common = layui.common;
+            form.render();
+            console.log(window.sessionStorage);
+
+
+
+            form.verify({
+                username: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '用户名不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '用户名首尾不能出现下划线\'_\'';
+                    }
+
+                },
+                account: function (value, item) { //value：表单的值、item：表单的DOM对象
+                        if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                            return '用户名不能有特殊字符';
+                        }
+                        if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                            return '用户名首尾不能出现下划线\'_\'';
+                        }
+
+                    }
+
+                    //我们既支持上述函数式的方式，也支持下述数组的形式
+                    //数组的两个值分别代表：[正则匹配、匹配不符时的提示文字]
+                    ,
+
+                password: [
+                    /^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'
+                ]
+            });
+            $('#LAY-user-get-vercode').attr("src", common.baseUrl + 'vender/getKaptcha');
+            $('body').on("click", "#LAY-user-get-vercode", function () {
+
+                this.src = common.baseUrl + "vender/getKaptcha";
+            });
+            //发送验证码
+            $("#LAY-user-getsmscode").click(function () {
+                var disabled = $("#LAY-user-getsmscode").attr("disabled");
+                if (disabled) {
+                    return false;
+                }
+                if ($("#LAY-user-login-cellphone").val() == "" || isNaN($("#LAY-user-login-cellphone").val()) ||
+                    $("#LAY-user-login-cellphone").val().length != 11) {
+                    layer.alert("请填写正确的手机号！");
+                    return false;
+                }
+          
+                $.ajax({
+                    async: false,
+                    type: "GET",
+                    url: common.baseUrl + "sms/send",
+                    data: {
+                        phone: $("#LAY-user-login-cellphone").val()
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        console.log(data);
+                        settime();
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+            var countdown = 60;
+            var _generate_code = $("#LAY-user-getsmscode");
+
+            function settime() {
+                if (countdown == 0) {
+                    _generate_code.attr("disabled", false);
+                    _generate_code.val("获取验证码");
+                    countdown = 60;
+                    return false;
+                } else {
+                    $("#LAY-user-getsmscode").attr("disabled", true);
+                    _generate_code.val("重新发送(" + countdown + "秒)");
+                    countdown--;
+                }
+                setTimeout(function () {
+                    settime();
+                }, 1000);
+            }
+            //提交
+            form.on('submit(LAY-user-login-submit)', function (obj) {
+                var field = obj.field;
+                
+                if(field.password!=field.surepassword){
+                    layer.msg("请确认两次密码是否正确");
+                }else{
+                    delete field.surepassword;
+                    //  请求登入接口
+                common.forgetPass(field, function (res) {
+                    console.log(res);
+                    if (res.code == 200) {
+                        layer.confirm('恭喜，密码修改成功', {
+                                icon: 1,
+                                title: '提示',
+                                btn: ['返回登录页'],
+                                
+                                yes: function (index) {
+                                    layer.close(index);
+                                    window.location.href = 'login.html';
+                                }
+
+                            });
+                    } else {
+                        layer.msg('请重试')
+                    }
+                })
+                }
+               
+            });
+        })
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <title>财务汇总详情</title>
+    <style>
+        .site-title fieldset {
+            border: none;
+            padding: 0;
+            border-top: 1px solid #eee;
+        }
+
+        .site-title fieldset legend {
+            margin-left: 20px;
+            padding: 0 10px;
+            font-size: 22px;
+            font-weight: 300;
+        }
+
+        .layui-col-md5 .layui-form-item,
+        .layui-col-md7 .layui-form-item {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+    <script src="../../js/layui.js"></script>
+    <script src="../../js/lay/modules/jquery.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="../../js/tool.js"></script>
+</head>
+
+<body>
+    <button class="layui-btn layui-btn-danger  back">返回</button>
+    <div class="site-title">
+        <fieldset>
+            <legend>
+                <a>订单列表</a>
+            </legend>
+        </fieldset>
+        <table class="layui-table" id="orderDetail" style="margin: 0;"></table>
+        <div id="laypage"></div>
+    </div>
+
+
+    <script type="text/html" id="orderStatus">
+        {{# if(d.order_status == 1){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">未支付</button>
+        {{# } else if(d.order_status == 2){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">使用中</button>
+        {{# } else if(d.order_status == 3){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">已完成</button>
+        {{# } else if(d.order_status == 4){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">已退款</button>
+        {{# } }}
+    </script>
+    <script type="text/html" id="orderType">
+        {{# if(d.order_type == 4){ }}
+        <button class="layui-btn layui-btn-normal layui-bg-green layui-btn-xs">微信下单</button>
+        {{# } else if(d.order_type == 3){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">支付宝下单</button>
+        {{# } else if(d.order_type == 1){ }}
+        <button class="layui-btn layui-btn-normal layui-bg-orange layui-btn-xs">APP下单</button>
+        {{# } else if(d.order_type == 2){ }}
+        <button class="layui-btn layui-btn-normal layui-bg-gray layui-btn-xs">APP扫码下单</button>
+
+        {{# } }}
+    </script>
+    <script type="text/html" id="buttonTpl">
+        {{# if(d.cause == 1){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">手动取消</button>
+        {{# } else if(d.cause == 2){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">超时未支付</button>
+        {{# } else if(d.cause == 3){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">已提交</button>
+        {{# } else if(d.cause == 4){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">设备故障</button>
+        {{# } else if(d.cause == 5){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">退款中</button>
+        {{# } else if(d.cause == 6){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">已退款</button>
+        {{# } else if(d.cause == 7){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">自动取消</button>
+        {{# } else if(d.cause == 8){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">启动中</button>
+        {{# } else if(d.cause == 9){ }}
+        <button class="layui-btn layui-btn-warning layui-btn-xs">结算中</button>
+        {{# } else if(d.cause == 10){ }}
+        <button class="layui-btn layui-btn-success layui-btn-xs">已完成</button>
+        {{# } else{ }}
+        <span>无数据</span>
+        {{# } }}
+    </script>
+    <script type="text/html" id="isRefund">
+        {{# if(d.cause == 6){ }}
+        <button class="layui-btn layui-btn-normal layui-bg-green layui-btn-xs">是</button>
+        {{# } else{ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">否</button>
+        
+        {{# } }}
+    </script>
+    <script>
+        layui.use(['table', 'jquery', 'common', 'laypage'], function () {
+            var table = layui.table,
+                $ = layui.jquery,
+                laypage = layui.laypage,
+                common = layui.common;
+            var url = location.href;
+            $('body').on('click', '.back', function () {
+                window.history.back()
+            });
+            var searchData = parseURL(url),
+                giveData = new Array();
+            var limitcount = 10,
+                curnum = 1,
+                param = {
+                    page: 1,
+                    size: 10
+                };
+                param=Object.assign(param,searchData);
+               
+            //列表查询方法
+            function productsearch(param, start, limitsize) {
+                param.page = start;
+                param.size = limitsize;
+                 console.log(param);
+                common.getSinFianceData(param, function (res) {
+                    console.log(res.data);
+
+                    if (res.code == 200) {
+                        // 订单信息
+                        table.render({
+                            elem: '#orderDetail',
+                            cols: [
+                                [{
+                                    field: 'order_num',
+                                    title: '订单编号',
+                                    align: 'center',
+                                }, {
+                                    field: 'nick_name',
+                                    title: '用户姓名',
+                                    align: 'center',
+                                }, {
+                                    field: 'phone',
+                                    title: '手机号',
+                                    align: 'center',
+                                }, {
+                                    field: 'server_name',
+                                    title: '产品名称',
+                                    align: 'center',
+                                }, {
+                                    field: 'money',
+                                    title: '订单金额',
+                                    align: 'center',
+
+                                }, {
+                                    field: 'create_date',
+                                    title: '优惠金额',
+                                    align: 'center',
+
+                                }, {
+                                    field: 'buyer_pay_amount',
+                                    title: '结算金额',
+                                    align: 'center',
+
+                                }, {
+                                    field: 'order_status',
+                                    title: '订单状态',
+                                    align: 'center',
+                                    templet: '#orderStatus'
+
+                                }]
+                            ],
+                            cellMinWidth: 80,
+                            data: res.data.list,
+                            limit: limitcount,
+                            done: function (res1, curr, count) {
+                                console.log(res1);
+                                //如果是异步请求数据方式，res即为你接口返回的信息。
+                                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                                laypage.render({
+                                    elem: 'laypage',
+                                    count: res.data.count,
+                                    curr: curnum,
+                                    limit: limitcount,
+                                    theme: 'right',
+                                    limits: [10, 20, 50, 100],
+                                    layout: ['prev', 'page', 'next', 'skip',
+                                        'count',
+                                        'limit'
+                                    ],
+                                    jump: function (obj, first) {
+                                        if (!first) {
+                                             
+                                            curnum = obj.curr;
+                                            limitcount = obj.limit;
+                                            param.page = obj.curr;
+                                            param.size = obj.limit;
+                                            param.pageSize = obj.limit;
+                                            productsearch(param, curnum,
+                                                limitcount);
+                                        }
+                                    }
+                                });
+                            },
+                            text: {
+                                none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                            }
+                        });
+
+
+
+
+                    } else {
+                        layer.msg('数据缺失，请重试')
+                    }
+
+
+
+                });
+            }
+            productsearch(param, curnum, limitcount);
+
+        });
+    </script>
+</body>
+
+</html>
