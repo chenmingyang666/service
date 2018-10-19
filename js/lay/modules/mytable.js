@@ -932,7 +932,6 @@ layui.define(['laytpl', 'laypage', 'layer', 'form'], function(exports){
         });
         tr.addClass(ELEM_CLICK).siblings('tr').removeClass(ELEM_CLICK);
       });
-  
       //同步滚动条
       that.layMain.on('scroll', function(){
         var othis = $(this)

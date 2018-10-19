@@ -194,13 +194,14 @@
                             [{
                                     checkbox: true,
                                     fixed: 'left',
-                                    width: 80
+                                    width: 50
                                 }, {
 
                                     title: '序号',
                                     templet: function (d) {
                                         return d.LAY_TABLE_INDEX + 1
-                                    }
+                                    },
+                                    width:80
                                 }, {
                                     field: 'name',
                                     title: '定价名称',
@@ -226,8 +227,8 @@
                                 //     align: 'center'
                                 // }
                                 , {
-                                    fixed: 'right',
-                                    width: 150,
+                                    // fixed: 'right',
+                                    // width: 150,
                                     align: 'center',
                                     title: '操作',
                                     toolbar: '#toolBar',

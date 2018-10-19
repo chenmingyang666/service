@@ -150,7 +150,7 @@
                         // ids=ids.toString();
                         console.log(ids.toString());
                         if (ids == '') {
-                            layer.msg('请选择要删除的项目信息')
+                            layer.msg('请选择要删除的项目信息');
                         } else {
                             parent.layer.confirm('确认删除吗?', function () {
                                 common.deleteProjectInfos(ids.toString(), function (res) {
@@ -186,24 +186,25 @@
                         cols: [
                             [{
                                     checkbox: true,
-                                    fixed: true
+                                    fixed: true,
+                                    width:50
                                 }, {
 
                                     title: '序号',
                                     templet: function (d) {
                                         return d.LAY_TABLE_INDEX + 1
-                                    }
+                                    },
+                                    width:80
                                 }, {
                                     field: 'name',
                                     title: '项目名称',
-                                    sort: true,
+                                    minWidth:250
                                 }, {
                                     field: 'contract',
                                     title: '合同编码',
                                 }, {
                                     field: 'principal',
                                     title: '负责人',
-                                    sort: true
                                 }, {
                                     field: 'phone',
                                     title: '联系方式',
@@ -213,11 +214,9 @@
                                 }, {
                                     field: 'address',
                                     title: '项目地址',
-                                    sort: true,
                                 }, {
                                     field: 'cate',
                                     title: '项目类型',
-                                    sort: true,
                                 },
                                  {
                                     field: 'status',

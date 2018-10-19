@@ -2,15 +2,16 @@
     .define(['jquery'], function (exports) {
         var $ = layui.jquery,
             baseUrl = 'http://api.gelives.com/';
-        bxUrl = 'http://api.cloudbox.net.cn:8002/';
-        //  baseUrl ='http://192.168.1.200:80/'; baseUrl = 'http://192.168.1.48/';
+            bxUrl = 'http://api.cloudbox.net.cn:8002/';
+        //  baseUrl ='http://192.168.1.200:80/';
+        // baseUrl = 'http://192.168.1.48/';
         // baseUrl = 'http://192.168.1.53:80/';
         var obj = {
             baseUrl: 'http://api.gelives.com/',
             bxUrl: 'http://api.cloudbox.net.cn:8002/',
-            // baseUrl: 'http://192.168.1.200:80/', baseUrl: 'http://192.168.1.48/',
-            // baseUrl: 'http://192.168.1.53:80/',
-            // 注册用户
+            // baseUrl: 'http://192.168.1.200:80/',
+            // baseUrl: 'http://192.168.1.48/',
+            // baseUrl: 'http://192.168.1.53:80/', 注册用户
             regUser: function (field, callback) {
                 $.ajax({
                     url: baseUrl + 'vender/register',
@@ -170,7 +171,9 @@
                 $.ajax({
                     url: baseUrl + 'device/countDeviceUseRate',
                     headers: {
-                        'Authorization': 'Bearer ' + layui.sessionData('token').token
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
                     },
                     contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
@@ -269,7 +272,7 @@
             //获取设备列表
             getDeviceList: function (param, callback) {
                 $.ajax({
-                    url: baseUrl + 'device/list',
+                    url: baseUrl + 'db',
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -332,10 +335,28 @@
                     success: callback
                 });
             },
+            // 保存新增设备
+            addDeviceInfo: function (datas, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'db/add',
+                    data: datas,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
             // 根据ID获取设备信息
             getSingDeviceInfo: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'device/edit/' + id,
+                    url: baseUrl + 'db/get/' + id,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -352,7 +373,6 @@
                 $.ajax({
                     type: 'get',
                     url: baseUrl + 'device/getByNumber?number=' + data,
-
                     dataType: 'json',
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -389,7 +409,7 @@
             updateDeviceInfo: function (datas, callback) {
                 $.ajax({
                     type: 'post',
-                    url: baseUrl + 'device/update',
+                    url: baseUrl + 'db/update',
                     data: JSON.stringify(datas),
                     dataType: 'json',
                     headers: {
@@ -427,7 +447,25 @@
             deleteDevice: function (id, callback) {
                 $.ajax({
                     type: 'post',
-                    url: baseUrl + 'device/delete/' + id,
+                    url: baseUrl + 'db/delete/' + id,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token,
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 批量删除设备
+            deleteDevices: function (ids, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'db/delete/' + ids,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -444,7 +482,8 @@
             // 机型品牌三级联动
             getDeviceLinked: function (callback) {
                 $.ajax({
-                    url: baseUrl + 'common/linked',
+                    // url: baseUrl + 'common/linked',
+                    url: baseUrl + 'dlc',
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -456,20 +495,26 @@
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
                     success: callback
-                });
+                }); 
             },
-            // 获取设备下拉列表
-            getDeviceDropList: function (param, callback) {
+            // 获取设备下拉列表 getDeviceDropList: function (param, callback) {     $.ajax({ url:
+            // baseUrl + 'device/dropList',         data: param,         headers: {
+            // 'Authorization': 'Bearer ' + layui .sessionData('token') .token,
+            // 'Content-Type': 'application/json'         },         // contentType:
+            // 'application/json,application/x-www-form-urlencoded', beforeSend: function
+            // (request) { request.setRequestHeader("Authorization", 'Bearer ' +
+            // layui.sessionData("token").token);         },         success: callback });
+            // }, 
+            // 获取主板下拉列表
+            getMBDropList: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'device/dropList',
-                    data: param,
+                    url: baseUrl + 'dlc/getImeis?modelId=' + id,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token,
                         'Content-Type': 'application/json'
                     },
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -480,7 +525,7 @@
             getLocateList: function (param, callback) {
                 // console.log(param);
                 $.ajax({
-                    url: baseUrl + 'locate/list',
+                    url: baseUrl + 'lct',
                     data: param,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -517,7 +562,8 @@
             // 位置点下拉列表
             getLocateDropList: function (callback) {
                 $.ajax({
-                    url: baseUrl + 'locate/dropList',
+                    // url: baseUrl + 'locate/dropList',
+                    url: baseUrl + 'dlc/getLocates',
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -552,7 +598,7 @@
             // 编辑地址
             getSinLocateInfo: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'locate/edit/' + id,
+                    url: baseUrl + 'lct/get/' + id,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -570,7 +616,7 @@
             updateAddress: function (params, callback) {
                 $.ajax({
                     type: 'post',
-                    url: baseUrl + 'locate/update',
+                    url: baseUrl + 'lct/update',
                     data: params,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -589,7 +635,7 @@
             deleteAddresses: function (ids, callback) {
                 $.ajax({
                     type: 'post',
-                    url: baseUrl + 'locate/deletes',
+                    url: baseUrl + 'lct/deletes',
                     data: {
                         "ids": ids
                     },
@@ -610,7 +656,7 @@
             deleteAddress: function (id, callback) {
                 $.ajax({
                     type: 'post',
-                    url: baseUrl + 'locate/delete/' + id,
+                    url: baseUrl + 'lct/delete/' + id,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -628,7 +674,7 @@
             addLocate: function (params, callback) {
                 $.ajax({
                     type: 'post',
-                    url: baseUrl + 'locate/save',
+                    url: baseUrl + 'lct/add',
                     data: params,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -647,7 +693,7 @@
             getSimList: function (param, callback) {
                 // console.log(param);
                 $.ajax({
-                    url: baseUrl + 'common/listSim',
+                    url: baseUrl + 'sim',
                     data: param,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -661,9 +707,82 @@
                     success: callback
                 });
             },
+            // 新增物联网卡
+            addSim: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'sim/add',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 删除多个物联网卡
+            deleteSims: function (ids, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'sim/deletes',
+                    data: {
+                        "ids": ids
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 编辑物联网卡
+            getSinSimInfo: function (id, callback) {
+                $.ajax({
+                    url: baseUrl + 'sim/get/' + id,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token,
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            //  根据id更新物联网卡信息
+            updateSim: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'sim/update',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                            // ,'Content-Type': 'application/json'
+                    },
+                    // contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
             // 物联网卡下拉列表
             getSimDropList: function (callback) {
                 $.ajax({
+                    //  url: baseUrl + 'common/dropListSim',
                     url: baseUrl + 'common/dropListSim',
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -694,11 +813,11 @@
                     success: callback
                 });
             },
-
-            // 主板管理（待定） 二维码下拉列表
-            getQrDropList: function (callback) {
+            // 主板管理列表
+            getMBList: function (param, callback) {
                 $.ajax({
-                    url: baseUrl + 'common/dropListQR',
+                    url: baseUrl + 'me',
+                    data: param,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -708,14 +827,89 @@
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
-                    url: baseUrl + 'common/dropListQR',
+                    success: callback
+                })
+            },
+
+            // 新增主板
+            addMB: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'me/add',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                            // ,'Content-Type': 'application/json'
+                    },
+                    // contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
                     success: callback
                 });
             },
-            //二维码列表
-            getQrList: function (param, callback) {
+            // 获得编辑主板信息
+            getSinMBInfo: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'common/listQR',
+                    url: baseUrl + 'me/get/' + id,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token,
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 更新编辑保存主板
+            updateMBInfo: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'me/update',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                            // ,'Content-Type': 'application/json'
+                    },
+                    // contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 批量删除主板
+            deleteMBInfos: function (ids, callback) {
+                $.ajax({
+                    url: baseUrl + 'me/deletes',
+                    type: 'post',
+                    data: {
+                        "ids": ids
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    // contentType:'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 主机管理列表
+            getEQList: function (param, callback) {
+                $.ajax({
+                    url: baseUrl + 'eq',
                     data: param,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -723,6 +917,204 @@
                             .token
                     },
                     contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+
+            // 新增主机
+            addEQ: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'eq/add',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                            // ,'Content-Type': 'application/json'
+                    },
+                    // contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 获得编辑主机信息
+            getSinEQInfo: function (id, callback) {
+                $.ajax({
+                    url: baseUrl + 'eq/get/' + id,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token,
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 更新编辑保存主机
+            updateEQ: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'eq/update',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 批量删除主机
+            deleteEQInfos: function (ids, callback) {
+                $.ajax({
+                    url: baseUrl + 'eq/deletes',
+                    type: 'post',
+                    data: {
+                        "ids": ids
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    // contentType:'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 获取主机下拉列表
+            getHostList: function (id, callback) {
+                $.ajax({
+                    url: baseUrl + 'dlc/getEqpts?modelId=' + id,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+
+                    success: callback
+                });
+            },
+            // 获取二维码下拉列表
+            getQrDropList: function (callback) {
+                $.ajax({
+                    url: baseUrl + 'dlc/getQrcodes',
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+
+                    success: callback
+                });
+            },
+            //二维码列表
+            getQrList: function (param, callback) {
+                $.ajax({
+                    url: baseUrl + 'qr',
+                    data: param,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+             // 新增二维码
+             addQr: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'qr/add',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                            // ,'Content-Type': 'application/json'
+                    },
+                    // contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 获得编辑二维码信息
+            getSinQrInfo: function (id, callback) {
+                $.ajax({
+                    url: baseUrl + 'qr/get/' + id,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token,
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 更新编辑保存二维码
+            updateQr: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'qr/update',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 批量删除二维码
+            deleteQrInfos: function (ids, callback) {
+                $.ajax({
+                    url: baseUrl + 'qr/deletes',
+                    type: 'post',
+                    data: {
+                        "ids": ids
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    // contentType:'application/json',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -759,6 +1151,187 @@
                             .token
                     },
                     contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+
+            // 新增二维码
+            addQr: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'qr/add',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 删除多个二维码
+            deleteQrs: function (ids, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'qr/deletes',
+                    data: {
+                        "ids": ids
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+
+            // 新增二维码
+            addQr: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'qr/add',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                            // ,'Content-Type': 'application/json'
+                    },
+                    // contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 获得编辑二维码信息
+            getSinQrInfo: function (id, callback) {
+                $.ajax({
+                    url: baseUrl + 'qr/get/' + id,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token,
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 更新编辑保存二维码
+            updateQr: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'qr/update',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 新增营业时间
+            addRule: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'rule/add',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 删除多个营业时间
+            deleteRules: function (ids, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'rule/deletes',
+                    data: {
+                        "ids": ids
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+
+            // 新增营业时间
+            addRule: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'rule/add',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                            // ,'Content-Type': 'application/json'
+                    },
+                    // contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 获得编辑营业时间信息
+            getSinRuleInfo: function (id, callback) {
+                $.ajax({
+                    url: baseUrl + 'rule/get/' + id,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token,
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 更新编辑保存营业时间
+            updateRule: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    url: baseUrl + 'rule/update',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },

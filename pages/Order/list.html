@@ -25,7 +25,7 @@
 </head>
 
 <body>
-    <div class="layui-tab layui-tab-card searchmenu">
+    <!-- <div class="layui-tab layui-tab-card searchmenu">
         <ul class="layui-tab-title">
             <li class="allOrder layui-this">全部订单
                 <span>
@@ -54,7 +54,7 @@
             </li>
             <button class="layui-btn layui-btn-warm layui-border-box refresh" style="float: right;">刷新</button>
         </ul>
-    </div>
+    </div> -->
 
     <form class="layui-form layui-layer-border" style=" padding: 10px 0 0;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item">
@@ -108,8 +108,8 @@
                     </select>
                 </div>
             </div>
-       
-        <!-- <div class="layui-inline">
+
+            <!-- <div class="layui-inline">
             <label class="layui-form-label">数据来源：</label>
             <div class="layui-input-block">
                 <select name="source" lay-verify="">
@@ -121,27 +121,26 @@
                 </select>
             </div>
         </div> -->
-
-        <div class="layui-inline">
-            <label class="layui-form-label">开始时间：</label>
-            <div class="layui-input-inline">
-                <input type="text" name="startTime" class="layui-input" id="beginTime" placeholder="开始日期" autocomplete="off"
-                    lay-key="1">
+            <div class="layui-inline">
+                <label class="layui-form-label">开始时间：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="startTime" class="layui-input" id="beginTime" placeholder="开始日期"
+                        autocomplete="off" lay-key="1">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">结束时间：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="endTime" class="layui-input" id="endTime" placeholder="结束日期" autocomplete="off"
+                        lay-key="2">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"></label>
+                <button class="layui-btn layui-btn-sm" lay-submit lay-filter="searchBox">查询</button>
+                <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
             </div>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">结束时间：</label>
-            <div class="layui-input-inline">
-                <input type="text" name="endTime" class="layui-input" id="endTime" placeholder="结束日期" autocomplete="off"
-                    lay-key="2">
-            </div>
-        </div>
-
-        <div class="layui-inline">
-            <button class="layui-btn layui-bg-blue" lay-submit lay-filter="searchBox">提交</button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-        </div>
-    </div>
     </form>
     <!-- 结果显示表格 -->
     <div class="layui-form">
@@ -178,8 +177,9 @@
     <script type="text/html" id="detailBar">
         <a style="cursor:pointer;" class="layui-btn layui-btn-xs" lay-event="details">订单详情</a>
     {{#if(d.pay_time && d.order_status!=4){  }}    
-            <a style="cursor:pointer;" class="layui-btn layui-bg-green layui-btn-xs" lay-event="returnMoney">退款</a>
+            <a style="cursor:pointer;" class="layui-btn layui-bg-warning layui-btn-xs" lay-event="returnMoney">退款</a>
     {{#} }}    
+    <a style="cursor:pointer;" class="layui-btn layui-bg-green layui-btn-xs" title="解除当前订单状态" lay-event="unlock">复位</a>
         
     </script>
     <script type="text/html" id="buttonTpl">
@@ -241,7 +241,7 @@
         {{# } }}
     </script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate', 'main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -341,7 +341,7 @@
                     $('.searchmenu ul li.using cite').text(res.data.use);
                     $('.searchmenu ul li.finished cite').text(res.data.finish);
                     $('.searchmenu ul li.refund cite').text(res.data.refund);
-                   
+
                     // 展示搜索结果的表格
                     table.render({
                         elem: '#data_demo',
@@ -349,12 +349,12 @@
                             [{
                                 checkbox: true,
                                 fixed: 'left',
-                                width: 80
+                                width: 50
                             }, {
                                 field: 'order_num',
                                 title: '订单编号',
-                                fixed: true,
-                                sort: true,
+                                // fixed: true,
+                                // sort: true,
                             }, {
                                 field: 'nick_name',
                                 title: '用户名',
@@ -365,11 +365,10 @@
                                 field: 'pay_way',
                                 title: '支付方式',
                                 templet: '#payWay',
-                                sort: true
                             }, {
                                 field: 'money',
                                 title: '订单金额',
-                                sort: true,
+                                // sort: true,
                                 templet: function (d) {
                                     if (d.money == null || d.money ==
                                         '') {
@@ -381,7 +380,7 @@
                             }, {
                                 field: 'buyer_pay_amount',
                                 title: '实付金额',
-                                sort: true,
+                                // sort: true,
                                 templet: function (d) {
                                     if (d.buyer_pay_amount == null || d.buyer_pay_amount ==
                                         '') {
@@ -405,8 +404,8 @@
                                 title: '下单时间',
                                 align: 'center'
                             }, {
-                                fixed: 'right',
-                                width: 150,
+                                // fixed: 'right',
+                                // width: 150,
                                 align: 'center',
                                 title: '操作',
                                 toolbar: '#detailBar',
@@ -423,14 +422,15 @@
                                 limits: [10, 20, 50, 100],
                                 limit: limitcount,
                                 theme: 'right',
-                                layout: ['prev', 'page', 'next', 'skip', 'refresh','count','limit'
+                                layout: ['prev', 'page', 'next', 'skip', 'refresh',
+                                    'count', 'limit'
                                 ],
                                 jump: function (obj, first) {
                                     if (!first) {
                                         curnum = obj.curr;
                                         limitcount = obj.limit;
                                         param.page = obj.curr;
-                                        param.size = obj.limit;
+                                        param.pageSize = obj.limit;
                                         productsearch(param, curnum,
                                             limitcount);
                                     }
@@ -441,7 +441,8 @@
                             none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
                         }
                     });
-                     $('#laypage .layui-laypage-prev').before('<span style="border:none">'+'订单金额：¥1012，结算金额：¥988'+'</span>');
+                    $('#laypage .layui-laypage-prev').before('<span style="border:none">' +
+                        '订单金额：¥1012，结算金额：¥988' + '</span>');
                 });
             }
             productsearch(param, curnum, limitcount);
@@ -492,12 +493,12 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'details') { //查看
-                    //do somehing
-                    window.location.href = 'orderDetail.html?order_num=' + data.order_num;
+                    initModal('订单详情', 'orderDetail.html?order_num=' + data.order_num);
                 } else if (layEvent === 'returnMoney') {
-                   layui.layer.open({
+                    var that = $(this);
+                    layui.layer.open({
                         title: '退款原因：',
-                        type:1,
+                        type: 1,
                         shade: 0,
                         area: ['300px', '500px'],
                         content: $('.refundBox'),
@@ -506,12 +507,13 @@
                             var params = {
                                 vendor_id: layui.sessionData('id').id,
                                 order_num: data.order_num
-                            }
-                            //do something
+                            };
                             common.orderRefund(params, function (res) {
                                 if (res.code == 200) {
                                     layer.closeAll();
                                     layer.msg('退款成功');
+                                    that.hide();
+                                    productsearch(param, curnum, limitcount);
                                 } else {
                                     layer.msg(res.message);
                                     layer.closeAll();
@@ -530,6 +532,8 @@
                         }
                     });
 
+                } else if (layEvent === 'unlock') {
+                    layer.msg('复位')
                 }
             });
             $('body').on('click', '.searchmenu ul li', function (e) {

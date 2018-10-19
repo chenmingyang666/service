@@ -38,6 +38,18 @@
                 </div>
             </div>
             <div class="layui-inline">
+                <label class="layui-form-label">楼号：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="building" required placeholder="输入楼号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">楼层</label>
+                <div class="layui-input-block">
+                    <input type="text" name="floor" required placeholder="输入楼层" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
                 <label class="layui-form-label">是否上线：</label>
                 <div class="layui-input-block">
                     <select name="status" lay-verify="">
@@ -47,12 +59,10 @@
                     </select>
                 </div>
             </div>
-
             <div class="layui-inline" style="float: right;">
                 <button class="layui-btn layui-btn-sm" lay-submit lay-filter="searchBox">查询</button>
                 <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
             </div>
-
         </div>
 
 
@@ -170,7 +180,7 @@
                             [{
                                 checkbox: true,
                                 fixed: 'left',
-                                width: 80
+                                width: 50
                             }, {
                                 title: '序号',
                                 templet: function (d) {
@@ -191,8 +201,6 @@
                             }, {
                                 field: 'community',
                                 title: '校区/社区',
-                                sort: true,
-
                             }, {
                                 field: 'latitude',
                                 title: '坐标',
@@ -206,15 +214,15 @@
                                 templet: '#checkboxTpl',
                                 align: 'center'
                             }, {
-                                fixed: 'right',
-                                width: 150,
+                                // fixed: 'right',
+                                // width: 150,
                                 align: 'center',
                                 title: '操作',
                                 toolbar: '#toolBar',
                             }]
                         ],
                         cellMinWidth: 80,
-                        data: res.content,
+                        data: res.data.content,
                         limit: limitcount,
                         done: function (res1, curr, count) {
                             console.log(res1);

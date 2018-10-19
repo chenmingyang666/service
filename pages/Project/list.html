@@ -317,25 +317,27 @@
                         cols: [
                             [{
                                     checkbox: true,
-                                    fixed: true
+                                    fixed: true,
+                                    width:50
                                 }, {
 
                                     title: '序号',
                                     templet: function (d) {
                                         return d.LAY_TABLE_INDEX + 1
-                                    }
+                                    },
+                                    width:80
                                 },
                                 {
                                     field: 'pjtname',
                                     title: '项目名称',
-                                    sort: true,
+                                    minWidth:250
+
                                 }, {
                                     field: 'community',
                                     title: '校区/社区',
                                 }, {
                                     field: 'dev_seq',
                                     title: '设备编号',
-                                    sort: true
                                 }, {
                                     field: 'cate',
                                     title: '设备类型',
@@ -346,20 +348,18 @@
                                 }, {
                                     field: 'qrcode',
                                     title: '二维码编号',
-                                    sort: true,
                                 }, {
                                     field: 'status',
                                     title: '设备状态',
-                                    sort: true,
                                     templet: '#deviceState'
                                 }, {
                                     field: 'online',
                                     title: '上下线',
                                     templet: '#checkboxTpl',
-                                    width: 135
+                                    // width: 135
                                 }, {
-                                    fixed: 'right',
-                                    width: 150,
+                                    // fixed: 'right',
+                                    // width: 150,
                                     align: 'center',
                                     title: '操作',
                                     toolbar: '#toolBar',
@@ -489,13 +489,7 @@
                     });
                 }
             });
-            // 监听表格内编辑
-            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                console.log(obj.value); //得到修改后的值
-                console.log(obj.field); //当前编辑的字段名
-                console.log(obj.data); //所在行的所有相关数据  
-                layer.msg('编辑保存')
-            });
+            
 
         });
     </script>

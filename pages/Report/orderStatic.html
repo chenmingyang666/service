@@ -112,7 +112,7 @@
     </script>
     <script src="../data.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate', 'formSelects'],
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate', 'formSelects','main'],
             function () {
                 var $ = layui.$,
                     layer = layui.layer,
@@ -189,44 +189,7 @@
                         console.table(arr); //已选择数据的数组
                     },
 
-                    // data: { //自定义渲染数据
-                    //     arr: [ //数组
-                    //         {
-                    //             content: '全选',
-                    //             value: 1,
-                    //             sel: true,
-                    //             dis: true
-                    //         }, //如果你这么写, 那就不可选不可删.
-                    //         {
-                    //             content: '全不选',
-                    //             value: 2,
-                    //             sel: false,
-                    //             dis: true
-                    //         }, //init的优先级高于sel
-                    //         {
-                    //             content: '反选',
-                    //             value: 3,
-                    //             sel: false,
-                    //             dis: false
-                    //         },
-                    //         {
-                    //             content: '还有啥',
-                    //             value: 4,
-                    //             sel: false,
-                    //             dis: false
-                    //         },
-                    //         {
-                    //             content: '没了吧',
-                    //             value: 5,
-                    //             sel: false,
-                    //             dis: false
-                    //         },
-                    //     ],
-                    //     name: 'content', //定义name的key, 默认name
-                    //     val: 'value', //定义val的key, 默认val
-                    //     selected: 'sel', //定义selected的key, 默认selected
-                    //     disabled: 'dis', //定义disabled的key, 默认disabled
-                    // }
+
                 });
 
 
@@ -251,12 +214,11 @@
                             cols: [
                                 [{
                                     field: 'address',
-                                    title: '时间',
-                                    sort: true,
+                                    title: '时间'
                                 }, {
                                     field: 'name',
                                     title: '项目名称',
-
+                                    minWidth: 250
                                 }, {
                                     field: 'cate_name',
                                     title: '设备类型',
@@ -301,7 +263,6 @@
                                     align: 'center'
                                 }]
                             ],
-
                             data: res.data.list,
                             done: function (res1, curr, count) {
                                 console.log(res1);

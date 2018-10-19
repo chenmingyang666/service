@@ -221,7 +221,7 @@ layui.define("layer", function (e) {
                                         layui.each(g, function () {
                                             var t = i(this),
                                                 l = t.text(),
-                                                r = l.indexOf(e) === -1;
+                                                r = l.toLowerCase().indexOf(e.toLowerCase()) === -1;
                                             ("" === e || "blur" === a
                                                 ? e !== l
                                                 : r) && n++,

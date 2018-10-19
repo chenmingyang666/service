@@ -187,7 +187,7 @@
         </div>
     </form>
     <script>
-        layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'laydate', 'common', 'address'], function () {
+        layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'laydate', 'common', 'address','main'], function () {
             var table = layui.table,
                 $ = layui.jquery,
                 layer = layui.layer,
@@ -221,13 +221,14 @@
 
                 }
             }).on('click', '.addTime', function () {
-                // layer.open()
-                layer.open({
-                    title:'新增营业时间',
-                    type: 2,
-                    content: 'addHour.html',
-                    area:['50%','50%']
-                });
+                
+                initModal('新增营业时间','addHour.html')
+                // layer.open({
+                //     title:'新增营业时间',
+                //     type: 2,
+                //     content: 'addHour.html',
+                //     area:['50%','50%']
+                // });
             });
 
             form.render();

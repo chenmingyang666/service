@@ -31,9 +31,9 @@
     <form class="layui-form layui-layer-border" style=" padding: 10px;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item" style="margin-bottom: 0">
             <div class="layui-inline">
-                <label class="layui-form-label" style="width:100px ;">物联网卡卡号：</label>
+                <label class="layui-form-label" style="width:100px ;">物联网卡号码：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="simCode" placeholder="输入编号" autocomplete="off" class="layui-input">
+                    <input type="text" name="simCode" placeholder="输入号码" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">激活时间：</label>
+                <label class="layui-form-label">安装时间：</label>
                 <div class="layui-input-inline">
                     <input type="text" name="activeTimeStart" class="layui-input" id="beginTime" placeholder="开始日期"
                         autocomplete="off" lay-key="1">
@@ -91,6 +91,8 @@
     <div class="layui-form">
         <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
             <div class="demoTable" style="text-align: right;margin: 10px 0 0">
+                <button class="layui-btn layui-btn-primary" data-type="add">+新增</button>
+                <button class="layui-btn layui-btn-primary" data-type="delete">-删除</button>
                 <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出</button>
 
             </div>
@@ -106,10 +108,10 @@
     <script type="text/html" id="outdateTpl">
         <!-- 0 未过期 1过期 -->
         {{# if(d.status == 0){ }}
-        <!-- <button class="layui-btn layui-btn-blue layui-btn-sm">未过期</button> -->
+        <button class="layui-btn layui-btn-blue layui-btn-sm">未过期</button>
 
         {{# } else if(d.status==1){ }}
-        <!-- <button class="layui-btn layui-btn-warm layui-btn-sm">已过期</button> -->
+        <button class="layui-btn layui-btn-warm layui-btn-sm">已过期</button>
         {{# } }}
     </script>
     <script type="text/html" id="sourceTpl">
@@ -128,9 +130,10 @@
         <button class="layui-btn layui-btn-danger layui-btn-xs">已废弃</button>
         {{#} }}
     </script>
-
-
-    <!-- <script src="../data.js"></script> -->
+    <script type="text/html" id="toolBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
     <script>
         layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage'], function () {
             var $ = layui.$,
@@ -188,9 +191,35 @@
                     isAll: function () { //验证是否全选
                         var checkStatus = table.checkStatus('data_demo');
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    }, add: function () {
+                        window.location.href = "addCard.html?isTrue=1"
+                    },
+                    delete: function () {
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        var ids = [];
+                        data.forEach(function (ele, index) {
+                            ids.push(ele.id);
+                        });
+                        // ids=ids.toString();
+                        console.log(ids.toString());
+                        if (ids.length > 0) {
+                            parent.layer.confirm('确认删除吗?', function () {
+                                common.deleteSims(ids.toString(), function (res) {
+                                    if (res.code == 200) {
+                                        productsearch(param, curnum, limitcount);
+                                        layer.msg('已删除');
+                                        parent.layer.closeAll();
+                                    } else {
+                                        layer.msg('删除失败');
+                                        parent.layer.closeAll();
+                                    };
+                                });
+                            })
+                        } else {
+                            layer.msg('请选择要删除的物联网卡')
+                        }
                     }
-
-
                 };
             // 日期
             laydate.render({
@@ -222,7 +251,7 @@
                             [{
                                 checkbox: true,
                                 fixed: 'left',
-                                width: 80
+                                width: 50
                             }, {
                                 title: '序号',
                                 templet: function (d) {
@@ -264,7 +293,6 @@
                             , {
                                 field: 'period',
                                 title: '有效期',
-                                sort: true,
                                 templet: function (d) {
                                     if (d.period) {
                                         return d.period + '天'
@@ -277,6 +305,12 @@
                                 title: '是否过期',
                                 templet: '#outdateTpl',
                                 align: 'center'
+                            }, {
+                                // fixed: 'right',
+                                // width: 150,
+                                align: 'center',
+                                title: '操作',
+                                toolbar: '#toolBar',
                             }]
                         ],
                         cellMinWidth: 80,
@@ -360,12 +394,7 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
-                    //do somehing
-                    //同步更新缓存对应的值
-                    obj.update({
-                        username: '123',
-                        title: 'xxx'
-                    });
+                  window.location.href="editCard.html?isTrue=1"
                 } else if (layEvent === 'del') {
                     console.log(data.id);
                     layer.confirm('真的删除行么', function (index) {

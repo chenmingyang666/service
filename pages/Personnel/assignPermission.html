@@ -24,13 +24,10 @@
                         <option value="02">运维人员</option>
                         <option value="03">客服人员</option>
                         <option value="04">财务人员</option>
-                        <option value="*">新增角色++</option>
-
+                        <option value="*">新增角色</option>
                     </select>
                 </div>
-
-
-                <span class=" addRole hide">
+                <span class="addRole hide">
                     <label class="layui-form-label" style="width:100px">新增角色名称：</label>
                     <div class="layui-input-inline">
                         <input type="text" name="pjtname" class="layui-input" placeholder="输入角色名称" autocomplete="off">
@@ -51,16 +48,7 @@
 
     </form>
 
-    <script type="text/html" id="stateTpl">
-        {{# if(d.status == 0){ }}
-        <button class="layui-btn layui-btn-normal layui-btn-xs">已绑定</button>
-        {{# } else if(d.status==1){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">未使用</button>
-        {{# } else if(d.status==2){ }}
-        <button class="layui-btn layui-btn-danger layui-btn-xs">已废弃</button>
-
-        {{#} }}
-    </script>
+  
 
     <script type="text/html" id="toolBar">
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>

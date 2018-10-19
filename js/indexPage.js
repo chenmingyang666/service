@@ -146,7 +146,7 @@ layui
                     })
             },
             tabsBodyChange: function () {
-                active.rollPage('auto',)
+                active.rollPage('auto')
             },
             rollPage: function (e, i) {
                 var t = $("#LAY_app_tabsheader"),

@@ -39,11 +39,11 @@ layui
                                 .text()
                         ];
                     };
-                    
+
                     $(city).html('');
                     $(city).append('<option value="" selected>请选择设备品牌</option>');
                     if (cs) {
-                        cs = cs.brand;
+                        cs = cs.child;
                         for (var i in cs) {
                             $(city).append('<option>' + cs[i].name + '</option>');
                             pca.ckeys[cs[i].name] = cs[i];
@@ -72,9 +72,9 @@ layui
                     $(area).html('');
                     $(area).append('<option value="" selected>请选择设备型号</option>');
                     if (cs) {
-                        cs = cs.model;
+                        cs = cs.child;
                         for (var i in cs) {
-                            $(area).append('<option>' + cs[i] + '</option>');
+                            $(area).append('<option value=' + cs[i].id + '>' + cs[i].name + '</option>');
                         }
                         $(area)
                             .find('option:eq(1)')
@@ -104,7 +104,6 @@ layui
                 // $(obj).append('<option>全部</option>');
                 form.render();
             }
-
             pca.formHidden = function (obj, val) {
                 if (!$('#pca-hide-' + obj).length) 
                     $('body').append('<input id="pca-hide-' + obj + '" type="hidden" value="' + val + '" />');

@@ -98,7 +98,7 @@
         {{# } }}
     </script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -189,11 +189,10 @@
                             [{
                                 field: 'community',
                                 title: '学校社区',
-                                sort: true,
                             }, {
                                 field: 'pjtName',
                                 title: '项目名称',
-
+                                minWidth:250
                             }, {
                                 field: 'cate',
                                 title: '设备类型',
@@ -345,18 +344,7 @@
             }).on('click', '.refresh', function () {
                 window.location.reload()
             }).on('click', '.go', function () {
-                layer.open({
-                    type: 2,
-                    title:'设备状态统计详情',
-                    shade: false,
-                    area: ['100%','100%'],
-                    maxmin: true,
-                    content: '../../pages/Report/deviceStateDetail.html',
-                    zIndex: layer.zIndex, //重点1
-                    success: function (layero) {
-                        layer.setTop(layero); //重点2
-                    }
-                });
+                initModal('设备状态统计详情','../../pages/Report/deviceStateDetail.html')
             });
         });
     </script>

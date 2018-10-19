@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../css/layui.css">
-    <title>编辑主机</title>
+    <title>编辑主板</title>
     <style>
         .site-title fieldset {
             border: none;
@@ -85,18 +85,19 @@
 
 <body>
     <div class="layui-form-item">
-        <button class="layui-btn layui-btn-sm layui-btn-danger back" style="display: none">返回</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger  back" style="display: none">返回</button>
     </div>
 
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-card" style="border:1px solid #f6f6f6;">
-                    <div class="layui-card-header">编辑主机</div>
+                    <div class="layui-card-header">编辑主板</div>
                     <div class="layui-card-body" style="padding: 15px;display: flex;">
                         <div class="layui-col-md8">
+
                             <div class="layui-form-item">
-                                <label class="layui-form-label">主机分类：</label>
+                                <label class="layui-form-label">主板分类：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
                                     <select name="cate" lay-filter="cate" id="cate" lay-verify="">
                                     </select>
@@ -104,7 +105,7 @@
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
                             <div class="layui-form-item">
-                                <label class="layui-form-label">主机品牌：</label>
+                                <label class="layui-form-label">主板品牌：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
                                     <select name="brandName" lay-filter="brandName" id="brandName" lay-verify="">
                                     </select>
@@ -112,7 +113,7 @@
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
                             <div class="layui-form-item">
-                                <label class="layui-form-label">主机型号：</label>
+                                <label class="layui-form-label">主板型号：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
                                     <select name="brandCode" lay-filter="brandCode" id="brandCode" lay-verify="">
                                     </select>
@@ -121,26 +122,29 @@
                             </div>
                             <div class="layui-form-item">
 
-                                <label class="layui-form-label">主机编号：</label>
-                                <div class="layui-input-inline" style="width: 50%;">
-                                    <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input">
-
-                                </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
-                            </div>
-                            <div class="layui-form-item">
-
-                                <label class="layui-form-label">设备归属方：</label>
+                                <label class="layui-form-label">主板编号：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
                                     <!-- <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input"> -->
                                     <select name="devSeq" id="devSeq" lay-filter="devSeq">
-                                        <option value="01">服务商</option>
+                                        <option value="">请选择</option>
                                     </select>
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
-                        </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">设备归属方：</label>
+                                <div class="layui-input-inline" style="width: 50%;">
+                                    <!-- <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input"> -->
+                                    <select name="belong" lay-filter="devSeq">
+                                        <option value="01">集优科技</option>
+                                    </select>
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*必填</div>
 
+
+
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -164,16 +168,7 @@
 
             $('body').on('click', '.back', function () {
                 window.history.back();
-            }).on('click', '.showPingtaibtn', function () {
-                $(this).addClass('layui-btn-danger').siblings('a').removeClass('layui-btn-danger');
-                $(this).parent().parent().find('.showPingtai').show().siblings('.showSelf').hide();
-
-            }).on('click', '.showSelfbtn', function () {
-                $(this).addClass('layui-btn-danger').siblings('a').removeClass('layui-btn-danger');
-                $(this).parent().parent().find('.showSelf').show().siblings('.showPingtai').hide();
-
             });
-
 
             var url = location.href;
             var data = parseURL(url);
@@ -182,7 +177,8 @@
                     $('.back').show();
                 };
             }
-            common.getSinEQInfo(data.id, function (res) {
+            // 获取单条数据
+            common.getSinMBInfo(data.id, function (res) {
                 console.log(res);
                 form.render();
                 form.val("searchBox", {
@@ -196,21 +192,23 @@
                 });
                 form.render();
             });
+
+
             // 表单提交
             form.on('submit(searchBox)', function (data) {
                 // console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
                 parent.layer.open({
-                    content: '确定保存新主机?',
+                    content: '确定保存新设备?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
                         parent.layer.closeAll();
                         //do something
-                        common.updateEQ(data.field, function (res) {
+                        common.updateMBInfo(data.field, function (res) {
                             if (res.code == 200) {
-                                parent.layer.confirm('保存成功，继续添加主机?', {
+                                parent.layer.confirm('保存成功，继续添加设备?', {
                                     icon: 3,
                                     title: '提示',
-                                    btn: ['继续添加', '返回主机列表'],
+                                    btn: ['继续添加', '返回设备列表'],
                                     yes: function (index) {
                                         parent.layer.closeAll();
                                         window.location.reload();
@@ -218,7 +216,7 @@
                                     btn2: function (index) {
                                         parent.layer.closeAll()
                                         window.location.href =
-                                            'pages/Device/host.html';
+                                            'pages/Device/list.html';
                                     }
                                 });
                             } else {

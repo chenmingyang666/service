@@ -107,7 +107,7 @@
 
     <script src="../data.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -174,8 +174,6 @@
                 theme: '#393D49',
                 max: getYestoday(new Date())
             });
-            //    二维码处理
-
             // 获取二维码列表
             var limitcount = 10,
                 curnum = 1,
@@ -184,7 +182,6 @@
                     size: 10,
                     pageSize: 10
                 };
-
             function productsearch(param, start, limitsize) {
                 // param.page = start;
                 // param.pageSize = limitsize;
@@ -198,6 +195,7 @@
                             [{
                                 field: 'name',
                                 title: '项目名称',
+                                minWidth:250
 
                             }, {
                                 field: 'cate_name',
@@ -321,7 +319,7 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'detail') {
-                   layer.msg('wait')
+                   initModal('设备活跃度统计详情','activityDetail.html')
                 }
             });
             $('body').on('click', '.demoTable .layui-btn', function () {
