@@ -154,7 +154,8 @@
     <div class="layui-form">
         <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
             <div class="demoTable" style="text-align: right;margin: 10px 0 0">
-                <button class="layui-btn layui-btn-primary" data-type="addDevice">+新增项目</button>
+                <button class="layui-btn layui-btn-primary" data-type="addDevice">+新增</button>
+                <button class="layui-btn layui-btn-primary" data-type="delete">删除</button>
                 <button class="layui-btn layui-btn-primary" data-type="batchEnable">批量上线</button>
                 <button class="layui-btn layui-btn-primary" data-type="batchDisable">批量下线</button>
                 <!-- <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出项目</button> -->
@@ -219,7 +220,7 @@
     </script>
 
     <script>
-        layui.use(['layer', 'form', 'table', 'laytpl', 'laypage', 'common'], function () {
+        layui.use(['layer', 'form', 'table', 'laytpl', 'laypage', 'common','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -243,7 +244,8 @@
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
                     addDevice: function () { //新增项目
-                        window.location.href = 'addProject.html';
+                        // window.location.href = 'addProject.html';
+                        initModal('添加项目设备','addProject.html');
                     },
                     batchEnable: function () { //批量启用
                         var checkStatus = table.checkStatus('data_demo'),
@@ -298,9 +300,34 @@
                         } else {
                             layer.msg('请先勾选项目')
                         }
+                    },
+                    delete:function(){
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        var ids = [];
+                        data.forEach(function (ele, index) {
+                            ids.push(ele.id);
+                        });
+                        // ids=ids.toString();
+                        console.log(ids.toString());
+                        if (ids == '') {
+                            layer.msg('请选择要删除的信息');
+                        } else {
+                            parent.layer.confirm('确认删除吗?', function () {
+                                common.deleteProjectDevices(ids.toString(), function (res) {
+                                    if (res.code == 200) {
+                                        productsearch(param, curnum, limitcount);
+                                        layer.msg('已删除');
+                                        parent.layer.closeAll();
+                                    } else {
+                                        layer.msg('删除失败');
+                                        parent.layer.closeAll();
+                                    }
+                                });
+                            })
+                        }
                     }
                 };
-
             var limitcount = 10,
                 curnum = 1,
                 param = {
@@ -477,10 +504,13 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
-                    window.location.href = 'editProject.html?pjt_id=' + data.pjt_id + '&cate=' + data.cate +
-                        '&brandcode=' +
-                        data.brandcode + '&brandname=' + data.brandname + '&pricing_id=' + data.pricing_id +
-                        '&device_id=' + data.device_id;
+                    // window.location.href = 'editProject.html?pjt_id=' + data.pjt_id + '&cate=' + data.cate +
+                    //     '&brandcode=' +
+                    //     data.brandcode + '&brandname=' + data.brandname + '&pricing_id=' + data.pricing_id +
+                    //     '&device_id=' + data.device_id;
+                        initModal('编辑项目设备','editProject.html?pjt_id=' + data.pjt_id + '&cate=' + data.cate +
+                        '&brandcode=' +data.brandcode + '&brandname=' + data.brandname + '&pricing_id=' + data.pricing_id +
+                        '&device_id=' + data.device_id)
                 } else if (layEvent === 'del') {
                     layer.confirm('真的删除么', function (index) {
                         obj.del(); //删除对应行（tr）的DOM结构，并更新缓存

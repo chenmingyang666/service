@@ -83,18 +83,17 @@
     <script src="../../js/tool.js"></script>
 </head>
 <body>
-    <div class="layui-form-item">
+    <!-- <div class="layui-form-item">
         <button class="layui-btn layui-btn-sm layui-btn-danger  back" style="display: none">返回</button>
-    </div>
+    </div> -->
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-card" style="border:1px solid #f6f6f6;">
-                    <div class="layui-card-header">添加物联网卡</div>
+                    <!-- <div class="layui-card-header">新增物联网卡</div> -->
                     <div class="layui-card-body" style="padding: 15px;display: flex;">
                         <div class="layui-col-md8">
                             <div class="layui-form-item">
-                                
                                     <label class="layui-form-label">物联网卡号：</label>
                                     <div class="layui-input-inline" style="width: 50%;">
                                         <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input">
@@ -168,7 +167,6 @@
                     content: '确定保存新物联网卡?',
                     btn: ['确定', '取消'], 
                     yes: function (index, layero) {
-                        parent.layer.closeAll();
                         //do something
                         common.updateDeviceInfo(data.field, function (res) {
                             if (res.code == 200) {
@@ -182,7 +180,7 @@
                                     },
                                     btn2: function (index) {
                                         parent.layer.closeAll()
-                                        window.location.href ='pages/Device/thingscard.html';
+                                        // window.location.href ='pages/Device/thingscard.html';
                                     }
                                 });
                             } else {

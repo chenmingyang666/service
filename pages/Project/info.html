@@ -110,7 +110,7 @@
 
     <!-- <script src="../data.js"></script> -->
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -138,7 +138,8 @@
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
                     addInfo: function () { //新增设备
-                        window.location.href = 'addInfo.html?isTrue=1';
+                        // window.location.href = 'addInfo.html?isTrue=1';
+                        initModal('新增项目信息','addInfo.html')
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -311,7 +312,8 @@
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
                     //do somehing
-                    window.location.href = 'editInfo.html?id=' + data.id;
+                    // window.location.href = 'editInfo.html?id=' + data.id;
+                    initModal('编辑项目信息','editInfo.html?id=' + data.id)
                 } else if (layEvent === 'del') {
                     console.log(data.id);
 

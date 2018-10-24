@@ -18,8 +18,6 @@
 </head>
 
 <body>
-
-
     <div class="layui-tab">
         <ul class="layui-tab-title">
             <li class="layui-this">申请结算</li>
@@ -97,27 +95,7 @@
                         // if (data.length == 0) {
                         //     return layer.msg('请选择数据')
                         // }
-                        parent.layer.confirm('确认导出二维码数据?', {
-                            icon: 3,
-                            title: '提示',
-                            btn: ['确认', '取消'],
-                            yes: function (index) {
-                                var qrCode = $("input[name='qrCode']").val(),
-                                    status = $("select[name='status']").next().find(
-                                        'dl dd.layui-this').attr('lay-value');
-                                var urlStr = common.baseUrl +
-                                    'common/exportQR?userId=' +
-                                    layui.sessionData('id').id + '&qrCode=' + qrCode +
-                                    '&status=' + status;
-                                urlStr = urlStr.replace("undefined", '');
-                                console.log(urlStr);
-                                window.location.href = urlStr;
-                                parent.layer.closeAll()
-                            },
-                            btn2: function (index) {
-                                parent.layer.closeAll()
-                            }
-                        });
+                        
                     },
                     getCheckLength: function () { //获取选中数目
                         var checkStatus = table.checkStatus('data_demo'),
@@ -279,15 +257,7 @@
                 var data = obj.data; //获得当前行数据
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
-                if (layEvent === 'details') {
-
-
-                    window.location.href = 'summaryDetail.html?vendor_id=' + layui.sessionData('id').id +
-                        '&startTime=' + $('input[name="startTime"]').val() +
-                        '&endTime=' + $('input[name="endTime"]').val() + '&address=' + $(
-                            'input[name="address"]').val() + '&pjtName=' + $('input[name="pjtName"]').val() +
-                        '&productName=' + $('input[name="productName"]').val();
-                }
+               
             });
             $('body').on('click', '.demoTable .layui-btn', function () {
                 var type = $(this).data('type');
@@ -296,5 +266,4 @@
         });
     </script>
 </body>
-
 </html>

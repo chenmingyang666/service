@@ -135,7 +135,7 @@
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -192,7 +192,8 @@
                         var checkStatus = table.checkStatus('data_demo');
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     }, add: function () {
-                        window.location.href = "addCard.html?isTrue=1"
+                        // window.location.href = "addCard.html?isTrue=1"
+                        initModal('新增物联网卡','addCard.html')
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -394,7 +395,7 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
-                  window.location.href="editCard.html?isTrue=1"
+                  initModal('编辑物联网卡',editCard.html)
                 } else if (layEvent === 'del') {
                     console.log(data.id);
                     layer.confirm('真的删除行么', function (index) {

@@ -98,7 +98,7 @@
         {{# } }}
     </script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate','main'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate', 'main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -192,7 +192,7 @@
                             }, {
                                 field: 'pjtName',
                                 title: '项目名称',
-                                minWidth:250
+                                minWidth: 250
                             }, {
                                 field: 'cate',
                                 title: '设备类型',
@@ -206,36 +206,27 @@
                                 field: '0',
                                 title: '空闲',
                                 align: 'center',
-                                // templet: '<div class="go">{{ d["0"] }}</div>'
                                 templet: '<div><a class="layui-table-link go" title="点击看设备">{{d["0"]}}</a></div>'
-
                             }, {
                                 field: '1',
                                 title: '支付中',
                                 align: 'center',
                                 templet: '<div><a class="layui-table-link go" title="点击看设备">{{d["1"]}}</a></div>'
-
-
                             }, {
                                 field: '2',
                                 title: '运行中',
                                 align: 'center',
                                 templet: '<div><a class="layui-table-link go" title="点击看设备">{{d["2"]}}</a></div>'
-
-
                             }, {
                                 field: '3',
                                 title: '离线',
                                 align: 'center',
                                 templet: '<div><a class="layui-table-link go" title="点击看设备">{{d["3"]}}</a></div>'
-
                             }, {
                                 field: '4',
                                 title: '故障',
                                 align: 'center',
                                 templet: '<div><a class="layui-table-link go" title="点击看设备">{{d["4"]}}</a></div>'
-
-
                             }]
                         ],
 
@@ -309,7 +300,6 @@
                     form.render();
                 }
             });
-
             // 监听表格内编辑
             table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
                 layer.msg('编辑保存');
@@ -334,7 +324,6 @@
                         productsearch(param, curnum, limitcount);
                         layer.msg('删除成功')
                         //向服务端发送删除指令
-
                     });
                 }
             });
@@ -344,10 +333,9 @@
             }).on('click', '.refresh', function () {
                 window.location.reload()
             }).on('click', '.go', function () {
-                initModal('设备状态统计详情','../../pages/Report/deviceStateDetail.html')
+                initModal('设备状态统计详情', '../../pages/Report/deviceStateDetail.html')
             });
         });
     </script>
 </body>
-
 </html>

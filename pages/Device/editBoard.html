@@ -92,7 +92,7 @@
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-card" style="border:1px solid #f6f6f6;">
-                    <div class="layui-card-header">编辑主板</div>
+                    <!-- <div class="layui-card-header">编辑主板</div> -->
                     <div class="layui-card-body" style="padding: 15px;display: flex;">
                         <div class="layui-col-md8">
 
@@ -201,7 +201,7 @@
                     content: '确定保存新设备?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
-                        parent.layer.closeAll();
+                      
                         //do something
                         common.updateMBInfo(data.field, function (res) {
                             if (res.code == 200) {
@@ -215,8 +215,8 @@
                                     },
                                     btn2: function (index) {
                                         parent.layer.closeAll()
-                                        window.location.href =
-                                            'pages/Device/list.html';
+                                        // window.location.href =
+                                        //     'pages/Device/list.html';
                                     }
                                 });
                             } else {

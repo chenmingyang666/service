@@ -50,19 +50,16 @@
 </head>
 
 <body>
-    <div class="layui-form-item">
-        <button class="layui-btn layui-btn-sm layui-btn-danger  back" style="display: none">返回</button>
-    </div>
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-form-item" style="border:1px solid #f6f6f6;">
-                    <div class="layui-card-header">新增营业时间</div>
+                    <!-- <div class="layui-card-header">新增营业时间</div> -->
                     <div class="layui-card-body" style="padding: 15px;">
                         <div class="layui-form-item">
                             <label class="layui-form-label">营业时间名称：</label>
                             <div class="layui-input-inline" style="width: 50%">
-                                <input type="text" name="name" id="name" lay-verify="required|hourName"  placeholder="输入名称"
+                                <input type="text" name="name" id="name" lay-verify="hourName|required"  placeholder="输入名称"
                                     autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid layui-word-aux">*限定21个字符</div>
@@ -141,7 +138,7 @@
                 window.history.back();
             });
 
-            form.render();
+           
             // 日期
             laydate.render({
                 elem: '.workTime1',
@@ -169,44 +166,42 @@
                 format: 'HH:mm:ss',
                 theme: '#393D49',
             });
-
-
             form.verify({
                 hourName:function (e) {
-                    if(e.length<21){
+                    if(e.length>21){
                         return '名称限定21个字符'
                     }
                 }
             });
+            form.render();
             form.on('submit(searchBox)', function (data) {
 
                 if (data.field.community == '') {
                     layer.msg('请选择学校')
                 } else {
                     parent.layer.open({
-                        content: '确定保存项目信息?',
+                        content: '确定保存信息?',
                         btn: ['确定', '取消'],
                         fixed: true,
                         offset: '40%',
                         yes: function (index, layero) {
-                            parent.layer.closeAll();
                             //do something
-                            common.addProjectInfo(data.field, function (res) {
+                            common.addRule(data.field, function (res) {
                                 if (res.code == 200) {
-                                    parent.layer.confirm('保存成功，继续添加项目信息?', {
+                                    parent.layer.confirm('保存成功，继续添加信息?', {
                                         icon: 3,
                                         title: '提示',
                                         fixed: true,
                                         offset: '40%',
-                                        btn: ['继续添加', '返回项目列表'],
+                                        btn: ['继续添加', '返回列表'],
                                         yes: function (index) {
-                                            parent.layer.closeAll();
+                                            parent.layer.close();
                                             window.location.reload();
                                         },
                                         btn2: function (index) {
                                             parent.layer.closeAll()
-                                            window.location.href =
-                                                'pages/Project/info.html';
+                                            // window.location.href =
+                                            //     'pages/Project/info.html';
                                         }
 
                                     });
@@ -217,18 +212,14 @@
                                     } else {
                                         layer.msg('保存失败');
                                     }
-                                    parent.layer.closeAll();
+                                    
                                 }
                             })
                         },
                         btn2: function (index) {
-                            parent.layer.closeAll()
+                            parent.layer.close()
 
                         },
-                        cancel: function (index) {
-                            parent.layer.closeAll()
-
-                        }
                     });
                 }
 

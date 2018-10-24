@@ -46,14 +46,11 @@
 </head>
 
 <body>
-    <div class="layui-form-item">
-        <button class="layui-btn layui-btn-sm layui-btn-danger  back">返回</button>
-    </div>
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-card" style="border:1px solid #f6f6f6;">
-                    <div class="layui-card-header">编辑设备</div>
+                    <!-- <div class="layui-card-header">编辑设备</div> -->
                     <div class="layui-card-body" style="padding: 15px;display: flex;">
                         <div class="layui-col-md8">
                             <div class="layui-form-item">
@@ -338,9 +335,7 @@
                 window.pca = pca;
                 return pca;
             })($);
-            $('body').on('click', '.back', function () {
-                window.history.back();
-            }).on('click', '.showPingtaibtn', function () {
+            $('body').on('click', '.showPingtaibtn', function () {
                 $(this).addClass('layui-btn-danger').siblings('a').removeClass('layui-btn-danger');
                 $(this).parent().parent().find('.showPingtai').show().siblings('.showSelf').hide();
             }).on('click', '.showSelfbtn', function () {
@@ -639,7 +634,7 @@
                     content: '确定保存编辑内容?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
-                        parent.layer.closeAll();
+                       
                         common.updateDeviceInfo(data.field, function (res) {
                             if (res.code == 200) {
                                 parent.layer.closeAll();
@@ -652,8 +647,8 @@
                                     },
                                     btn2: function (index) {
                                         parent.layer.closeAll();
-                                        window.location.href =
-                                            'pages/Device/list.html';
+                                        // window.location.href =
+                                        //     'pages/Device/list.html';
                                     }
                                 });
                             } else {

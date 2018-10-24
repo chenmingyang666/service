@@ -88,15 +88,13 @@
 </head>
 
 <body>
-    <div class="layui-form-item">
-        <button class="layui-btn layui-btn-sm layui-btn-danger  back" style="display: none">返回</button>
-    </div>
+   
 
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-card" style="border:1px solid #f6f6f6;">
-                    <div class="layui-card-header">添加设备</div>
+                    <!-- <div class="layui-card-header">添加设备</div> -->
                     <div class="layui-card-body" style="padding: 15px;display: flex;">
                         <div class="layui-col-md8">
                             <div class="layui-form-item">
@@ -242,9 +240,7 @@
                 form = layui.form,
                 element = layui.element,
                 common = layui.common;
-            $('body').on('click', '.back', function () {
-                window.history.back();
-            }).on('click', '.showPingtaibtn', function () {
+            $('body').on('click', '.showPingtaibtn', function () {
                 $(this).addClass('layui-btn-danger').siblings('a').removeClass('layui-btn-danger');
                 $(this).parent().parent().find('.showPingtai').show().siblings('.showSelf').hide();
             }).on('click', '.showSelfbtn', function () {
@@ -554,7 +550,6 @@
                     content: '确定保存新设备?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
-                        parent.layer.closeAll();
                         common.addDeviceInfo(data.field, function (res) {
                             if (res.code == 200) {
                                 parent.layer.confirm('保存成功，继续添加设备?', {
@@ -567,8 +562,8 @@
                                     },
                                     btn2: function (index) {
                                         parent.layer.closeAll()
-                                        window.location.href =
-                                            'pages/Device/list.html';
+                                        // window.location.href =
+                                        //     'pages/Device/list.html';
                                     }
                                 });
                             } else {
@@ -592,11 +587,7 @@
             });
             var url = location.href;
             var data = parseURL(url);
-            if (data) {
-                if (data.isTrue) {
-                    $('.back').show();
-                };
-            }
+           
         });
     </script>
 </body>

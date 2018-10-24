@@ -109,7 +109,7 @@
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-form-item" style="border:1px solid #f6f6f6;">
-                    <div class="layui-card-header">新增项目</div>
+                    <!-- <div class="layui-card-header">新增项目</div> -->
                     <div class="layui-card-body" style="padding: 15px;">
                         <div class="layui-col-md5">
                             <div class="layui-form-item">
@@ -596,9 +596,7 @@
                                     },
                                     btn2: function (index) {
                                         parent.layer.closeAll()
-
-                                        window.location.href =
-                                            'pages/Project/list.html';
+                                        // window.location.href = 'pages/Project/list.html';
                                     }
 
                                 });
@@ -608,11 +606,9 @@
                         })
                     },
                     btn2: function (index) {
-                        parent.layer.closeAll()
+                        parent.layer.close()
                     },
-                    cancel: function (index) {
-                        parent.layer.closeAll()
-                    }
+                 
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });

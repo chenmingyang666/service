@@ -1,16 +1,16 @@
 ﻿layui
     .define(['jquery'], function (exports) {
         var $ = layui.jquery,
-            baseUrl = 'http://api.gelives.com/';
+            // baseUrl = 'http://api.gelives.com/';
             bxUrl = 'http://api.cloudbox.net.cn:8002/';
         //  baseUrl ='http://192.168.1.200:80/';
-        // baseUrl = 'http://192.168.1.48/';
+        baseUrl = 'http://192.168.1.48/';
         // baseUrl = 'http://192.168.1.53:80/';
         var obj = {
-            baseUrl: 'http://api.gelives.com/',
+            // baseUrl: 'http://api.gelives.com/',
             bxUrl: 'http://api.cloudbox.net.cn:8002/',
             // baseUrl: 'http://192.168.1.200:80/',
-            // baseUrl: 'http://192.168.1.48/',
+            baseUrl: 'http://192.168.1.48/',
             // baseUrl: 'http://192.168.1.53:80/', 注册用户
             regUser: function (field, callback) {
                 $.ajax({
@@ -1248,11 +1248,13 @@
                     success: callback
                 });
             },
-            // 新增营业时间
-            addRule: function (params, callback) {
+
+
+            // 营业时间
+            getHourList: function (params, callback) {
                 $.ajax({
                     type: 'post',
-                    url: baseUrl + 'rule/add',
+                    url: baseUrl + 'rule',
                     data: params,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -1338,11 +1340,13 @@
                     success: callback
                 });
             },
-
+            
+            
             // 项目管理 项目列表
             getProjectDetail: function (param, callback) {
                 $.ajax({
-                    url: baseUrl + 'project/listDevice',
+                    // url: baseUrl + 'project/listDevice',
+                    url: baseUrl + 'pb',
                     data: param,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -1350,6 +1354,24 @@
                             .token
                     },
                     contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 项目批量删除
+            deleteProjectDevices: function (ids, callback) {
+                $.ajax({
+                    url: baseUrl + 'dev/deletes',
+                    type: 'post',
+                    data:{'ids':ids},
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -1368,8 +1390,6 @@
                             .token
                     },
                     contentType: 'application/json',
-
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -1396,7 +1416,8 @@
             //    通过选中项目名称获取项目信息
             getProjectDropListInfo: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'project/edit/' + id,
+                    // url: baseUrl + 'project/edit/' + id,
+                    url: baseUrl + 'pjt/get/' + id,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -1412,7 +1433,8 @@
             // 根据id更新项目信息
             updateProjectInfo: function (param, callback) {
                 $.ajax({
-                    url: baseUrl + 'project/update',
+                    // url: baseUrl + 'project/update',
+                    url: baseUrl + 'pjt/update',
                     type: 'post',
                     data: JSON.stringify(param),
                     headers: {
@@ -1447,7 +1469,8 @@
             // 根据id删除多个项目信息
             deleteProjectInfos: function (ids, callback) {
                 $.ajax({
-                    url: baseUrl + 'project/deletes',
+                    // url: baseUrl + 'project/deletes',
+                    url: baseUrl + 'pjt/deletes',
                     type: 'post',
                     data: {
                         "ids": ids
@@ -1465,7 +1488,6 @@
                 })
             },
             // 项目设备选择设备
-
             addProjectDetail: function (datas, callback) {
                 $.ajax({
                     url: baseUrl + 'project/listDetail',
@@ -1502,7 +1524,8 @@
             //新增项目post请求
             addProjectDevice: function (datas, callback) {
                 $.ajax({
-                    url: baseUrl + 'project/relate',
+                    // url: baseUrl + 'project/relate',
+                    url: baseUrl + 'pjt/update',
                     type: 'post',
                     data: JSON.stringify(datas),
                     headers: {
@@ -1514,7 +1537,6 @@
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
-
                     success: callback
                 })
             },
@@ -1522,10 +1544,9 @@
             addProjectInfo: function (datas, callback) {
                 $.ajax({
                     type: 'post',
-                    url: baseUrl + 'project/save',
+                    // url: baseUrl + 'project/save',
+                    url: baseUrl + 'pjt/add',
                     data: JSON.stringify(datas),
-                    // data:datas,
-
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -1535,15 +1556,15 @@
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
-                    dataType: 'json',
-
+                    dataType: 'json',                   
                     success: callback
                 })
             },
             // 项目信息管理
-            getProjectList: function (param, callback) {
+            getProjectList: function (param,callback) {
                 $.ajax({
-                    url: baseUrl + 'project/list',
+                    // url: baseUrl + 'project/list',
+                    url: baseUrl + 'pjt',
                     data: param,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -1576,7 +1597,8 @@
             // 定价信息列表
             getPricingList: function (param, callback) {
                 $.ajax({
-                    url: baseUrl + 'pricing/list',
+                    // url: baseUrl + 'pricing/list',
+                    url: baseUrl + 'pic',
                     data: param,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -1593,8 +1615,8 @@
             // 编辑单个的定价
             getSinPricing: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'pricing/list/' + id,
-
+                    // url: baseUrl + 'pricing/list/' + id,
+                    url: baseUrl + 'pic/get/' + id,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -1610,7 +1632,8 @@
             // 保存编辑定价
             savePricings: function (datas, callback) {
                 $.ajax({
-                    url: baseUrl + 'pricing/update',
+                    // url: baseUrl + 'pricing/update',
+                    url: baseUrl + 'pic/update',
                     type: 'post',
                     data: JSON.stringify(datas),
                     headers: {
@@ -1628,7 +1651,8 @@
             // 删除多个信息
             deletePricings: function (ids, callback) {
                 $.ajax({
-                    url: baseUrl + 'pricing/deletes',
+                    // url: baseUrl + 'pricing/deletes',
+                    url: baseUrl + 'pic/deletes',
                     type: 'post',
                     data: {
                         "ids": ids
@@ -1664,7 +1688,8 @@
             // 保存定价信息
             savePricing: function (param, callback) {
                 $.ajax({
-                    url: baseUrl + 'pricing/save',
+                    // url: baseUrl + 'pricing/save',
+                    url: baseUrl + 'pic/add',
                     type: 'post',
                     data: JSON.stringify(param),
                     headers: {

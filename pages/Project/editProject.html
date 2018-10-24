@@ -107,15 +107,15 @@
 </head>
 
 <body>
-    <div class="layui-form-item">
+    <!-- <div class="layui-form-item">
         <button class="layui-btn layui-btn-sm layui-btn-danger  back">返回</button>
-    </div>
+    </div> -->
 
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-form-item" style="border:1px solid #f6f6f6;">
-                    <div class="layui-card-header">编辑项目</div>
+                    <!-- <div class="layui-card-header">编辑项目</div> -->
                     <div class="layui-card-body" style="padding: 15px;">
                         <div class="layui-col-md5">
                             <div class="layui-form-item">
@@ -150,21 +150,16 @@
                         </div>
                         <div class="layui-col-md7">
 
+                           
                             <div class="layui-form-item">
-                                <label class="layui-form-label"></label>
-                                <div class="layui-input-block">
-                                    <span class=""></span>
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">合同编号：</label>
+                                <label class="layui-form-label">项目编号：</label>
                                 <div class="layui-input-inline">
                                     <span class="contract"></span>
                                 </div>
                             </div>
 
                             <div class="layui-form-item">
-                                <label class="layui-form-label">合同服务期：</label>
+                                <label class="layui-form-label">项目周期：</label>
                                 <div class="layui-input-inline" width="auto">
                                     <span class="contractPeriod"></span>
                                 </div>
@@ -173,6 +168,12 @@
                                 <label class="layui-form-label">项目地址：</label>
                                 <div class="layui-input-inline">
                                     <span class="address"></span>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">营业时间：</label>
+                                <div class="layui-input-inline">
+                                    <span class="workTime"></span>
                                 </div>
                             </div>
                         </div>
@@ -480,6 +481,7 @@
                     res.data.endTime));
                 $('.address').text(res.data.address);
                 $('.community').text(res.data.community);
+                $('.workTime').text(res.data.community);
                 var urlStr = {
                     'pjtId': mainData.pjt_id,
                     'cate': mainData.cate,
@@ -525,9 +527,6 @@
                             form.render();
                         };
                     });
-
-
-
                     $('#pricingId').next().find('dd[lay-value=' + mainData.pricing_id + ']').click();
                 });
             };
@@ -580,7 +579,6 @@
                     fixed: true,
                     offset: '40%',
                     yes: function (index, layero) {
-                        parent.layer.closeAll();
                         common.addProjectDevice(submitData, function (res) {
                             console.log(res);
                             if (res.code == 200) {
@@ -591,11 +589,11 @@
                                     offset: '40%',
                                     btn: ['继续编辑', '返回列表'],
                                     yes: function (index) {
-                                        parent.layer.closeAll();
+                                        parent.layer.close();
                                     },
                                     btn2: function (index) {
                                         parent.layer.closeAll();
-                                        window.location.href ='pages/Project/list.html';
+                                        // window.location.href ='pages/Project/list.html';
                                     }
                                 });
                             }
@@ -604,9 +602,7 @@
                     btn2: function (index) {
                         parent.layer.closeAll()
                     },
-                    cancel: function (index) {
-                        parent.layer.close(All)
-                    }
+                  
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });

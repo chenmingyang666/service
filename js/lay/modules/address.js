@@ -170,17 +170,18 @@ layui
             form.render();
             form.on('select(commuType)', function (data) {
                 var value = data.value;
-                console.log($(this).index());
-                // if (value) {     that.commuType(areas[$(this).index() - 1].child); } else {
-                // $("select[name=commuType]").attr("disabled", "disabled");     form.render() }
-                if (data.value == '0') {
+                if (value == '0') {
                     $('.type1').show();
                     $('.type2').hide();
-                    that.school(areas[data.value].child);
-                } else if (data.value == '1') {
+                     $('input[name="building"],input[name="floor"]').attr('lay-verify', 'required');
+                    that.school(areas[value].child);
+                    form.render();
+                } else if (value == '1') {
                     $('.type2').show();
                     $('.type1').hide();
-                    that.community(areas[data.value].child);
+                    $('input[name="building"],input[name="floor"]').removeAttr('lay-verify');
+                    that.community(areas[value].child);
+                    form.render();
                 }
             });
         }
@@ -203,7 +204,6 @@ layui
                     $("select[name=schoolArea]").attr("disabled", "disabled");
                     form.render()
                 }
-
             });
         }
         //加载校区

@@ -77,7 +77,7 @@
     </script>
 
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -104,8 +104,9 @@
                         var checkStatus = table.checkStatus('data_demo');
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
-                    addAddress: function () { //新增设备
-                        window.location.href = 'addHour.html?isTrue=1';
+                    addAddress: function () { 
+                        // window.location.href = 'addHour.html?isTrue=1';
+                        initModal('新增营业时间','addHour.html')
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -118,8 +119,8 @@
                         if (ids == '') {
                             layer.msg('请选择要删除的价格')
                         } else {
-                            parent.layer.confirm('确认删除吗?', function () {
-                                common.deletePricings(ids.toString(), function (res) {
+                            parent.layer.confirm('删除营业时间后，相关项目的营业时间将变为全天营业', function () {
+                                common.deleteRules(ids.toString(), function (res) {
                                     if (res.code == 200) {
                                         productsearch(param, curnum, limitcount);
                                         layer.msg('已删除');
@@ -147,7 +148,7 @@
                 };
             //列表查询方法
             function productsearch(param, start, limitsize) {
-                common.getPricingList(param, function (res) {
+                common.getHourList(param, function (res) {
                     console.log(res);
                     // 展示搜索结果的表格
                     table.render({
@@ -273,32 +274,11 @@
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
                     //do somehing
-                    window.location.href = 'editPrice.html?id=' + data.id;
-                } else if (layEvent === 'del') {
-                    console.log(data.id);
-                    parent.layer.confirm('确认删除价格"' + data.name + '"吗？', function (index) {
-                        common.deletePricing(data.id, function (res) {
-                            if (res.code == 200) {
-                                obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-                                layer.msg('删除成功')
-                                parent.layer.closeAll();
-                            } else {
-                                layer.msg(res.message)
-                            }
-                            parent.layer.close(index);
-
-                        });
-
-                    });
+                    // window.location.href = 'editPrice.html?id=' + data.id;
+                    initModal('编辑营业时间','editHour.html?id=' + data.id)
                 }
             });
-            // 监听表格内编辑
-            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                console.log(obj.value); //得到修改后的值
-                console.log(obj.field); //当前编辑的字段名
-                console.log(obj.data); //所在行的所有相关数据  
-                layer.msg('编辑保存')
-            });
+           
             //    设备控制开关
             form.on('switch(deviceControl)', function (data) {
                 console.log($(data.elem).parents('tr').attr('data-index'));

@@ -32,7 +32,6 @@
     <script src="../../js/tool.js"></script>
 </head>
 <body>
-    <!-- <button class="layui-btn layui-btn-danger  back">返回</button> -->
     <div class="site-title orderTitle">
         <fieldset>
             <legend>
@@ -137,9 +136,7 @@
                 $ = layui.jquery,
                 common = layui.common;
             var url = location.href;
-            $('body').on('click', '.back', function () {
-                window.history.back()
-            });
+          
 
             var order_num = parseURL(url).order_num,
                 giveData = new Array();

@@ -92,15 +92,13 @@
 </head>
 
 <body>
-    <div class="layui-form-item">
-        <button class="layui-btn layui-btn-sm layui-btn-danger  back">返回</button>
-    </div>
+  
 
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-form-item" style="border:1px solid #f6f6f6;">
-                    <div class="layui-card-header">编辑价格信息</div>
+                    <!-- <div class="layui-card-header">编辑价格信息</div> -->
                     <div class="layui-card-body" style="padding: 15px;">
                         <div class="layui-col-md5">
                             <div class="layui-form-item">
@@ -325,7 +323,6 @@
                         content: '确定保存编辑内容?',
                         btn: ['确定', '取消'],
                         yes: function (index, layero) {
-                            parent.layer.closeAll();
                             common.savePricings(data.field, function (res) {
                                 if (res.code == 200) {
                                     parent.layer.confirm('保存成功，继续编辑?', {
@@ -333,28 +330,23 @@
                                         title: '提示',
                                         btn: ['确定', '返回列表'],
                                         yes: function (index) {
-                                            parent.layer.closeAll();
+                                            parent.layer.close();
                                         },
                                         btn2: function (index) {
-                                            parent.layer.closeAll();
-                                            window.location.href =
-                                                'pages/Project/price.html';
+                                            parent.layer.close();
+                                           
                                         }
                                     });
 
                                 } else {
                                     layer.msg('保存失败');
-                                    parent.layer.closeAll();
                                 }
                             });
                         },
                         btn2: function (index) {
-                            parent.layer.closeAll();
+                            parent.layer.close();
                         },
-                        cancel: function (index) {
-                            parent.layer.closeAll();
-
-                        }
+                      
                     });
                 } else {
                     layer.msg('请设定功能价格');

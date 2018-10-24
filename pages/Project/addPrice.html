@@ -99,9 +99,7 @@
 </head>
 
 <body>
-    <div class="layui-form-item">
-        <button class="layui-btn layui-btn-sm layui-btn-danger  back" style="display: none;">返回</button>
-    </div>
+    
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
@@ -342,13 +340,13 @@
                                         offset: '40%',
                                         btn: ['继续添加', '返回产品价格管理'],
                                         yes: function (index) {
-                                            parent.layer.closeAll();
+                                            parent.layer.close();
                                             window.location.reload();
                                         },
                                         btn2: function (index) {
                                             parent.layer.closeAll();
-                                            window.location.href =
-                                                'pages/Project/price.html';
+                                            // window.location.href =
+                                            //     'pages/Project/price.html';
                                         }
 
                                     });
@@ -358,16 +356,13 @@
                                     } else {
                                         layer.msg('保存失败');
                                     }
-                                    parent.layer.closeAll();
                                 }
                             });
                         },
                         btn2: function (index) {
-                            parent.layer.closeAll();
+                            parent.layer.close();
                         },
-                        cancel: function (index) {
-                            parent.layer.closeAll();
-                        }
+                       
                     })
                 } else {
                     layer.msg('请设定功能价格');

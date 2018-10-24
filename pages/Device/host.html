@@ -147,7 +147,7 @@
         {{# } }}
     </script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -205,7 +205,7 @@
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
                     add: function () {
-                        window.location.href = "addHost.html?isTrue=1"
+                        initModal('新增主机','addHost.html')
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -391,7 +391,8 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
-                  window.location.href="editHost.html?isTrue=1"
+                //   window.location.href="editHost.html?isTrue=1"
+                  initModal('编辑主机','editHost.html')
                 } else if (layEvent === 'del') {
                     console.log(data.id);
                     layer.confirm('真的删除行么', function (index) {

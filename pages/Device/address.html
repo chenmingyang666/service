@@ -107,7 +107,7 @@
 
     <script src="../data.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -134,8 +134,8 @@
                         var checkStatus = table.checkStatus('data_demo');
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
-                    addAddress: function () { //新增设备
-                        window.location.href = 'addAddress.html?isTrue=1';
+                    addAddress: function () { 
+                        initModal('新增设备点','addAddress.html');
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -306,8 +306,7 @@
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
                     //do somehing
-                    window.location.href = 'editAddress.html?id=' + data.id
-
+                    initModal('编辑设备','editAddress.html')
                 } else if (layEvent === 'del') {
                     console.log(data);
                     parent.layer.confirm('确认删除设备点"' + data.name + '"吗？', function (index) {

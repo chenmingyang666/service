@@ -82,7 +82,7 @@
 
     <script src="../data.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -290,11 +290,16 @@
                 if (layEvent === 'details') {
 
 
-                    window.location.href = 'summaryDetail.html?vendor_id=' + layui.sessionData('id').id +
+                    // window.location.href = 'summaryDetail.html?vendor_id=' + layui.sessionData('id').id +
+                    //     '&startTime=' + $('input[name="startTime"]').val() +
+                    //     '&endTime=' + $('input[name="endTime"]').val() + '&address=' + $(
+                    //         'input[name="address"]').val() + '&pjtName=' + $('input[name="pjtName"]').val() +
+                    //     '&productName=' + $('input[name="productName"]').val();
+                        initModal('','summaryDetail.html?vendor_id=' + layui.sessionData('id').id +
                         '&startTime=' + $('input[name="startTime"]').val() +
                         '&endTime=' + $('input[name="endTime"]').val() + '&address=' + $(
                             'input[name="address"]').val() + '&pjtName=' + $('input[name="pjtName"]').val() +
-                        '&productName=' + $('input[name="productName"]').val();
+                        '&productName=' + $('input[name="productName"]').val())
                 }
             });
             $('body').on('click', '.demoTable .layui-btn', function () {

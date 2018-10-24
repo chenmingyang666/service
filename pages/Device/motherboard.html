@@ -138,7 +138,7 @@
     </script>
     <script src="../data.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -195,7 +195,8 @@
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
                     add: function () {
-                        window.location.href = "addBoard.html?isTrue=1"
+                        // window.location.href = "addBoard.html?isTrue=1"
+                        initModal('新增主板','addBoard.html')
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -357,7 +358,7 @@
                         layer.close(index);
                     });
                 } else if (layEvent === 'edit') {
-                    window.location.href = "editBoard.html?isTrue=1"
+                    initModal('编辑主板','editBoard.html');
                 }
             });
 

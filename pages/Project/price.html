@@ -106,7 +106,7 @@
 
     <script src="../../js/lay/modules/projectRelate.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -134,7 +134,7 @@
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
                     addAddress: function () { //新增设备
-                        window.location.href = 'addPrice.html?isTrue=1';
+                        initModal('新增定价','addPrice.html')
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -320,7 +320,8 @@
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
                     //do somehing
-                    window.location.href = 'editPrice.html?id=' + data.id;
+                    // window.location.href = 'editPrice.html?id=' + data.id;
+                    initModal('编辑价格信息','editPrice.html?id=' + data.id)
                 } else if (layEvent === 'del') {
                     console.log(data.id);
                     parent.layer.confirm('确认删除价格"' + data.name + '"吗？', function (index) {
