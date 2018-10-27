@@ -94,7 +94,7 @@
                                     </div>
                                     <div class="layui-form-mid layui-word-aux">*必填</div>
                                 </div>
-                                <div class="showSelf" style="display: none">
+                                <!-- <div class="showSelf" style="display: none">
                                     <div class="layui-input-inline" style="width: 50%;">
                                         <input type="text" name="number" autocomplete="off" class="layui-input">
                                     </div>
@@ -103,7 +103,7 @@
                                 <div class="layui-btn-container layui-input-inline">
                                     <a class="layui-btn layui-btn-primary layui-btn-danger layui-btn-xs showPingtaibtn">平台</a>
                                     <a class="layui-btn  layui-btn-primary layui-btn-xs showSelfbtn">自有</a>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">设备点名称：</label>
@@ -462,6 +462,7 @@
                     $('#eqptId').parents('.layui-form-item').find('.showSelfbtn').click();
                     $('input[name="number"]').val(res.data.number);
                 };
+                
             });
 
             function useDevice(data) {

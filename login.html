@@ -62,7 +62,7 @@
                         <div class="layui-row">
                             <div class="layui-col-xs7">
                                 <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
-                                <input type="text" name="vrifyCode" id="LAY-user-login-vercode" lay-verify="required"
+                                <input type="text" name="imageCode" id="LAY-user-login-vercode" lay-verify="required"
                                     placeholder="图形验证码" class="layui-input">
                             </div>
                             <div class="layui-col-xs5">
@@ -116,13 +116,13 @@
                 element = layui.element,
                 common = layui.common;
             form.render();
-            $('#LAY-user-get-vercode').attr("src", common.baseUrl + 'vender/getKaptcha');
+            $('#LAY-user-get-vercode').attr("src", common.baseUrl + 'code/image');
             $('body').on("click", "#LAY-user-get-vercode", function () {
-                this.src = common.baseUrl + "vender/getKaptcha";
+                this.src = common.baseUrl + "code/image";
             });
             if (layui.sessionData('token').token) {
                 window.location.href = 'index.html'
-            }
+            };
             //提交
             form.on('submit(LAY-user-login-submit)', function (obj) {
                 var field = obj.field;
@@ -130,14 +130,13 @@
                 common.loginRequest(field, function (res) {
                     console.log(res);
                     if (res.data) {
-
                         layui.sessionData('token', {
                             key: 'token',
                             value: res.data.token
                         });
                         layui.sessionData('nickName', {
                             key: 'nickName',
-                            value: res.data.nickName
+                            value: res.data.name
                         });
                         layui.sessionData('account', {
                             key: 'account',
@@ -147,7 +146,7 @@
                             key: 'id',
                             value: res.data.id
                         });
-                    }
+                    };
                     if (res.code == 200) {
                         layer.msg('登入成功', {
                             offset: '15px',
@@ -164,7 +163,7 @@
                             $("#LAY-user-get-vercode").click();
                             layer.msg('登录失败');
                         }
-                    }
+                    };
                 });
             });
 

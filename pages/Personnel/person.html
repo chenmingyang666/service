@@ -19,27 +19,27 @@
             <div class="layui-inline">
                 <label class="layui-form-label">人员姓名：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="pjtname" class="layui-input" placeholder="输入人员姓名" autocomplete="off">
+                    <input type="text" name="name" class="layui-input" placeholder="输入人员姓名" autocomplete="off">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">手机号：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="pjtname" class="layui-input" placeholder="输入手机号" autocomplete="off">
+                    <input type="text" name="phone" class="layui-input" placeholder="输入手机号" autocomplete="off">
                 </div>
             </div>
-           
             <div class="layui-inline">
                 <label class="layui-form-label">角色：</label>
                 <div class="layui-input-inline">
-                    <select name="cate" lay-filter="cate" lay-verify="">
+                    <!-- <select name="role" lay-filter="role" lay-verify="">
                         <option value="">请选择</option>
                         <option value="01">运行人员</option>
                         <option value="02">运维人员</option>
                         <option value="03">客服人员</option>
                         <option value="04">财务人员</option>
+                    </select> -->
+                    <input type="text" name="role" class="layui-input" placeholder="输入角色" autocomplete="off">
 
-                    </select>
                 </div>
             </div>
            
@@ -55,6 +55,11 @@
     <!-- 结果显示表格 -->
     <div class="layui-form">
         <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
+            <div class="demoTable" style="text-align: right;margin: 10px 0 0">
+                <button class="layui-btn layui-btn-primary" data-type="add">+新增</button>
+                <button class="layui-btn layui-btn-primary" data-type="delete">删除</button>
+               
+            </div>
         </table>
         <div id="laypage"></div>
 
@@ -76,7 +81,7 @@
 
     <script src="../data.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate','main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -103,7 +108,39 @@
                     isAll: function () { //验证是否全选
                         var checkStatus = table.checkStatus('data_demo');
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
-                    }
+                    },
+                    add: function () { //新增设备
+                        initModal('新增管理人员','addUser.html');
+                    },
+                    delete: function () { //批量删除设备
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        var ids = [];
+                        data.forEach(function (ele, index) {
+                            ids.push(ele.id);
+                        });
+                        // ids=ids.toString();
+                        console.log(ids.toString());
+                        if (ids.length > 0) {
+                            parent.layer.confirm('确认删除吗?', function () {
+                                common.deleteDevices(ids.toString(), function (res) {
+                                    if (res.code == 200) {
+                                        productsearch(param, curnum, limitcount);
+                                        layer.msg('已删除');
+                                        parent.layer.closeAll();
+                                    } else {
+                                        layer.msg('删除失败');
+                                        parent.layer.closeAll();
+                                    };
+
+                                });
+
+                            })
+                        } else {
+                            layer.msg('请选择要删除的设备')
+                        }
+
+                    },
                 };
           
             // 获取人员管理列表
@@ -116,11 +153,11 @@
                 };
 
             function productsearch(param, start, limitsize) {
-                // param.page = start;
-                // param.pageSize = limitsize;
+                param.page = start;
+                param.pageSize = limitsize;
                 param.vendorId = layui.sessionData('id').id;
 
-                common.getProfitData(param, function (res) {
+                common.getVendorUserData(param, function (res) {
                     console.log(res);
                     // 展示搜索结果的表格
                     table.render({
@@ -139,14 +176,14 @@
                                 title: '手机号',
                                 align: 'center',
                             }, {
-                                field: 'role',
+                                field: 'role_name',
                                 title: '角色',
                                 align: 'center'
                             }, {
-                                field: 'order_numer',
+                                field: 'create_date',
                                 title: '创建时间',
                                 align: 'center',
-                                templet:timeChange()
+                               
                             }, {
                                     fixed: 'right',
                                     width: 150,
@@ -196,7 +233,7 @@
                     param = {
                         page: 1,
                         pageSize: 10,
-                        size: 10
+                        
                     };
                 var obj = Object.assign(param, needData);
                 console.log(obj);

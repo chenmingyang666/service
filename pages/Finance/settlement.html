@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <div class="layui-tab">
+    <div class="layui-tab" lay-filter="setTitle">
         <ul class="layui-tab-title">
             <li class="layui-this">申请结算</li>
             <li>结算历史</li>
@@ -70,10 +70,13 @@
 
 
     <script type="text/html" id="toolBar">
+        {{# if(d.status=='0'){ }}
         <a style="cursor:pointer;" class="layui-btn layui-btn-xs" lay-event="settle">申请结算</a>
-        <span>待结算</span>
-        <span>已结算</span>
-        
+        {{# }else if(d.status=='1'){ }}
+            <span>结算中</span>
+        {{# }else if(d.status=='2'){ }}
+            <span>已结算</span>
+        {{#} }}
     </script>
 
     <script src="../data.js"></script>
@@ -95,7 +98,7 @@
                         // if (data.length == 0) {
                         //     return layer.msg('请选择数据')
                         // }
-                        
+
                     },
                     getCheckLength: function () { //获取选中数目
                         var checkStatus = table.checkStatus('data_demo'),
@@ -122,45 +125,134 @@
                 theme: '#393D49',
                 max: getYestoday(new Date())
             });
-            //    二维码处理
+            // 监听选项卡切换
+            element.on('tab(setTitle)', function (data) {
+                if (data.index == '1') {
+                    param.status = '1,2';
+                    productsearch(param, curnum, limitcount);
+                    var historyCols = [
+                        [{
+                                field: 'time',
+                                title: '结算时间',
 
-            // 获取二维码列表
+                            }, {
+                                field: 'money',
+                                title: '订单金额'
+                            }, {
+                                field: 'server_name',
+                                title: '优惠金额',
+                                align: 'center',
+                            }, {
+                                field: 'real_money',
+                                title: '实收金额',
+                                align: 'center'
+                            }, {
+                                field: 'money',
+                                title: '手续费',
+                                align: 'center'
+                            },
+                            {
+                                field: 'order_numer',
+                                title: '平台手续费',
+                                align: 'center'
+                            }, {
+                                field: 'refund_money',
+                                title: '结算金额',
+                                align: 'center'
+                            }, {
+                                fixed: 'right',
+                                width: 150,
+                                align: 'center',
+                                title: '结算状态',
+                                toolbar: '#toolBar',
+                            }
+                        ]
+                    ];
+                    table.reload('data_demo', {
+                        cols: historyCols
+                    })
+                } else {
+                    param.status = '0';
+                    productsearch(param, curnum, limitcount);
+                    var historyCols = [
+                        [{
+                                field: 'time',
+                                title: '结算时间',
+
+                            }, {
+                                field: 'money',
+                                title: '订单金额'
+                            }, {
+                                field: 'server_name',
+                                title: '优惠金额',
+                                align: 'center',
+                            }, {
+                                field: 'real_money',
+                                title: '实收金额',
+                                align: 'center'
+                            }, {
+                                field: 'money',
+                                title: '手续费',
+                                align: 'center'
+                            },
+                            {
+                                field: 'order_numer',
+                                title: '平台手续费',
+                                align: 'center'
+                            }, {
+                                field: 'refund_money',
+                                title: '结算金额',
+                                align: 'center'
+                            }, {
+                                fixed: 'right',
+                                width: 150,
+                                align: 'center',
+                                title: '申请结算',
+                                toolbar: '#toolBar',
+                            }
+                        ]
+                    ];
+                    table.reload('data_demo', {
+                        cols: historyCols
+                    })
+                }
+            });
+            // 获取列表
             var limitcount = 10,
                 curnum = 1,
                 param = {
                     page: 1,
                     size: 10,
-                    pageSize: 10
+                    pageSize: 10,
+                    status:'0'
                 };
 
             function productsearch(param, start, limitsize) {
-                // param.page = start;
-                // param.pageSize = limitsize;
+               
                 param.vendor_id = layui.sessionData('id').id;
-                common.getFianceData(param, function (res) {
+                common.getRevenueApplyData(param, function (res) {
                     console.log(res);
                     // 展示搜索结果的表格
                     table.render({
                         elem: '#data_demo',
                         cols: [
                             [{
-                                    field: 'address',
+                                    field: 'time',
                                     title: '结算时间',
-                                    sort: true,
-                                }, {
-                                    field: 'name',
-                                    title: '订单金额',
 
+                                }, {
+                                    field: 'money',
+                                    title: '订单金额'
                                 }, {
                                     field: 'server_name',
                                     title: '优惠金额',
                                     align: 'center',
                                 }, {
-                                    field: 'order_num',
+                                    field: 'real_money',
                                     title: '实收金额',
                                     align: 'center'
                                 }, {
-                                    field: 'sum',
+                                    field: 'poundage',
                                     title: '手续费',
                                     align: 'center'
                                 },
@@ -169,7 +261,7 @@
                                     title: '平台手续费',
                                     align: 'center'
                                 }, {
-                                    field: 'buyer_pay_amount',
+                                    field: 'refund_money',
                                     title: '结算金额',
                                     align: 'center'
                                 }, {
@@ -181,7 +273,6 @@
                                 }
                             ]
                         ],
-
                         data: res.data.list,
                         done: function (res1, curr, count) {
                             console.log(res1);
@@ -209,7 +300,6 @@
                                 }
                             });
                         }
-
                     });
                 });
             }
@@ -223,7 +313,8 @@
                 console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
                 var param = {
                     page: curnum,
-                    size: limitcount
+                    size: limitcount,
+                    pageSize: limitcount
                 };
                 var obj = Object.assign(param, data.field);
                 console.log(obj);
@@ -257,7 +348,33 @@
                 var data = obj.data; //获得当前行数据
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
-               
+
+                if (layEvent === 'settle') { //查看
+
+
+                    layer.open({
+                        content: '确定申请结算?',
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            var params = {
+                                'vendor_id': layui.sessionData('id').id,
+                                'id': data.id
+                            };
+                            common.doRevenueApply(params, function (res) {
+                                if (res.code == 200) {
+                                    layer.msg('结算成功');
+                                    layer.close(index);
+                                    productsearch(param, curnum, limitcount);
+                                } else {
+                                    layer.msg(res.message)
+                                }
+                            })
+                        },
+
+
+                    });
+
+                }
             });
             $('body').on('click', '.demoTable .layui-btn', function () {
                 var type = $(this).data('type');
@@ -266,4 +383,5 @@
         });
     </script>
 </body>
+
 </html>

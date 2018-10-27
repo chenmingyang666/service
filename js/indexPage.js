@@ -20,7 +20,8 @@ layui
         if (!layui.sessionData('token').token) {
             window.location.href = 'login.html'
         } else {
-            if (!layui.sessionData('nickName').nickName) {
+            // if (!layui.sessionData('nickName').nickName) {
+            if (!layui.sessionData('id').id) {
                 $('.shadeBg').show();
                 $('.userData').show();
                 form.on('submit(sendInfo)', function (data) {
@@ -40,22 +41,24 @@ layui
                         fixed: true,
                         offset: '40%',
                         yes: function (index, layero) {
-                            common
-                                .updateInfo(field, function (res) {
-                                    if (res.code == 200) {
-                                        layer.msg('保存成功');
-                                        if (res.data) {
-                                            layui.sessionData('nickName', {
-                                                key: 'nickName',
-                                                value: res.data.name
-                                            });
-                                            $('.nickName').text(res.data.name);
-                                            $('.shadeBg').hide();
-                                            $('.userData').hide();
-                                            layer.close(index); //如果设定了yes回调，需进行手工关闭
-                                        }
-                                    }
-                                })
+                            field.id = layui
+                                .sessionData('id')
+                                .id;
+                            common.updateInfo(field, function (res) {
+                                if (res.code == 200) {
+                                    layer.msg('保存成功');
+
+                                    layui.sessionData('nickName', {
+                                        key: 'nickName',
+                                        value: res.data.name
+                                    });
+                                    $('.nickName').text(res.data.name);
+                                    $('.shadeBg').hide();
+                                    $('.userData').hide();
+                                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+
+                                }
+                            })
                         },
                         btn2: function (index) {
                             layer.close(index)
@@ -133,7 +136,8 @@ layui
                 element.tabDelete("layadmin-layout-tabs", id); //删除
             },
             tabDeleteOther: function (idOther) {
-                $.each(idOther, function (i, item) {
+                $
+                    .each(idOther, function (i, item) {
                         element.tabDelete("layadmin-layout-tabs", item); //ids是一个数组，里面存放了多个id，调用tabDelete方法分别删除
 
                     })
@@ -141,7 +145,8 @@ layui
             },
             tabDeleteAll: function (ids) {
                 //删除所有
-                $.each(ids, function (i, item) {
+                $
+                    .each(ids, function (i, item) {
                         element.tabDelete("layadmin-layout-tabs", item); //ids是一个数组，里面存放了多个id，调用tabDelete方法分别删除
                     })
             },
@@ -244,6 +249,32 @@ layui
             //最后不管是否新增tab，最后都转到要打开的选项页面上
             active.tabChange(dataid.attr("data-id"));
         });
+        // 加载权限菜单
+        // common.getUserMenuList({
+        //     "user_id": layui
+        //         .sessionData('id')
+        //         .id
+        // }, function (res) {
+        //     console.log(res.data);
+        //     var menu1 = [],
+        //         menu2 = [];
+        //     res
+        //         .data
+        //         .forEach(function (ele) {
+        //             menu1.push(ele.name)
+        //         });
+        //     console.log(menu1);
+        //     $('.layui-side ul .layui-nav-item a[data-title]').each(function () {
+
+        //         var title = $(this).attr('data-title');
+        //         console.log(title);
+        //         console.log(menu1.indexOf(title));
+        //         if (menu1.indexOf(title)<0) {
+        //             var that = $(this);
+        //             that.addClass('layui-hide')
+        //         }
+        //     })
+        // });
         $('.layadmin-pagetabs .layui-tab li')
             .first()
             .on('click', function () {
@@ -268,9 +299,9 @@ layui
 
             } else if (type === 'closeOtherTabs') { //关闭其他页面
                 var idOther = [];
-                $('#LAY_app_tabsheader li').not('#LAY_app_tabsheader li:first')
+                $('#LAY_app_tabsheader li')
+                    .not('#LAY_app_tabsheader li:first')
                     .not('#LAY_app_tabsheader li.layui-this')
-                    
                     .each(function () {
                         idOther.push($(this).attr('lay-id'));
                     });
@@ -282,7 +313,7 @@ layui
                     .each(function () {
                         ids.push($(this).attr('lay-id'));
                     });
-                    console.log(ids);
+                console.log(ids);
                 active.tabDeleteAll(ids);
                 active.leftPage();
             }

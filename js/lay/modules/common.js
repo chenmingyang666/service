@@ -4,17 +4,19 @@
             // baseUrl = 'http://api.gelives.com/';
             bxUrl = 'http://api.cloudbox.net.cn:8002/';
         //  baseUrl ='http://192.168.1.200:80/';
-        baseUrl = 'http://192.168.1.48/';
-        // baseUrl = 'http://192.168.1.53:80/';
+        // baseUrl = 'http://192.168.1.48/';
+        baseUrl = 'http://192.168.1.53:18080/';
         var obj = {
             // baseUrl: 'http://api.gelives.com/',
             bxUrl: 'http://api.cloudbox.net.cn:8002/',
             // baseUrl: 'http://192.168.1.200:80/',
-            baseUrl: 'http://192.168.1.48/',
-            // baseUrl: 'http://192.168.1.53:80/', 注册用户
+            // baseUrl: 'http://192.168.1.48/',
+            baseUrl: 'http://192.168.1.53:18080/', 
+            // 注册用户
             regUser: function (field, callback) {
                 $.ajax({
-                    url: baseUrl + 'vender/register',
+                    // url: baseUrl + 'vender/register',
+                    url: baseUrl + 'vc/register',
                     type: 'post',
                     dataType: 'json',
                     data: field,
@@ -24,20 +26,21 @@
             // 用户登录请求
             loginRequest: function (field, callback) {
                 $.ajax({
-                    url: baseUrl + 'vender/login',
+                    url: baseUrl + 'vc/login',
                     type: 'post',
-                    dataType: 'json',
+                    // dataType: 'json',
                     data: field,
                     xhrFields: {
                         withCredentials: true
                     },
+                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     success: callback
                 });
             },
             // 忘记密码
             forgetPass: function (params, callback) {
                 $.ajax({
-                    url: baseUrl + 'vender/forget',
+                    url: baseUrl + 'vc/forget',
                     type: 'post',
                     dataType: 'json',
                     data: params,
@@ -46,6 +49,7 @@
                             .sessionData('token')
                             .token
                     },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -55,9 +59,8 @@
             // 更新密码
             updatePass: function (params, callback) {
                 $.ajax({
-                    url: baseUrl + 'vender/change',
+                    url: baseUrl + 'vc/change',
                     type: 'post',
-                    dataType: 'json',
                     data: params,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -73,7 +76,7 @@
             // 完善信息
             updateInfo: function (params, callback) {
                 $.ajax({
-                    url: baseUrl + 'vender/update',
+                    url: baseUrl + 'vc/update',
                     type: 'post',
                     dataType: 'json',
                     data: params,
@@ -91,7 +94,7 @@
             // 服务商用户详细信息
             userInfo: function (callback) {
                 $.ajax({
-                    url: baseUrl + 'vender/' + layui
+                    url: baseUrl + 'vc/get/' + layui
                         .sessionData("id")
                         .id,
                     headers: {
@@ -240,6 +243,23 @@
             orderRefund: function (params, callback) {
                 $.ajax({
                     url: baseUrl + 'vendor/order/refund',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 订单复位
+            orderUnlock: function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/order/reset',
                     data: params,
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -1704,16 +1724,14 @@
                     success: callback
                 });
             },
-            // 获取功能定价信息
+            // 获取功能定价信息 
             getPriceFuncs: function (params, callback) {
                 $.ajax({
-                    url: baseUrl + 'pricing/funcs',
-
-                    data: params,
+                    // url: baseUrl + 'pricing/funcs',
+                    url: baseUrl + 'pic/getByModelid/'+params,
+                    // data: params,
                     headers: {
-                        'Authorization': 'Bearer ' + layui
-                            .sessionData('token')
-                            .token
+                        'Authorization': 'Bearer ' + layui.sessionData('token').token
                     },
                     contentType: 'application/json',
                     beforeSend: function (request) {
@@ -1827,7 +1845,7 @@
             getProfitData: function (params, callback) {
                 $.ajax({
                     url: baseUrl + 'vendor/order/project/income',
-                    data: params,
+                    data: params, 
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -1873,7 +1891,194 @@
                     },
                     success: callback
                 })
-            }
+            },
+            // 退款申请
+            getRefundReqData:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/order/refund/list',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 结算申请列表
+            getRevenueApplyData:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/order/revenue/list',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 发起申请结算
+            doRevenueApply:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/order/revenue/apply',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 获取操作人员
+            getVendorUser:function(id,callback){
+                $.ajax({
+                    url: baseUrl + 'vendor/user/info',
+                    data: {'user_id':id},
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+             // 成员列表
+             getVendorUserData:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/user/list',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 新增成员列表
+            addVendorUser:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/user/save',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 角色下拉列表
+            getRoleDropList:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'role/list',
+                    data: {'vendorId':params},
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+             // 角色人员添加
+            addRole:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'role/save',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 角色权限绑定
+            bindPermission:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'user/menu/bind',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 菜单所有列表
+            getAllMenuList:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'menu/all',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 菜单用户列表
+            getUserMenuList:function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'menu/list',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
         };
         //输出接口
         exports('common', obj);

@@ -4,7 +4,9 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../css/layui.css">
-    <title>新增主板</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css" rel="stylesheet">
+    <title>新增管理人员</title>
     <style>
         .site-title fieldset {
             border: none;
@@ -84,72 +86,52 @@
 </head>
 
 <body>
-
-
+    <!-- <div class="layui-form-item">
+        <button class="layui-btn layui-btn-sm layui-btn-danger  back" style="display: none">返回</button>
+    </div> -->
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-card" style="border:1px solid #f6f6f6;">
-                    <!-- <div class="layui-card-header">新增主板</div> -->
+                    <!-- <div class="layui-card-header">新增管理人员</div> -->
                     <div class="layui-card-body" style="padding: 15px;display: flex;">
                         <div class="layui-col-md8">
-
                             <div class="layui-form-item">
-                                <label class="layui-form-label">主板分类：</label>
+                                <label class="layui-form-label">管理人员姓名：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
-                                    <select name="cate" lay-filter="cate" id="cate" lay-verify="">
-                                    </select>
+                                    <input type="text" name="name" lay-verify="required" autocomplete="off" class="layui-input">
                                 </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
                             <div class="layui-form-item">
-                                <label class="layui-form-label">主板品牌：</label>
+                                <label class="layui-form-label">手机号：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
-                                    <select name="brandName" lay-filter="brandName" id="brandName" lay-verify="">
-                                    </select>
+                                    <input type="text" name="phone" lay-verify="required" autocomplete="off" class="layui-input">
                                 </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
                             <div class="layui-form-item">
-                                <label class="layui-form-label">主板型号：</label>
+                                <label class="layui-form-label">密码：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
-                                    <select name="brandCode" lay-filter="brandCode" id="brandCode" lay-verify="">
-                                    </select>
+                                    <input type="password" name="password" lay-verify="required" autocomplete="off"
+                                        class="layui-input">
                                 </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
                             <div class="layui-form-item">
-
-                                <label class="layui-form-label">主板编号：</label>
+                                <label class="layui-form-label">角色：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
-                                    <!-- <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input"> -->
-                                    <select name="devSeq" id="devSeq" lay-filter="devSeq">
+                                    <select name="role_id" id="role" lay-filter="cate" lay-verify="">
                                         <option value="">请选择</option>
+                                        <!-- <option value="01">运行人员</option>
+                                        <option value="02">运维人员</option>
+                                        <option value="03">客服人员</option>
+                                        <option value="04">财务人员</option> -->
+
                                     </select>
                                 </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
-
-
-
-                            </div>
-                            <div class="layui-form-item">
-
-                                <label class="layui-form-label">设备归属方：</label>
-                                <div class="layui-input-inline" style="width: 50%;">
-                                    <!-- <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input"> -->
-                                    <select name="owned" lay-filter="owned">
-                                        <option value="01">集优科技</option>
-                                    </select>
-                                </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
-
-
-
+                                <div class="layui-form-mid" title="新增角色名称"><i class="fa fa-plus addFunc"></i></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="layui-card" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                     <button class="layui-btn layui-btn-danger" lay-submit lay-filter="searchBox">保存</button>
@@ -159,53 +141,64 @@
     </form>
     <script src="../../js/jquery.min.js"></script>
     <script>
-        layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'element', 'common'], function () {
+        layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'element', 'laydate', 'common', 'main'], function () {
             var table = layui.table,
                 $ = layui.jquery,
                 layer = layui.layer,
                 laytpl = layui.laytpl,
                 form = layui.form,
                 element = layui.element,
+                laydate = layui.laydate,
                 common = layui.common;
 
             $('body').on('click', '.back', function () {
                 window.history.back();
-            }).on('click', '.showPingtaibtn', function () {
-                $(this).addClass('layui-btn-danger').siblings('a').removeClass('layui-btn-danger');
-                $(this).parent().parent().find('.showPingtai').show().siblings('.showSelf').hide();
-
-            }).on('click', '.showSelfbtn', function () {
-                $(this).addClass('layui-btn-danger').siblings('a').removeClass('layui-btn-danger');
-                $(this).parent().parent().find('.showSelf').show().siblings('.showPingtai').hide();
+            }).on('click', '.addFunc', function () {
+                initMinModal('新增角色配置权限', 'assignPermission.html?isTrue=1')
 
             });
-
+            laydate.render({
+                elem: '#beginTime',
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                theme: '#393D49',
+            });
+            function getRoleDropList() {
+                // 获取角色下拉列表
+                common.getRoleDropList(layui.sessionData('id').id, function (res) {
+                    console.log(res);
+                    res.data.forEach(function (ele, index) {
+                        $('#role').append("<option value=" + ele.id + ">" +ele.name +"</option>");
+                        form.render();
+                    });
+                });
+            };
+            getRoleDropList();
             // 表单提交
             form.on('submit(searchBox)', function (data) {
                 console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
-                parent.layer.open({
-                    content: '确定保存新主板?',
+                layer.open({
+                    content: '确定保存新管理人员?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
                         //do something
-                        common.addMB(data.field, function (res) {
+                        common.addVendorUser(data.field, function (res) {
                             if (res.code == 200) {
-                                parent.layer.confirm('保存成功，继续添加主板?', {
+                                layer.confirm('保存成功，继续添加管理人员?', {
                                     icon: 3,
                                     title: '提示',
-                                    btn: ['继续添加', '返回主板列表'],
+                                    btn: ['继续添加', '取消'],
                                     yes: function (index) {
-                                        parent.layer.closeAll();
-                                        window.location.reload();
+                                        layer.closeAll();
+
                                     },
                                     btn2: function (index) {
-                                        parent.layer.closeAll()
-                                        // window.location.href =
-                                        //     'pages/Device/list.html';
+                                        layer.closeAll()
+                                        // window.location.href ='pages/Device/thingscard.html';
                                     }
                                 });
                             } else {
-                                parent.layer.closeAll();
+                                layer.closeAll();
                                 if (res.message != null || res.message != '') {
                                     layer.msg(res.message);
                                 } else {
@@ -215,11 +208,9 @@
                         })
                     },
                     btn2: function (index) {
-                        parent.layer.closeAll()
+                        layer.closeAll()
                     },
-                    cancel: function (index) {
-                        parent.layer.closeAll()
-                    }
+
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
@@ -230,6 +221,7 @@
                     $('.back').show();
                 };
             }
+
         });
     </script>
 </body>

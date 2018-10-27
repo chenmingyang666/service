@@ -69,8 +69,8 @@
     <div class="layui-form">
         <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
             <div class="demoTable" style="text-align: right;margin: 10px 0 0">
+                <button class="layui-btn layui-btn-primary" data-type="add">+新增</button>
                 <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出</button>
-
             </div>
         </table>
         <div id="laypage"></div>
@@ -153,6 +153,10 @@
                     isAll: function () { //验证是否全选
                         var checkStatus = table.checkStatus('data_demo');
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    },
+                    add:function(){
+                        initModal('新增二维码','addEwm.html');
+                    
                     }
                 };
 

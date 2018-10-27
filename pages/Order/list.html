@@ -121,7 +121,7 @@
                 </select>
             </div>
         </div> -->
-            
+
         </div>
         <div class="layui-form-item">
             <div class="layui-inline">
@@ -158,16 +158,16 @@
     <!-- 退款询问框 -->
     <div class="refundBox hide" style="padding:10px">
         <div class="layui-form" lay-filter="refundBox">
-            <div class="layui-form-item" style="height:fit-content"><input type="checkbox" name="reason" value="下单错误"
-                    title="下单错误" lay-skin="primary"></div>
-            <div class="layui-form-item" style="height:fit-content"><input type="checkbox" name="reason" value="设备未启动"
+            <div class="layui-form-item" style="height:fit-content"><input type="radio" name="cause" value="下单错误" title="下单错误"
+                    lay-skin="primary"></div>
+            <div class="layui-form-item" style="height:fit-content"><input type="radio" name="cause" value="设备未启动"
                     title="设备未启动" lay-skin="primary"></div>
-            <div class="layui-form-item" style="height:fit-content"><input type="checkbox" name="reason" value="设备运行中终止"
+            <div class="layui-form-item" style="height:fit-content"><input type="radio" name="cause" value="设备运行中终止"
                     title="设备运行中终止" lay-skin="primary"></div>
-            <div class="layui-form-item" style="height:fit-content"><input type="checkbox" name="reason" value="设备故障"
-                    title="设备故障" lay-skin="primary"></div>
-            <div class="layui-form-item" style="height:fit-content"><input type="checkbox" name="reason" value="其他"
-                    title="其他" lay-skin="primary">
+            <div class="layui-form-item" style="height:fit-content"><input type="radio" name="cause" value="设备故障" title="设备故障"
+                    lay-skin="primary"></div>
+            <div class="layui-form-item" style="height:fit-content"><input type="radio" name="cause" value="其他" title="其他"
+                    lay-skin="primary">
                 <textarea name="other" placeholder="" class="layui-textarea"></textarea>
             </div>
         </div>
@@ -181,10 +181,14 @@
         <a style="cursor:pointer;" class="layui-btn layui-btn-xs" lay-event="details">订单详情</a>
     {{#if(d.pay_time && d.order_status!=4){  }}    
             <a style="cursor:pointer;" class="layui-btn layui-bg-warning layui-btn-xs" lay-event="returnMoney">退款</a>
-    {{#} }}    
+    {{#} }}  
+    {{# if(d.order_status==2){ }}
     <a style="cursor:pointer;" class="layui-btn layui-bg-green layui-btn-xs" title="解除当前订单状态" lay-event="unlock">复位</a>
+    
+    {{#} }}  
         
     </script>
+    
     <script type="text/html" id="buttonTpl">
         {{# if(d.cause == 1){ }}
         <button class="layui-btn layui-btn-normal layui-btn-xs">手动取消</button>
@@ -284,7 +288,7 @@
                                     endTime = $(
                                         "input[name='endTime']").val();
                                 var urlStr = common.baseUrl +
-                                    'order/export?userId=' +
+                                    'vendor/order/export?vendor_id=' +
                                     layui.sessionData('id').id + '&order_num=' + order_num +
                                     '&phone=' + phone + '&nick_name=' + nick_name +
                                     '&payWay=' + payWay +
@@ -343,7 +347,6 @@
                     $('.searchmenu ul li.using cite').text(res.data.use);
                     $('.searchmenu ul li.finished cite').text(res.data.finish);
                     $('.searchmenu ul li.refund cite').text(res.data.refund);
-
                     // 展示搜索结果的表格
                     table.render({
                         elem: '#data_demo',
@@ -355,8 +358,8 @@
                             }, {
                                 field: 'order_num',
                                 title: '订单编号',
-                                // fixed: true,
-                                // sort: true,
+                                fixed: 'left',
+                                width:200
                             }, {
                                 field: 'nick_name',
                                 title: '用户名',
@@ -368,9 +371,11 @@
                                 title: '支付方式',
                                 templet: '#payWay',
                             }, {
+                                field: 'server_name',
+                                title: '产品名称',
+                            }, {
                                 field: 'money',
                                 title: '订单金额',
-                                // sort: true,
                                 templet: function (d) {
                                     if (d.money == null || d.money ==
                                         '') {
@@ -444,7 +449,7 @@
                         }
                     });
                     $('#laypage .layui-laypage-prev').before('<span style="border:none">' +
-                        '订单金额：¥1012，结算金额：¥988' + '</span>');
+                        '订单金额：¥'+res.data.income+'，结算金额：¥'+res.data.poundage + '</span>');
                 });
             }
             productsearch(param, curnum, limitcount);
@@ -506,24 +511,45 @@
                         content: $('.refundBox'),
                         btn: ['确定', '取消'],
                         yes: function (index, layero) {
+                            var cause = function () {
+                                console.log($('input[name="cause"]').next(
+                                    '.layui-form-radioed').find('div').text());
+                                if ($('input[name="cause"]').next('.layui-form-radioed')
+                                    .find('div').text() != '其他') {
+                                    return $('input[name="cause"]').next(
+                                        '.layui-form-radioed').find('div').text()
+                                } else {
+                                    return $('[name="other"]').val()
+                                };
+                            };
                             var params = {
                                 vendor_id: layui.sessionData('id').id,
-                                order_num: data.order_num
+                                order_num: data.order_num,
+                                cause: cause(),
+                                account:layui.sessionData('nickName').nickName
                             };
-                            common.orderRefund(params, function (res) {
-                                if (res.code == 200) {
-                                    layer.closeAll();
-                                    layer.msg('退款成功');
-                                    that.hide();
-                                    productsearch(param, curnum, limitcount);
-                                } else {
-                                    layer.msg(res.message);
-                                    layer.closeAll();
-                                }
-                            })
+                            console.log(params);
+                            if (params.cause == '') {
+                                layer.msg('请填写详细原因');
+                                return false;
+                            } else {
+                                common.orderRefund(params, function (res) {
+                                    if (res.code == 200) {
+                                        layer.closeAll();
+                                        layer.msg('退款成功');
+                                        that.hide();
+                                        productsearch(param, curnum, limitcount);
+                                    } else {
+                                        layer.msg(res.message);
+                                        layer.close(index);
+                                    }
+                                })
+                            }
+
                         },
                         success: function (layero, index) {
                             console.log(layero[0]);
+                            
                             form.render()
                         },
                         btn2: function (index) {
@@ -535,7 +561,31 @@
                     });
 
                 } else if (layEvent === 'unlock') {
-                    layer.msg('复位')
+
+                    var params = {
+
+                        order_num: data.order_num
+                    };
+                    var that = $(this);
+                    layer.confirm('确定对此订单复位?', {
+                        icon: 3,
+                        title: '提示'
+                    }, function (index) {
+                        common.orderUnlock(params, function (res) {
+                            if (res.code == 200) {
+                                layer.closeAll();
+                                layer.msg('复位成功');
+                                that.hide();
+                                productsearch(param, curnum, limitcount);
+                            } else {
+                                layer.msg(res.message);
+                                layer.closeAll();
+                            }
+                        })
+
+                        layer.close(index);
+                    });
+
                 }
             });
             $('body').on('click', '.searchmenu ul li', function (e) {
@@ -548,7 +598,6 @@
                     };
                     productsearch(param, curnum, limitcount);
                 } else if ($(this).hasClass('pendpay')) { //待付款
-
                     var param = {
                         page: 1,
                         pageSize: 10,

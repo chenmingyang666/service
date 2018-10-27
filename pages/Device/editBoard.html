@@ -135,19 +135,21 @@
                                 <label class="layui-form-label">设备归属方：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
                                     <!-- <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input"> -->
-                                    <select name="belong" lay-filter="devSeq">
+                                    <select name="owned" lay-filter="owned">
                                         <option value="01">集优科技</option>
                                     </select>
                                 </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
-
-
-
                             </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否报废：</label>
+                                <div class="layui-input-inline" style="width: 50%;">
+                                    <input type="checkbox" name="yyy" lay-skin="switch" lay-text="正常|报废">
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-
                 <div class="layui-card" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                     <button class="layui-btn layui-btn-danger" lay-submit lay-filter="searchBox">保存</button>
@@ -172,11 +174,11 @@
 
             var url = location.href;
             var data = parseURL(url);
-            if (data) {
-                if (data.isTrue) {
-                    $('.back').show();
-                };
-            }
+            // if (data) {
+            //     if (data.isTrue) {
+            //         $('.back').show();
+            //     };
+            // }
             // 获取单条数据
             common.getSinMBInfo(data.id, function (res) {
                 console.log(res);
@@ -196,21 +198,21 @@
 
             // 表单提交
             form.on('submit(searchBox)', function (data) {
-                // console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
+                console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
                 parent.layer.open({
-                    content: '确定保存新设备?',
+                    content: '确定保存信息?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
                       
                         //do something
                         common.updateMBInfo(data.field, function (res) {
                             if (res.code == 200) {
-                                parent.layer.confirm('保存成功，继续添加设备?', {
+                                parent.layer.confirm('保存成功，继续添加?', {
                                     icon: 3,
                                     title: '提示',
-                                    btn: ['继续添加', '返回设备列表'],
+                                    btn: ['继续添加', '返回列表'],
                                     yes: function (index) {
-                                        parent.layer.closeAll();
+                                        parent.layer.close();
                                         window.location.reload();
                                     },
                                     btn2: function (index) {
@@ -230,11 +232,9 @@
                         })
                     },
                     btn2: function (index) {
-                        parent.layer.closeAll()
+                        parent.layer.close()
                     },
-                    cancel: function (index) {
-                        parent.layer.closeAll()
-                    }
+                   
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });

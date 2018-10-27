@@ -68,7 +68,7 @@
                         <div class="layui-row">
                             <div class="layui-col-xs7">
                                 <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
-                                <input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required"
+                                <input type="text" name="smsCode" id="LAY-user-login-vercode" lay-verify="required"
                                     placeholder="验证码" class="layui-input">
                             </div>
                             <div class="layui-col-xs5">
@@ -125,23 +125,29 @@
                 var disabled = $("#LAY-user-getsmscode").attr("disabled");
                 if (disabled) {
                     return false;
-                }
+                };
                 if ($("#LAY-user-login-cellphone").val() == "" || isNaN($("#LAY-user-login-cellphone").val()) ||
                     $("#LAY-user-login-cellphone").val().length != 11) {
                     layer.alert("请填写正确的手机号！");
                     return false;
-                }
+                };
                 $.ajax({
                     async: false,
                     type: "GET",
-                    url: common.baseUrl + "sms/send",
+                    url: common.baseUrl + "code/sms",
                     data: {
-                        phone: $("#LAY-user-login-cellphone").val()
+                        mobile: $("#LAY-user-login-cellphone").val()
                     },
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        settime();
+                        if(data.code==200){
+                              layer.msg('发送成功');
+                              settime();
+                        }else{
+                            layer.msg(data.message);
+                        }
+                      
                     },
                     error: function (err) {
                         layer.msg('发送失败')
@@ -150,7 +156,6 @@
             });
             var countdown = 60;
             var _generate_code = $("#LAY-user-getsmscode");
-
             function settime() {
                 if (countdown == 0) {
                     _generate_code.attr("disabled", false);
@@ -165,7 +170,7 @@
                 setTimeout(function () {
                     settime();
                 }, 1000);
-            }
+            };
             //提交
             form.on('submit(LAY-user-reg-submit)', function (obj) {
                 var field = obj.field;
@@ -183,7 +188,7 @@
                             icon: 1,
                             time: 1000
                         }, function () {
-                            common.loginRequest(field, function (res) {
+                            // common.loginRequest(field, function (res) {
                                 console.log(res);
                                 if (res.data) {
                                     layui.sessionData('token', {
@@ -202,8 +207,8 @@
                                         key: 'id',
                                         value: res.data.id
                                     });
-                                }
-                                if (res.code == 200) {
+                                };
+                                // if (res.code == 200) {
                                     layer.msg('登入主页成功', {
                                         offset: '15px',
                                         icon: 1,
@@ -211,14 +216,8 @@
                                     }, function () {
                                         location.href = 'index.html'; //后台主页
                                     });
-                                } else {
-                                    if (res.message) {
-                                        layer.msg(res.message);
-                                    } else {
-                                        layer.msg('登录失败');
-                                    }
-                                }
-                            });
+                                // } 
+                            // });
                            
                         });
                     } else if (res.code == 500) {

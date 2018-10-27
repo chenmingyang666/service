@@ -47,7 +47,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">开始时间：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="beginTime" class="layui-input" id="beginTime" placeholder="开始日期" autocomplete="off" lay-key="1">
+                    <input type="text" name="startTime" class="layui-input" id="startTime" placeholder="开始日期" autocomplete="off" lay-key="1">
                 </div>
             </div>
             <div class="layui-inline">
@@ -63,8 +63,6 @@
             </div>
 
         </div>
-
-
     </form>
     <!-- 结果显示表格 -->
     <div class="layui-form">
@@ -125,13 +123,11 @@
                                         layui.sessionData('id').id + '&qrCode=' + qrCode +
                                         '&status=' + status;
                                     urlStr = urlStr.replace("undefined", '');
-                                    console.log(urlStr);
                                     window.location.href = urlStr;
-                                    parent.layer.closeAll()
+                                    parent.layer.closeAll();
                                 },
                                 btn2: function (index) {
-                                    parent.layer.closeAll()
-    
+                                    parent.layer.closeAll();
                                 }
     
                             });
@@ -148,7 +144,7 @@
                     };
                 // 日期
                 laydate.render({
-                    elem: '#beginTime',
+                    elem: '#startTime',
                     type: 'date',
                     format: 'yyyy-MM-dd',
                     theme: '#393D49',
@@ -161,9 +157,8 @@
                     theme: '#393D49',
                     max: getYestoday(new Date())
                 });
-                //    二维码处理
-    
-                // 获取二维码列表
+                
+                // 获取列表
                 var limitcount = 10,
                     curnum = 1,
                     param = {
@@ -176,7 +171,7 @@
                     // param.page = start;
                     // param.pageSize = limitsize;
                     param.vendorId=layui.sessionData('id').id;
-                    common.getProfitData    (param, function (res) {
+                    common.getProfitData(param, function (res) {
                         console.log(res);
                         // 展示搜索结果的表格
                         table.render({

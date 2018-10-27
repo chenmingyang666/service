@@ -132,7 +132,7 @@
     </script>
     <script type="text/html" id="toolBar">
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
     </script>
     <script>
         layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage','main'], function () {
@@ -260,7 +260,7 @@
                                 }
                             }, {
                                 field: 'simCode',
-                                title: '物联网网卡卡号',
+                                title: '物联网卡号码',
                             }, {
                                 field: 'source',
                                 title: '设备归属方',
@@ -291,22 +291,23 @@
                             //         }
                             //     }
                             // }
+                            // , {
+                            //     field: 'period',
+                            //     title: '有效期',
+                            //     templet: function (d) {
+                            //         if (d.period) {
+                            //             return d.period + '天'
+                            //         } else {
+                            //             return ''
+                            //         }
+                            //     }
+                            // }, {
+                            //     field: 'expire',
+                            //     title: '是否过期',
+                            //     templet: '#outdateTpl',
+                            //     align: 'center'
+                            // }
                             , {
-                                field: 'period',
-                                title: '有效期',
-                                templet: function (d) {
-                                    if (d.period) {
-                                        return d.period + '天'
-                                    } else {
-                                        return ''
-                                    }
-                                }
-                            }, {
-                                field: 'expire',
-                                title: '是否过期',
-                                templet: '#outdateTpl',
-                                align: 'center'
-                            }, {
                                 // fixed: 'right',
                                 // width: 150,
                                 align: 'center',

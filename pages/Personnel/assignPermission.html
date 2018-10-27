@@ -15,48 +15,49 @@
 <body>
     <form class="layui-form layui-layer-border" style=" padding: 10px;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item" style="margin-bottom: 0">
-            <div class="layui-inline">
-                <label class="layui-form-label">角色：</label>
-                <div class="layui-input-inline">
-                    <select name="role" lay-filter="role" lay-verify="">
-                        <option value="">请选择</option>
-                        <option value="01">运营人员</option>
-                        <option value="02">运维人员</option>
-                        <option value="03">客服人员</option>
-                        <option value="04">财务人员</option>
-                        <option value="*">新增角色</option>
-                    </select>
-                </div>
+            <div class="layui-inline ">
+                <span class="roleSelect">
+                    <label class="layui-form-label">角色：</label>
+                    <div class="layui-input-inline roleSelect">
+                        <select name="role" id="role" lay-filter="role" lay-verify="">
+                            <option value="">请选择</option>
+                            <!-- <option value="01">运营人员</option>
+                            <option value="02">运维人员</option>
+                            <option value="03">客服人员</option>
+                            <option value="04">财务人员</option> -->
+                            <option value="*">新增角色</option>
+                        </select>
+                    </div>
+                </span>
                 <span class="addRole hide">
                     <label class="layui-form-label" style="width:100px">新增角色名称：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="pjtname" class="layui-input" placeholder="输入角色名称" autocomplete="off">
+                        <input type="text" name="name" class="layui-input" placeholder="输入角色名称" autocomplete="off">
+                    </div>
+                    <div class="layui-inline">
+                        <button class="layui-btn addRoleBtn">确定</button>
                     </div>
                 </span>
-                <div class="layui-inline">
-                    <button class="layui-btn" lay-submit lay-filter="searchBox">确定</button>
-                </div>
+
 
             </div>
             <!-- 结果显示表格 -->
             <div class="layui-form">
                 <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
                 </table>
-                <div id="laypage"></div>
+                <!-- <div id="laypage"></div> -->
 
             </div>
-
+            <div class="layui-card funcBtn" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
+                <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                <button class="layui-btn layui-btn-danger" data-type="save">保存</button>
+            </div>
     </form>
-
-  
-
     <script type="text/html" id="toolBar">
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     </script>
-
-    <script src="../data.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate', 'main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -73,7 +74,7 @@
                         // if (data.length == 0) {
                         //     return layer.msg('请选择数据')
                         // }
-
+                        return data;
                     },
                     getCheckLength: function () { //获取选中数目
                         var checkStatus = table.checkStatus('data_demo'),
@@ -83,8 +84,76 @@
                     isAll: function () { //验证是否全选
                         var checkStatus = table.checkStatus('data_demo');
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
-                    }
+                    },
+                    reset: function (e) {
+                        window.location.reload();
+                    },
+                    save: function (e) {
+                        var data = active.getCheckData.call(this);
+                        var arr = [],params={};
+                        data.forEach(function (ele) {
+                            arr.push(ele.id);
+                        });
+                        params.role_id=$('#role').next()
+                            .find('.layui-this').attr('lay-value');
+                        params.menu_id=arr.toString();
+                        layer.open({
+                            content: '确定保存?',
+                            btn: ['确定', '取消'],
+                            yes: function (index, layero) {
+                                common.bindPermission(params, function (res) {
+                                    if (res.code == 200) {
+                                        layer.close(index);
+                                        layer.confirm('保存成功！', {
+                                            icon: 3,
+                                            title: '提示',
+                                            btn: ['继续添加', '返回'],
+                                            yes: function (index) {
+                                                layer.close(index);
+                                                // window.location.reload();
+                                            },
+
+                                        });
+                                    } else {
+                                        layer.close(index);
+                                        if (res.message != null || res.message != '') {
+                                            layer.msg(res.message);
+                                        } else {
+                                            layer.msg('保存失败');
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    },
+
+
                 };
+
+            let url = window.location.href,
+                urlData = parseURL(url);
+            if (urlData) {
+                if (urlData.isTrue) {
+                    $('.roleSelect').hide();
+                    $('.addRole').show();
+
+                }
+
+            };
+            function getRoleDropList() {
+                // 获取角色下拉列表
+                common.getRoleDropList(layui.sessionData('id').id, function (res) {
+                    console.log(res);
+                    res.data.forEach(function (ele, index) {
+                        $('#role').find('option:last').before("<option value=" + ele.id + ">" +
+                            ele
+                            .name +
+                            "</option>");
+                        form.render();
+                    });
+                });
+            };
+            getRoleDropList();
             form.on('select(role)', function (data) {
                 if (data.value == '*') {
                     $('.addRole').show();
@@ -101,13 +170,13 @@
                     size: 10,
                     pageSize: 10
                 };
-
+            // 权限选择列表
             function productsearch(param, start, limitsize) {
                 // param.page = start;
                 // param.pageSize = limitsize;
                 param.vendorId = layui.sessionData('id').id;
 
-                common.getProfitData(param, function (res) {
+                common.getAllMenuList(param, function (res) {
                     console.log(res);
                     // 展示搜索结果的表格
                     table.render({
@@ -116,14 +185,14 @@
                             [{
                                 checkbox: true,
                                 fixed: 'left',
-                                width: 80,  
-                            },{
+                                width: 80,
+                            }, {
                                 field: 'name',
                                 title: '权限',
                             }]
                         ],
-                            width:500,
-                        data: res.data.list,
+                        width: 500,
+                        data: res.data,
                         done: function (res1, curr, count) {
                             console.log(res1);
                             //如果是异步请求数据方式，res即为你接口返回的信息。
@@ -134,16 +203,25 @@
                                 limit: limitcount,
                                 // theme: 'right',
                                 limits: [10, 20, 50, 100],
-                                layout: ['prev', 'page','next', 'skip', 'count',
+                                layout: ['prev', 'page',
+                                    'next', 'skip',
+                                    'count',
                                     'limit'
                                 ],
                                 jump: function (obj, first) {
                                     if (!first) {
                                         curnum = obj.curr;
-                                        limitcount = obj.limit;
-                                        param.page = obj.curr;
-                                        param.size = obj.limit;
-                                        productsearch(param, curnum,limitcount);
+                                        limitcount =
+                                            obj.limit;
+                                        param.page =
+                                            obj.curr;
+                                        param.size =
+                                            obj.limit;
+                                        productsearch(
+                                            param,
+                                            curnum,
+                                            limitcount
+                                        );
                                     }
                                 }
                             });
@@ -168,24 +246,31 @@
                 productsearch(obj, curnum, limitcount);
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
+
+
             // 全选和反选
             form.on('checkbox(allChoose)', function (data) {
                 console.log(data);
-                var child = $(data.elem).parents('table').find('tbody input[name="singItem"]');
+                var child = $(data.elem).parents('table').find(
+                    'tbody input[name="singItem"]');
                 child.each(function (index, item) {
                     item.checked = data.elem.checked;
                 });
                 form.render('checkbox');
             });
             form.on('checkbox(itemChoose)', function (data) {
-                var sib = $(data.elem).parents('table').find('tbody input[name="singItem"]:checked').length;
-                var total = $(data.elem).parents('table').find('tbody input[name="singItem"]').length;
+                var sib = $(data.elem).parents('table').find(
+                    'tbody input[name="singItem"]:checked').length;
+                var total = $(data.elem).parents('table').find(
+                    'tbody input[name="singItem"]').length;
                 if (sib == total) {
-                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                    $(data.elem).parents('table').find(
+                        'thead input[name="singItem"]').prop("checked",
                         true);
                     form.render();
                 } else {
-                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                    $(data.elem).parents('table').find(
+                        'thead input[name="singItem"]').prop("checked",
                         false);
                     form.render();
                 }
@@ -207,9 +292,29 @@
                     layer.msg('wait')
                 }
             });
-            $('body').on('click', '.demoTable .layui-btn', function () {
+            $('body').on('click', '.funcBtn .layui-btn', function (e) {
+                e.preventDefault();
+
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
+            }).on('click', '.addRoleBtn', function (e) {
+               var params=new Object();
+                params.name = $('[name="name"]').val();
+                params.user_id = layui.sessionData('id').id;
+                common.addRole(params, function (res) {
+                    if (res.code == 200) {
+                     
+                        layer.msg('新增角色成功！');
+                        getRoleDropList();
+                    } else {
+                        
+                        if (res.message != null || res.message != '') {
+                            layer.msg(res.message);
+                        } else {
+                            layer.msg('保存失败');
+                        }
+                    }
+                })
             });
         });
     </script>

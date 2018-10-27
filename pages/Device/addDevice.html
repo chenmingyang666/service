@@ -138,7 +138,7 @@
                                     </div>
                                     <div class="layui-form-mid layui-word-aux">*必填</div>
                                 </div>
-                                <div class="showSelf" style="display: none">
+                                <!-- <div class="showSelf" style="display: none">
                                     <div class="layui-input-inline" style="width: 50%;">
                                         <input type="text" name="number" autocomplete="off" class="layui-input">
                                     </div>
@@ -147,7 +147,7 @@
                                 <div class="layui-btn-container layui-input-inline">
                                     <a class="layui-btn layui-btn-primary layui-btn-danger layui-btn-xs showPingtaibtn">平台</a>
                                     <a class="layui-btn  layui-btn-primary layui-btn-xs showSelfbtn">自有</a>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">设备点名称：</label>
@@ -299,8 +299,7 @@
                             for (var i = 0; i < 10; i++) {
                                 initHtml += '<input type="checkbox"  name="ports" value="'+(i+1)+'" title="' +
                                 (i + 1) + '号" lay-skin="primary">'
-                            }
-                            console.log(initHtml);
+                            };
                             $('#portsAll').html(initHtml);
                             $('#ports').show();
                         } else {
@@ -318,7 +317,7 @@
                                 .find('option:eq(1)')
                                 .attr('selected', true);
                         }
-                        form.render();
+                        form.render(); 
                         $(city)
                             .next()
                             .find('.layui-this')
@@ -532,56 +531,51 @@
                     var a=[];
                     $('input[name="ports"]').each(function (e) {
                         if($(this).next('.layui-unselect').is('.layui-form-checked')){
-                            a.push($(this).val()+':'+'1' )
-                        }else{
-                            a.push($(this).val()+':'+'0' )
+                            a.push($(this).val())
                         }
                     });
                     data.field.ports=a.toString();
                 } else {
-                  data.field.ports='1:0'
+                  data.field.ports='1'
                 }
                 delete data.field.brandName;
                 data.field.modelId = data.field.brandCode;
                 delete data.field.brandCode;
                 delete data.field.cate;
                 console.log(data.field);
-                parent.layer.open({
+                layer.open({
                     content: '确定保存新设备?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
                         common.addDeviceInfo(data.field, function (res) {
                             if (res.code == 200) {
-                                parent.layer.confirm('保存成功，继续添加设备?', {
+                                layer.close(index);
+                                layer.confirm('保存成功，继续添加设备?', {
                                     icon: 3,
                                     title: '提示',
                                     btn: ['继续添加', '返回设备列表'],
                                     yes: function (index) {
-                                        parent.layer.closeAll();
-                                        window.location.reload();
-                                    },
+                                        layer.close(index);
+                                        // window.location.reload();
+                                    }, 
                                     btn2: function (index) {
-                                        parent.layer.closeAll()
+                                        parent.layer.closeAll();
                                         // window.location.href =
                                         //     'pages/Device/list.html';
                                     }
                                 });
                             } else {
-                                parent.layer.closeAll();
-                                if (res.msg != null || res.msg != '') {
-                                    layer.msg(res.msg);
+                                layer.close(index);
+                                if (res.message != null || res.message != '') {
+                                    layer.msg(res.message);
                                 } else {
                                     layer.msg('保存失败');
                                 }
                             }
                         })
                     },
-                    btn2: function (index) {
-                        parent.layer.closeAll()
-                    },
-                    cancel: function (index) {
-                        parent.layer.closeAll()
-                    }
+                    
+                   
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
