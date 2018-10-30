@@ -69,7 +69,7 @@
     <form class="layui-form layui-layer-border" style=" padding: 10px;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item" style="margin-bottom: 0">
             <div class="layui-inline">
-                <label class="layui-form-label" style="width:100px ;">设备类型：</label>
+                <label class="layui-form-label" style="width:100px ;">主机类型：</label>
                 <div class="layui-input-block">
                     <input type="text" name="cate" placeholder="输入类型" autocomplete="off" class="layui-input">
                 </div>
@@ -83,19 +83,19 @@
             <div class="layui-inline">
                 <label class="layui-form-label" style="width:100px ;">主板类型：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="id" placeholder="输入类型" autocomplete="off" class="layui-input">
+                    <input type="text" name="brandCode" placeholder="输入类型" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label" style="width:100px ;">主板编码：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="id" placeholder="输入编码" autocomplete="off" class="layui-input">
+                    <input type="text" name="imei" placeholder="输入编码" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">主板状态：</label>
                 <div class="layui-input-inline" style="width: 80px;">
-                    <select name="device_state" lay-filter="state" lay-verify="">
+                    <select name="useStatus" lay-filter="state" lay-verify="">
                         <option value="">全部</option>
                         <option value="0">未使用</option>
                         <option value="1">使用中</option>
@@ -122,16 +122,27 @@
         <div id="laypage"></div>
     </div>
     <script type="text/html" id="stateTpl">
-        {{# if(d.state == '已处理'){ }}
+        {{# if(d.useStatus == 0){ }}
         <button class="layui-btn layui-btn-normal layui-btn-xs">未使用</button>
-        {{# } else if(d.state == '未分配'){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">使用中</button>
-        {{# } else{ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">已损坏</button>
+        {{# } else if(d.useStatus == 1 ){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">已使用</button>
+        {{# } else if(d.useStatus == 2){ }}
+        <button class="layui-btn layui-btn-warm layui-btn-xs">已报废</button>
         {{# } }}
     </script>
+    <script type="text/html" id="owned">
+        {{# if(d.owned == 1){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">服务商</button>
+        {{# } else if(d.owned == 0){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">集优生活</button>
+        {{# } }}
+    </script>
+  
     <script type="text/html" id="toolBar">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        {{# if(d.useStatus ==0 && d.owned==1){ }}
+         <a class="layui-btn layui-btn-xs" title="仅自有主板可编辑" lay-event="edit">编辑</a>
+        {{# } }}
+       
         <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
     </script>
     <script src="../data.js"></script>
@@ -210,7 +221,7 @@
                                 common.deleteMBInfos(ids.toString(), function (res) {
                                     if (res.code == 200) {
                                         productsearch(param, curnum, limitcount);
-                                        layer.msg('已删除');
+                                        layer.msg(res.message);
                                         parent.layer.closeAll();
                                     } else {
                                         layer.msg('删除失败');
@@ -262,26 +273,27 @@
                                     return d.LAY_TABLE_INDEX + 1
                                 }
                             }, {
-                                field: 'simCode',
+                                field: 'owned',
                                 title: '设备归属方',
+                                templet: '#owned'
+
                             }, {
-                                field: 'source',
-                                title: '品牌',
-                                templet: '#'
+                                field: 'brand',
+                                title: '品牌'
                             }, {
-                                field: 'status',
+                                field: 'cate',
                                 title: '主板类型',
                                 templet: '#',
                             }, {
-                                field: 'activeTime',
+                                field: 'imei',
                                 title: '主板编号',
-
+                                
                             }, {
-                                field: 'expire',
+                                field: 'type',
                                 title: '主板型号',
 
                             }, {
-                                field: 'period',
+                                field: 'useStatus',
                                 title: '状态',
                                 templet: '#stateTpl'
                             }, {
@@ -293,7 +305,7 @@
                             }]
                         ],
                         cellMinWidth: 80,
-                        data: res.content,
+                        data: res.data.content,
                         limit: limitcount,
                         done: function (res1, curr, count) {
                             console.log(res1);
@@ -301,14 +313,12 @@
                             //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                             laypage.render({
                                 elem: 'laypage',
-                                count: res.totalElements,
+                                count: res.data.totalElements,
                                 curr: param.page,
                                 limit: limitcount,
                                 theme: 'right',
                                 limits: [10, 20, 50, 100],
-                                layout: ['prev', 'page', 'next', 'skip', 'count',
-                                    'limit'
-                                ],
+                                layout: ['prev', 'page', 'next', 'skip', 'count','limit'],
                                 jump: function (obj, first) {
                                     if (!first) {
                                         curnum = obj.curr;
@@ -356,7 +366,7 @@
                         layer.close(index);
                     });
                 } else if (layEvent === 'edit') {
-                    initModal('编辑主板','editBoard.html');
+                    initModal('编辑主板','editBoard.html?id='+data.id);
                 }
             });
 

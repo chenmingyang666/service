@@ -4,14 +4,14 @@
             // baseUrl = 'http://api.gelives.com/';
             bxUrl = 'http://api.cloudbox.net.cn:8002/';
         //  baseUrl ='http://192.168.1.200:80/';
-        // baseUrl = 'http://192.168.1.48/';
-        baseUrl = 'http://192.168.1.53:18080/';
+        baseUrl = 'http://192.168.1.48:18080/';
+        // baseUrl = 'http://192.168.1.53:18080/';
         var obj = {
             // baseUrl: 'http://api.gelives.com/',
             bxUrl: 'http://api.cloudbox.net.cn:8002/',
             // baseUrl: 'http://192.168.1.200:80/',
-            // baseUrl: 'http://192.168.1.48/',
-            baseUrl: 'http://192.168.1.53:18080/', 
+            baseUrl: 'http://192.168.1.48:18080/',
+            // baseUrl: 'http://192.168.1.53:18080/', 
             // 注册用户
             regUser: function (field, callback) {
                 $.ajax({
@@ -307,6 +307,23 @@
                 });
             },
             //启用设备点
+            activeSinDevice: function (id, callback) {
+                $.ajax({
+                    url: baseUrl + 'db/opt/' + id,
+                    type: 'post',
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            //启用设备点
             activeDevice: function (id, callback) {
                 $.ajax({
                     url: baseUrl + 'device/online/' + id,
@@ -430,13 +447,11 @@
                 $.ajax({
                     type: 'post',
                     url: baseUrl + 'db/update',
-                    data: JSON.stringify(datas),
-                    dataType: 'json',
+                    data: datas,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
-                            .token,
-                        'Content-Type': 'application/json'
+                            .token
                     },
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
@@ -472,9 +487,8 @@
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token,
-                        'Content-Type': 'application/json'
-                    },
-                    contentType: 'application/json,application/x-www-form-urlencoded',
+                         
+                    }, 
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -485,14 +499,13 @@
             deleteDevices: function (ids, callback) {
                 $.ajax({
                     type: 'post',
-                    url: baseUrl + 'db/delete/' + ids,
+                    url: baseUrl + 'db/deletes',
+                    data:{"ids":ids},
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token,
-                        'Content-Type': 'application/json'
                     },
-                    contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -547,6 +560,24 @@
                 $.ajax({
                     url: baseUrl + 'lct',
                     data: param,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token,
+                        'Content-Type': 'application/json'
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 获取联动数据
+            getCimitsData: function (callback) {
+                // console.log(param);
+                $.ajax({
+                    url: baseUrl + 'dlc/getCimts',
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -642,9 +673,7 @@
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
-                            // ,'Content-Type': 'application/json'
                     },
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -662,10 +691,8 @@
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
-                            .token
-                            // ,'Content-Type': 'application/json'
+                            .token 
                     },
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -681,9 +708,7 @@
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
-                            // ,'Content-Type': 'application/json'
                     },
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -700,9 +725,7 @@
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token,
-                        // 'Content-Type': 'application/json'
                     },
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -850,7 +873,22 @@
                     success: callback
                 })
             },
-
+            // 主板3级联动
+            getBoardDropList:function (callback) {
+                $.ajax({
+                    url: baseUrl + 'dlc/linked/imei',
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
             // 新增主板
             addMB: function (params, callback) {
                 $.ajax({

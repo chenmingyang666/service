@@ -43,12 +43,12 @@
                     <input type="text" name="building" required placeholder="输入楼号" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-inline">
+            <!-- <div class="layui-inline">
                 <label class="layui-form-label">楼层</label>
                 <div class="layui-input-block">
                     <input type="text" name="floor" required placeholder="输入楼层" autocomplete="off" class="layui-input">
                 </div>
-            </div>
+            </div> -->
             <div class="layui-inline">
                 <label class="layui-form-label">是否上线：</label>
                 <div class="layui-input-block">
@@ -199,13 +199,21 @@
                                 field: 'area',
                                 title: '区县',
                             }, {
-                                field: 'community',
+                                field: 'cmitName',
                                 title: '校区/社区',
-                            }, {
+                            }
+                            // , {
+                            //     field: 'bulidingNo',
+                            //     title: '楼号',
+                            // }, {
+                            //     field: 'floorNo',
+                            //     title: '楼层',
+                            // }
+                            , {
                                 field: 'latitude',
                                 title: '坐标',
                                 templet: function (d) {
-                                    return d.longitude + ',' + d.latitude
+                                    return d.slng + ',' + d.slat
                                 }
 
                             }, {
@@ -230,13 +238,12 @@
                             //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                             laypage.render({
                                 elem: 'laypage',
-                                count: res.totalElements,
+                                count: res.data.totalElements,
                                 curr: param.page,
                                 limit: limitcount,
                                 theme: 'right',
                                 limits: [10, 20, 50, 100],
-                                layout: ['prev', 'page', 'next', 'skip', 'count',
-                                    'limit'
+                                layout: ['prev', 'page', 'next', 'skip', 'count','limit'
                                 ],
                                 jump: function (obj, first) {
                                     if (!first) {
@@ -255,9 +262,6 @@
                 });
             }
             productsearch(param, curnum, limitcount);
-
-
-
             element.render();
             form.render();
             //表单查询提交
@@ -274,7 +278,6 @@
                 var obj = Object.assign(param, needData);
                 console.log(obj);
                 productsearch(obj, curnum, limitcount);
-
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
             // 全选和反选
@@ -304,11 +307,10 @@
                 var data = obj.data; //获得当前行数据
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
-                if (layEvent === 'edit') { //查看
+                if (layEvent === 'edit') {
                     //do somehing
-                    initModal('编辑设备','editAddress.html')
+                    initModal('编辑设备','editAddress.html?id='+data.id+'&province='+data.province+'&city='+data.city+'&area='+data.area+'&type='+data.type+'&cmit='+data.cmit+'&cmitId='+data.cmitId+'&cmitName='+data.cmitName);
                 } else if (layEvent === 'del') {
-                    console.log(data);
                     parent.layer.confirm('确认删除设备点"' + data.name + '"吗？', function (index) {
                         common.deleteAddress(data.id, function (res) {
                             if (res.code == 200) {
@@ -324,14 +326,7 @@
                     });
                 }
             });
-            // 监听表格内编辑
-            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                console.log(obj.value); //得到修改后的值
-                console.log(obj.field); //当前编辑的字段名
-                console.log(obj.data); //所在行的所有相关数据  
-                layer.msg('编辑保存')
-            });
-            //    设备控制开关
+            //设备控制开关
             form.on('switch(deviceControl)', function (data) {
                 console.log($(data.elem).parents('tr').attr('data-index'));
                 console.log(data.elem.checked); //开关是否开启，true或者false

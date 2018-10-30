@@ -45,34 +45,38 @@
                 <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
                     <div class="layui-form-item">
                         <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
-                        <input type="text" name="account" id="LAY-user-login-cellphone" lay-verify="required|account" placeholder="输入注册时手机号" class="layui-input">
+                        <input type="text" name="account" id="LAY-user-login-cellphone" lay-verify="required|account"
+                            placeholder="输入注册时手机号" class="layui-input">
                     </div>
                     <div class="layui-form-item">
                         <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
-                        <input type="password" name="password" id="LAY-user-login-password" lay-verify="required|password" placeholder="输入密码" class="layui-input">
+                        <input type="password" name="password" id="LAY-user-login-password" lay-verify="required|password"
+                            placeholder="输入密码" class="layui-input">
                     </div>
                     <div class="layui-form-item">
                         <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
-                        <input type="password" name="surepassword" lay-verify="required|password" placeholder="再次输入密码" class="layui-input">
+                        <input type="password" name="surepassword" lay-verify="required|password" placeholder="再次输入密码"
+                            class="layui-input">
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-row">
                             <div class="layui-col-xs7">
                                 <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
-                                <input type="text" name="code" id="LAY-user-login-vercode" lay-verify="required" placeholder="验证码" class="layui-input">
+                                <input type="text" name="code" id="LAY-user-login-vercode" lay-verify="required"
+                                    placeholder="验证码" class="layui-input">
                             </div>
                             <div class="layui-col-xs5">
                                 <div style="margin-left: 10px;">
-                                    <input type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode" value="获取验证码">
+                                    <input type="button" class="layui-btn layui-btn-primary layui-btn-fluid" id="LAY-user-getsmscode"
+                                        value="获取验证码">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="LAY-user-login-submit">找回密码</button>
+                        <button class="layui-btn layui-btn-fluid" lay-submit="" id="LAY-user-login-submit" lay-filter="LAY-user-login-submit">找回密码</button>
                     </div>
                     <div class="layui-trans layui-form-item layadmin-user-login-other">
-
                         <a href="login.html" class="layadmin-user-jump-change layadmin-link" style="float: left;margin-left: 10px;color: #1890ff !important">返回登录</a>
                         <a href="reg.html" class="layadmin-user-jump-change layadmin-link" style="float: right;margin-right: 10px;color: #1890ff !important">注册帐号</a>
                     </div>
@@ -82,13 +86,9 @@
                 <p>© 2018
                     <a href="http://jiyoukeji.cn" target="_blank">gelives.com</a>
                 </p>
-            </div> 
-          
+            </div>
         </div>
-
     </div>
-
-
     <script type='text/javascript' src="js/layui.js"></script>
     <script type='text/javascript' src="js/global.js"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
@@ -151,7 +151,7 @@
                     layer.alert("请填写正确的手机号！");
                     return false;
                 }
-          
+
                 $.ajax({
                     async: false,
                     type: "GET",
@@ -188,35 +188,40 @@
                     settime();
                 }, 1000);
             }
+            $(document).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    document.getElementById("LAY-user-login-submit").click();
+                }
+            });
             //提交
             form.on('submit(LAY-user-login-submit)', function (obj) {
                 var field = obj.field;
-                
-                if(field.password!=field.surepassword){
+
+                if (field.password != field.surepassword) {
                     layer.msg("请确认两次密码是否正确");
-                }else{
+                } else {
                     delete field.surepassword;
                     //  请求登入接口
-                common.forgetPass(field, function (res) {
-                    console.log(res);
-                    if (res.code == 200) {
-                        layer.confirm('恭喜，密码修改成功', {
+                    common.forgetPass(field, function (res) {
+                        console.log(res);
+                        if (res.code == 200) {
+                            layer.confirm('恭喜，密码修改成功', {
                                 icon: 1,
                                 title: '提示',
                                 btn: ['返回登录页'],
-                                
+
                                 yes: function (index) {
                                     layer.close(index);
                                     window.location.href = 'login.html';
                                 }
 
                             });
-                    } else {
-                        layer.msg('请重试')
-                    }
-                })
+                        } else {
+                            layer.msg('请重试')
+                        }
+                    })
                 }
-               
+
             });
         })
     </script>

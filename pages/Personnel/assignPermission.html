@@ -46,7 +46,6 @@
                 <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
                 </table>
                 <!-- <div id="laypage"></div> -->
-
             </div>
             <div class="layui-card funcBtn" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
                 <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
@@ -94,6 +93,7 @@
                         data.forEach(function (ele) {
                             arr.push(ele.id);
                         });
+                        console.log(arr);
                         params.role_id=$('#role').next()
                             .find('.layui-this').attr('lay-value');
                         params.menu_id=arr.toString();
@@ -112,7 +112,6 @@
                                                 layer.close(index);
                                                 // window.location.reload();
                                             },
-
                                         });
                                     } else {
                                         layer.close(index);
@@ -126,8 +125,6 @@
                             }
                         })
                     },
-
-
                 };
 
             let url = window.location.href,
@@ -146,9 +143,7 @@
                     console.log(res);
                     res.data.forEach(function (ele, index) {
                         $('#role').find('option:last').before("<option value=" + ele.id + ">" +
-                            ele
-                            .name +
-                            "</option>");
+                            ele.name +"</option>");
                         form.render();
                     });
                 });
@@ -175,7 +170,6 @@
                 // param.page = start;
                 // param.pageSize = limitsize;
                 param.vendorId = layui.sessionData('id').id;
-
                 common.getAllMenuList(param, function (res) {
                     console.log(res);
                     // 展示搜索结果的表格
@@ -193,40 +187,7 @@
                         ],
                         width: 500,
                         data: res.data,
-                        done: function (res1, curr, count) {
-                            console.log(res1);
-                            //如果是异步请求数据方式，res即为你接口返回的信息。
-                            laypage.render({
-                                elem: 'laypage',
-                                count: res.data.count,
-                                curr: param.page,
-                                limit: limitcount,
-                                // theme: 'right',
-                                limits: [10, 20, 50, 100],
-                                layout: ['prev', 'page',
-                                    'next', 'skip',
-                                    'count',
-                                    'limit'
-                                ],
-                                jump: function (obj, first) {
-                                    if (!first) {
-                                        curnum = obj.curr;
-                                        limitcount =
-                                            obj.limit;
-                                        param.page =
-                                            obj.curr;
-                                        param.size =
-                                            obj.limit;
-                                        productsearch(
-                                            param,
-                                            curnum,
-                                            limitcount
-                                        );
-                                    }
-                                }
-                            });
-                        }
-
+                        limit:res.data.length
                     });
                 });
             }

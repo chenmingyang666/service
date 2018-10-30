@@ -182,6 +182,7 @@
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
                         //do something
+                        data.field.user_id=layui.sessionData('id').id;
                         common.addVendorUser(data.field, function (res) {
                             if (res.code == 200) {
                                 layer.confirm('保存成功，继续添加管理人员?', {

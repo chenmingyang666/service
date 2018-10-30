@@ -124,26 +124,22 @@
 
                                 <label class="layui-form-label">主板编号：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
-                                    <!-- <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input"> -->
-                                    <select name="devSeq" id="devSeq" lay-filter="devSeq">
-                                        <option value="">请选择</option>
-                                    </select>
+                                    <input type="text" name="imei" lay-verify="required" autocomplete="off" class="layui-input">
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">设备归属方：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
-                                    <!-- <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input"> -->
                                     <select name="owned" lay-filter="owned">
-                                        <option value="01">集优科技</option>
+                                        <option value="1">服务商</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">是否报废：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
-                                    <input type="checkbox" name="yyy" lay-skin="switch" lay-text="正常|报废">
+                                    <input type="checkbox" name="useStatus" id="useStatus" lay-skin="switch" lay-text="正常|报废">
                                 </div>
                             </div>
 
@@ -158,6 +154,7 @@
         </div>
     </form>
     <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/lay/modules/projectRelate.js"></script>
     <script>
         layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'element', 'common'], function () {
             var table = layui.table,
@@ -184,26 +181,46 @@
                 console.log(res);
                 form.render();
                 form.val("searchBox", {
-
                     'cate': res.data.cate,
                     'brandname': res.data.brandname,
                     'brand_code': res.data.brand_code,
-                    'devSeq': res.data.dev_seq,
+                    'imei': res.data.imei,
                     'number': res.data.number,
                     'code': res.data.code,
                 });
+
                 form.render();
+                // 主板3级联动
+                common.getBoardDropList(function (res) {
+                    console.log(res);
+                    pca.init(res.data, 'select[name=cate]', 'select[name=brandName]',
+                        'select[name=brandCode]', '', '', '');
+                });
+                // useStatus    
+                if (res.data.useStatus == 0) {
+                    $('#useStatus').val('0');
+                }else{
+                    $('#useStatus').val('1');
+                    $('#useStatus').attr('checked','checked');
+                    form.render();
+                }
             });
 
 
             // 表单提交
             form.on('submit(searchBox)', function (data) {
-                console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
+                if($('#useStatus').next().is('.layui-form-onswitch')){
+                   data.field.useStatus=1
+               }else{
+                data.field.useStatus=0
+               }
+               console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
+               
                 parent.layer.open({
                     content: '确定保存信息?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
-                      
+
                         //do something
                         common.updateMBInfo(data.field, function (res) {
                             if (res.code == 200) {
@@ -234,7 +251,7 @@
                     btn2: function (index) {
                         parent.layer.close()
                     },
-                   
+
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });

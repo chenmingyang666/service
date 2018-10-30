@@ -24,6 +24,9 @@
         .layadmin-user-jump-change {
             color: #1890ff !important;
         }
+        ::-webkit-scrollbar {
+            display: none;
+        }
     </style>
     <script>
         // 背景canvas
@@ -88,7 +91,7 @@
                         <input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>
                     </div> -->
                     <div class="layui-form-item">
-                        <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-reg-submit" style="background-color: #1890ff !important;">注册</button>
+                        <button class="layui-btn layui-btn-fluid" lay-submit id="LAY-user-reg-submit" lay-filter="LAY-user-reg-submit" style="background-color: #1890ff !important;">注册</button>
                     </div>
                     <div class="layui-trans layui-form-item layadmin-user-login-other">
                         <a href="login.html" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
@@ -171,6 +174,11 @@
                     settime();
                 }, 1000);
             };
+            $(document).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    document.getElementById("LAY-user-reg-submit").click();
+                }
+            });
             //提交
             form.on('submit(LAY-user-reg-submit)', function (obj) {
                 var field = obj.field;

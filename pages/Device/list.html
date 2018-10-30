@@ -12,7 +12,8 @@
             float: right !important;
         }
         .w150{
-            width: auto
+            width: 120px!important;
+            text-align: right;
         }
         .layui-side-menu,
         .layadmin-pagetabs .layui-tab-title li:after,
@@ -134,11 +135,11 @@
             <div class="layui-inline">
                 <label class="layui-form-label w150">主机型号：</label>
                 <div class="layui-input-inline">
-                    <div class="layui-input-inline">
+                    
                         <select name="brandCode" lay-filter="brandCode" lay-verify="" lay-search>
 
                         </select>
-                    </div>
+                    
                 </div>
 
             </div>
@@ -163,7 +164,7 @@
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">设备状态：</label>
+                <label class="layui-form-label w150">设备状态：</label>
                 <div class="layui-input-inline">
                     <select name="status" id="chooseStatus" lay-filter="status" lay-verify="">
                         <option value="">全部</option>
@@ -203,7 +204,7 @@
 
     <script type="text/html" id="toolBar">
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
     </script>
     <!-- 设备分类 -->
     <script type="text/html" id="deviceCate">
@@ -249,9 +250,11 @@
         {{# } }}
     </script>
     <script type="text/html" id="checkboxTpl">
-        {{# if(d.status ===1){ }}
-        <input type="checkbox" checked='' value="{{d.status}}" name="open" lay-skin="switch" lay-text="启用|关闭" lay-filter="deviceControl"> {{# }else{ }}
-        <input type="checkbox" name="close" lay-skin="switch" lay-text="启用|关闭" lay-filter="deviceControl"> {{# } }}
+        <!-- 0 上线  1下线 -->
+        {{# if(d.status ===0){ }}
+        <input type="checkbox" checked='' data-id="{{d.id}}" value="{{d.status}}" name="open" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl">
+         {{# }else{ }}
+        <input type="checkbox" name="close" data-id="{{d.id}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# } }}
     </script>
     <script src="../../js/global.js"></script>
     <script src="../../js/lay/modules/projectRelate.js"></script>
@@ -323,20 +326,17 @@
                         data.forEach(function (ele, index) {
                             ids.push(ele.id);
                         });
-                        // ids=ids.toString();
-                        console.log(ids.toString());
                         if (ids.length > 0) {
                             parent.layer.confirm('确认删除吗?', function () {
                                 common.deleteDevices(ids.toString(), function (res) {
                                     if (res.code == 200) {
                                         productsearch(param, curnum, limitcount);
-                                        layer.msg('已删除');
+                                        layer.msg(res.message);
                                         parent.layer.closeAll();
                                     } else {
-                                        layer.msg('删除失败');
+                                        layer.msg(res.message);
                                         parent.layer.closeAll();
                                     };
-
                                 });
 
                             })
@@ -381,32 +381,6 @@
                     }
 
                 };
-
-            var linkData = [{
-                "name": "洗衣机",
-                "child": [{
-                    "name": "海尔",
-                    "child": [{
-                        "id": "1",
-                        "name": "SXG80-BX10636U7"
-                    }, {
-                        "id": "2",
-                        "name": "SXB60-1U1"
-                    }, {
-                        "id": "3",
-                        "name": "SXB60-1U2"
-                    }, {
-                        "id": "4",
-                        "name": "SXB60-1U3"
-                    }]
-                }, {
-                    "name": "海尔1",
-                    "child": [{
-                        "id": "5",
-                        "name": "SXB60-1U4"
-                    }]
-                }]
-            }];
             // 拼配3级联动
             common.getDeviceLinked(function (res) {
                 console.log(res);
@@ -626,17 +600,15 @@
             });
             //    设备控制开关
             form.on('switch(deviceControl)', function (data) {
-                console.log($(data.elem).parents('tr').attr('data-index'));
-                console.log(data.elem.checked); //开关是否开启，true或者false
-                console.log(data.value); //开关value值，也可以通过data.elem.value得到
-                console.log(this.name);
-                // common.activeDevice(this.name, function (res) {
-                //     if (res.code == 200) {
-                //         layer.msg('操作成功')
-                //     } else {
-                //         layer.msg('操作失败')
-                //     }
-                // });
+              
+                var id=$(this).attr('data-id');
+                common.activeSinDevice(id, function (res) {
+                    if (res.code == 200) {
+                        layer.msg(res.message)
+                    } else {
+                        layer.msg(res.message)
+                    }
+                });
             });
             $('body').on('click', '.searchmenu ul li', function (e) {
                 var select = $(this).index();

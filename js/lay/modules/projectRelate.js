@@ -13,9 +13,8 @@ layui
                 if (!province || !$(province).length) 
                     return;
                 $(province).html('');
-                $(province).append('<option value="" selected>请选择设备分类</option>');
+                $(province).append('<option value="" selected>请选择</option>');
                 for (var i in initData) {
-
                     $(province).append('<option value="0' + (Number(i) + Number(1)) + '">' + initData[i].name + '</option>');
                     pca.keys[initData[i].name] = initData[i];
                 }
@@ -41,7 +40,7 @@ layui
                     };
 
                     $(city).html('');
-                    $(city).append('<option value="" selected>请选择设备品牌</option>');
+                    $(city).append('<option value="" selected>请选择</option>');
                     if (cs) {
                         cs = cs.child;
                         for (var i in cs) {
@@ -70,7 +69,7 @@ layui
                 form.on('select(brandName)', function (data) {
                     var cs = pca.ckeys[data.value];
                     $(area).html('');
-                    $(area).append('<option value="" selected>请选择设备型号</option>');
+                    $(area).append('<option value="" selected>请选择</option>');
                     if (cs) {
                         cs = cs.child;
                         for (var i in cs) {

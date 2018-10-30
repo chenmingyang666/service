@@ -20,8 +20,7 @@ layui
         if (!layui.sessionData('token').token) {
             window.location.href = 'login.html'
         } else {
-            // if (!layui.sessionData('nickName').nickName) {
-            if (!layui.sessionData('id').id) {
+            if (!layui.sessionData('nickName').nickName && layui.sessionData('is_vendor').is_vendor==0) {
                 $('.shadeBg').show();
                 $('.userData').show();
                 form.on('submit(sendInfo)', function (data) {
@@ -47,7 +46,6 @@ layui
                             common.updateInfo(field, function (res) {
                                 if (res.code == 200) {
                                     layer.msg('保存成功');
-
                                     layui.sessionData('nickName', {
                                         key: 'nickName',
                                         value: res.data.name
@@ -250,31 +248,25 @@ layui
             active.tabChange(dataid.attr("data-id"));
         });
         // 加载权限菜单
-        // common.getUserMenuList({
-        //     "user_id": layui
-        //         .sessionData('id')
-        //         .id
-        // }, function (res) {
-        //     console.log(res.data);
-        //     var menu1 = [],
-        //         menu2 = [];
-        //     res
-        //         .data
-        //         .forEach(function (ele) {
-        //             menu1.push(ele.name)
-        //         });
-        //     console.log(menu1);
-        //     $('.layui-side ul .layui-nav-item a[data-title]').each(function () {
+        common.getUserMenuList({
+            "user_id": layui.sessionData('role_id').role_id
+        ,"vendor_id":layui.sessionData('id').id}, function (res) { 
+            var menu1 = [];
+            res.data.forEach(function (ele) {
+                    menu1.push(ele.name)
+                }); 
+            $('.layui-side ul .layui-nav-item a[data-title]').each(function () {
+                var title = $(this).attr('data-title');
+                
+                // 当前菜单标题与返还的权限菜单不匹配，则隐藏
+                if (menu1.indexOf(title)<0) {
+                    var that = $(this);
+                    that.addClass('layui-hide');
+                    //  that.parent().addClass('layui-hide')
+                }
+            });
 
-        //         var title = $(this).attr('data-title');
-        //         console.log(title);
-        //         console.log(menu1.indexOf(title));
-        //         if (menu1.indexOf(title)<0) {
-        //             var that = $(this);
-        //             that.addClass('layui-hide')
-        //         }
-        //     })
-        // });
+        });
         $('.layadmin-pagetabs .layui-tab li')
             .first()
             .on('click', function () {

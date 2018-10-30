@@ -201,24 +201,20 @@
                             </span>
 
                             <label class="layui-form-label w50">楼号：</label>
-                            <div class="layui-input-inline" style="width: auto">
-                                <input class="layui-input" name="building"  >
+                            <div class="layui-input-inline" style="width: 100px">
+                                <input class="layui-input" name="buildingNo"  >
 
                             </div>
-                            <label class="layui-form-label w50">楼层：</label>
-                            <div class="layui-input-inline" style="width: auto">
-                                <input class="layui-input" name="floor"  >
-                            </div>
-                            <div class="layui-form-mid layui-word-aux">*</div>
+                            <div class="layui-form-mid layui-word-aux">*(地点类型为“学校”时，楼号为必填项)</div>
                         </div>
                         <div class="layui-form-item" style="display: flex;align-items: center;">
                             <label class="layui-form-label">地址定位：</label>
                             <div class="layui-input-inline" style="width: 50%;">
-                                <input type="text" autocomplete="off" name="locate" class="layui-input address" id="searchAddress">
+                                <input type="text" autocomplete="off" name="address" class="layui-input address" id="searchAddress">
                             </div>
                         </div>
 
-                        <div class="layui-form-item">
+                        <div class="layui-form-item" style="margin-bottom:0">
 
                             <div id="container"></div>
                             <div id="tip" style="text-align: right"></div>
@@ -235,14 +231,9 @@
                 <div class="layui-form-item" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                     <button class="layui-btn layui-btn-danger" lay-submit lay-filter="searchBox">保存</button>
-
-
                 </div>
-
             </div>
-
         </div>
-
     </form>
     <script>
         layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'element', 'common', 'address'], function () {
@@ -337,24 +328,9 @@
                 form = layui.form,
                 common = layui.common,
                 address = layui.address(),
-                element = layui.element;
+                element = layui.element;   
             var url = location.href;
 
-            // 监听地址类型选择
-            form.on('select(commuType)', function (data) {
-                // console.log(data.value);
-                if (data.value == '0') {
-                    $('.type1').show();
-                    $('.type2').hide();
-                    $('input[name="building"],input[name="floor"]').attr('lay-verify', 'required')
-                    // form.render();
-                } else if (data.value == '1') {
-                    $('.type2').show();
-                    $('.type1').hide();
-                    $('input[name="building"],input[name="floor"]').removeAttr('lay-verify')
-                    // form.render();
-                }
-            });
             // 监听完区县然后加载学校
             // form.on('select(area)', function (data) {
             //     console.log(data.value);
@@ -386,37 +362,48 @@
                     form.render()
                 })
             };
-
             // 监听学校选择 
             form.on('select(community)', function (data) {
-
                 $('#searchAddress').val($('select[name="community"]').find('option[value="' + data.value +
                     '"]').attr('data-address'));
                 form.render()
             });
             form.on('submit(searchBox)', function (data) {
                 var position = data.field.coordinate.split(',');
-                data.field.longitude = position[0];
-                data.field.latitude = position[1];
-                // console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
-                parent.layer.open({
+                data.field.slng = position[0];
+                data.field.slat = position[1];
+                if(data.field.school && data.field.schoolArea !=''){
+                    data.field.communityId=data.field.schoolArea;
+                }else{
+                    data.field.communityId=data.field.term;
+                }
+                delete data.field.province;
+                delete data.field.city;
+                delete data.field.area;
+                delete data.field.commuType;
+                delete data.field.school;
+                delete data.field.schoolArea;
+                delete data.field.community;
+                delete data.field.term;
+                console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
+                layer.open({
                     content: '确定保存新地址?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
                         common.addLocate(data.field, function (res) {
                             // console.log(res);
                             if (res.code == 200) {
-                                parent.layer.confirm('保存成功，继续添加地址?', {
+                                layer.confirm('保存成功，继续添加地址?', {
                                     icon: 3,
                                     title: '提示',
                                     fixed: true,
                                     btn: ['继续添加', '返回地址列表'],
                                     yes: function (index) {
-                                        parent.layer.close();
-                                        window.location.reload();
+                                        layer.close(index);
                                     },
                                     btn2: function (index) {
-                                        parent.layer.closeAll();
+                                        layer.close(index);
+                                        layer.closeAll();
                                         // window.location.href =
                                         //     'pages/Device/address.html';
                                     }
@@ -428,9 +415,7 @@
 
 
                     },
-                    btn2: function (index) {
-                        parent.layer.closeAll();
-                    },
+                    
                    
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。

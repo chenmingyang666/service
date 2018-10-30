@@ -74,7 +74,8 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="LAY-user-login-submit">登 入</button>
+                        <button class="layui-btn layui-btn-fluid" lay-submit="" id="LAY-user-login-submit" lay-filter="LAY-user-login-submit">登
+                            入</button>
                     </div>
                     <div class="layui-trans layui-form-item layadmin-user-login-other">
 
@@ -123,6 +124,11 @@
             if (layui.sessionData('token').token) {
                 window.location.href = 'index.html'
             };
+            $(document).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    document.getElementById("LAY-user-login-submit").click();
+                }
+            });
             //提交
             form.on('submit(LAY-user-login-submit)', function (obj) {
                 var field = obj.field;
@@ -145,6 +151,15 @@
                         layui.sessionData('id', {
                             key: 'id',
                             value: res.data.id
+                        });
+                        layui.sessionData('role_id', {
+                            key: 'role_id',
+                            value: res.data.role_user_id
+                        });
+                        // 判断是否是服务商 0服务商 1人员
+                        layui.sessionData('is_vendor', {
+                            key: 'is_vendor',
+                            value: res.data.is_vendor
                         });
                     };
                     if (res.code == 200) {
