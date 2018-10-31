@@ -11,26 +11,24 @@
             float: right !important;
         }
     </style>
-
     <script src="../../js/layui.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/global.js"></script>
     <script src="../../js/tool.js"></script>
 </head>
-
 <body>
     <form class="layui-form layui-layer-border" style=" padding: 10px;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item" style="margin:0">
             <div class="layui-inline">
                 <label class="layui-form-label">项目名称：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="name" class="layui-input" placeholder="输入项目名称" autocomplete="off">
+                    <input type="text" name="pjt_name" class="layui-input" placeholder="输入项目名称" autocomplete="off">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">设备类型：</label>
                 <div class="layui-input-inline">
-                    <select name="cate" xm-select="cate" xm-select-skin="normal" lay-filter="cate" lay-verify="">
+                    <select name="cate_name" xm-select="cate" xm-select-skin="normal" lay-filter="cate" lay-verify="">
                         <option value="">请选择</option>
                         <option value="01">洗衣机</option>
                         <option value="02">吹风机</option>
@@ -116,7 +114,7 @@
                     laypage = layui.laypage,
                     laydate = layui.laydate,
                     common = layui.common,
-                    formSelects = layui.formSelects,
+                    formSelects = layui.formSelects,multiCate='',
                     active = {
                         getCheckData: function () { //获取选中数据
                             var checkStatus = table.checkStatus('data_demo'),
@@ -159,14 +157,14 @@
                     name: 'cate', //xm-select的值
                     type: 1, //等效xm-select-type, 选择样式
                     on: function (data, arr) { //监听数据变化
-                        console.log(data); //layui.form.on的data
-                        console.table(arr); //已选择数据的数组
+                        var selectArr = [];
+                        arr.forEach(function (item) {
+                            console.log(item);
+                            selectArr.push(item.name)
+                        });
+                        multiCate = selectArr.toString();
                     },
-
-
                 });
-
-
                 // 获取二维码列表
                 var limitcount = 10,
                     curnum = 1,
@@ -175,19 +173,18 @@
                         size: 10,
                         pageSize: 10
                     };
-
                 function productsearch(param, start, limitsize) {
                     // param.page = start;
                     // param.pageSize = limitsize;
-                    param.vendorId = layui.sessionData('id').id;
-                    common.getOrderTypeData(param, function (res) {
+                    param.vendor_id = layui.sessionData('id').id;
+                    common.getOrderStaticData(param, function (res) {
                         console.log(res);
                         // 展示搜索结果的表格
                         table.render({
                             elem: '#data_demo',
                             cols: [
                                 [{
-                                    field: 'address',
+                                    field: 'year_mouth',
                                     title: '时间'
                                 }, {
                                     field: 'name',
@@ -195,33 +192,33 @@
                                     minWidth: 250
                                 }, {
                                     field: 'cate_name',
-                                    title: '设备类型',
+                                    title: '主机类型',
                                     templet: '#deviceCate',
                                     align: 'center',
 
-                                }, {
-                                    field: 'server_name',
-                                    title: '支付宝',
-                                    align: 'center'
-                                }, {
-                                    field: 'purse_income',
-                                    title: '钱包支付',
-                                    align: 'center'
-                                }, {
-                                    field: 'wechat_income',
-                                    title: '微信开发（APP）',
-                                    align: 'center'
-                                }, {
-                                    field: 'status',
-                                    title: '微信公众（扫码）',
-                                    align: 'center'
                                 }, {
                                     field: 'ali_income',
                                     title: '支付宝',
                                     align: 'center'
                                 }, {
-                                    field: 'order_numer',
-                                    title: '订单数',
+                                    field: 'wechat_income',
+                                    title: '微信',
+                                    align: 'center'
+                                }, {
+                                    field: 'purse_income',
+                                    title: '钱包',
+                                    align: 'center'
+                                }, {
+                                    field: '',
+                                    title: '水卡',
+                                    align: 'center'
+                                }, {
+                                    field: '',
+                                    title: '现金券',
+                                    align: 'center'
+                                }, {
+                                    field: 'order_number',
+                                    title: '订单量',
                                     align: 'center'
                                 }, {
                                     field: 'buyer_pay_amount',
@@ -274,6 +271,7 @@
                 form.render();
                 //表单查询提交
                 form.on('submit(searchBox)', function (data) {
+                    data.field.cate=multiCate;
                     var needData = data.field,
                         param = {
                             page: 1,

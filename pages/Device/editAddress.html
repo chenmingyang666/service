@@ -67,122 +67,123 @@
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.8&key=699aee3265c5dba08b66d0d9400e86d1"></script>
     <script type="text/javascript" src="https://webapi.amap.com/ui/1.0/main.js"></script>
 </head>
+
 <body>
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
-                <div class="layui-fluid">
-                        <div class="layui-row layui-col-space15">
-                            <div class="layui-form-item" style="border:1px solid #f6f6f6;">
-                                <!-- <div class="layui-card-header">新增地址</div> -->
-                                <div class="layui-card-body" style="padding: 15px;">
-                                    <div class="layui-col-md5">
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label">设备点名称：</label>
-                                            <div class="layui-input-inline" style="width: 50%;">
-                                                <input type="text" name="name" lay-verify="required" autocomplete="off" class="layui-input">
-                                            </div>
-                                            <div class="layui-form-mid layui-word-aux">*</div>
-                                        </div>
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label">省份：</label>
-                                            <div class="layui-input-inline" style="width: 50%;">
-                                                <select name="province" lay-filter="province" lay-verify="required" class="province">
-                                                    <option value="">请选择省</option>
-                                                </select>
-                                            </div>
-                                            <div class="layui-form-mid layui-word-aux">*</div>
-                                        </div>
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label">城市：</label>
-                                            <div class="layui-input-inline" style="width: 50%;">
-                                                <select name="city" lay-filter="city" lay-verify="required">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="layui-form-mid layui-word-aux">*</div>
-                                        </div>
-                                        <div class="layui-form-item">
-                                            <label class="layui-form-label">区县：</label>
-                                            <div class="layui-input-inline" style="width: 50%;">
-                                                <select name="area" lay-filter="area" lay-verify="required">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <div class="layui-form-mid layui-word-aux">*</div>
-                                        </div>
-            
-            
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-form-item" style="border:1px solid #f6f6f6;">
+                        <!-- <div class="layui-card-header">新增地址</div> -->
+                        <div class="layui-card-body" style="padding: 15px;">
+                            <div class="layui-col-md5">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">设备点名称：</label>
+                                    <div class="layui-input-inline" style="width: 50%;">
+                                        <input type="text" name="name" lay-verify="required" autocomplete="off" class="layui-input">
                                     </div>
-                                    <div class="layui-form-item">
-                                        <label class="layui-form-label">地址类型：</label>
-                                        <div class="layui-input-inline" style="width: auto">
-                                            <select name="commuType" lay-filter="commuType" lay-verify="required">
-                                                <!-- <option value="0">学校</option>
+                                    <div class="layui-form-mid layui-word-aux">*</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">省份：</label>
+                                    <div class="layui-input-inline" style="width: 50%;">
+                                        <select name="province" lay-filter="province" lay-verify="required" class="province">
+                                            <option value="">请选择省</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">*</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">城市：</label>
+                                    <div class="layui-input-inline" style="width: 50%;">
+                                        <select name="city" lay-filter="city" lay-verify="required">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">*</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">区县：</label>
+                                    <div class="layui-input-inline" style="width: 50%;">
+                                        <select name="area" lay-filter="area" lay-verify="required">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">*</div>
+                                </div>
+
+
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">地址类型：</label>
+                                <div class="layui-input-inline" style="width: auto">
+                                    <select name="commuType" lay-filter="commuType" lay-verify="required">
+                                        <!-- <option value="0">学校</option>
                                                 <option value="1">社区</option> -->
-                                            </select>
-            
-                                        </div>
-                                        <span class="type1">
-                                            <label class="layui-form-label w50">学校：</label>
-                                            <div class="layui-input-inline" style="width: auto">
-                                                <select name="school" lay-filter="school" lay-verify="required">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <label class="layui-form-label w50">校区：</label>
-                                            <div class="layui-input-inline" style="width: auto">
-                                                <select name="schoolArea" lay-filter="schoolArea" lay-verify="required">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                        </span>
-                                        <span class="type2" style="display:none">
-                                            <label class="layui-form-label w50">社区：</label>
-                                            <div class="layui-input-inline" style="width: auto">
-                                                <select name="community" lay-filter="community" lay-verify="required">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                            <label class="layui-form-label w50">期号：</label>
-                                            <div class="layui-input-inline" style="width: auto">
-                                                <select name="term" lay-filter="term" lay-verify="required">
-                                                    <option></option>
-                                                </select>
-                                            </div>
-                                        </span>
-                                        <label class="layui-form-label w50">楼号：</label>
-                                        <div class="layui-input-inline" style="width: 100px">
-                                            <input class="layui-input" name="buildingNo"  >
-            
-                                        </div>
-                                        <div class="layui-form-mid layui-word-aux">*(地点类型为“学校”时，楼号为必填项)</div>
+                                    </select>
+
+                                </div>
+                                <span class="type1">
+                                    <label class="layui-form-label w50">学校：</label>
+                                    <div class="layui-input-inline" style="width: auto">
+                                        <select name="school" lay-filter="school" lay-verify="required">
+                                            <option></option>
+                                        </select>
                                     </div>
-                                    <div class="layui-form-item" style="display: flex;align-items: center;">
-                                        <label class="layui-form-label">地址定位：</label>
-                                        <div class="layui-input-inline" style="width: 50%;">
-                                            <input type="text" autocomplete="off" name="address" class="layui-input address" id="searchAddress">
-                                        </div>
+                                    <label class="layui-form-label w50">校区：</label>
+                                    <div class="layui-input-inline" style="width: auto">
+                                        <select name="schoolArea" lay-filter="schoolArea" lay-verify="required">
+                                            <option></option>
+                                        </select>
                                     </div>
-            
-                                    <div class="layui-form-item" style="margin-bottom:0">
-            
-                                        <div id="container"></div>
-                                        <div id="tip" style="text-align: right"></div>
+                                </span>
+                                <span class="type2" style="display:none">
+                                    <label class="layui-form-label w50">社区：</label>
+                                    <div class="layui-input-inline" style="width: auto">
+                                        <select name="community" lay-filter="community" lay-verify="required">
+                                            <option></option>
+                                        </select>
                                     </div>
-                                    <div class="layui-form-item">
-                                        <div class="layui-form-label">坐标：</div>
-                                        <div class="layui-input-inline" style="width: 50%">
-                                            <input type="text" name="coordinate" autocomplete="off" class="layui-input showCoordinate">
-                                        </div>
+                                    <label class="layui-form-label w50">期号：</label>
+                                    <div class="layui-input-inline" style="width: auto">
+                                        <select name="term" lay-filter="term" lay-verify="required">
+                                            <option></option>
+                                        </select>
                                     </div>
+                                </span>
+                                <label class="layui-form-label w50">楼号：</label>
+                                <div class="layui-input-inline" style="width: 100px">
+                                    <input class="layui-input" name="buildingNo">
+
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">*(地点类型为“学校”时，楼号为必填项)</div>
+                            </div>
+                            <div class="layui-form-item" style="display: flex;align-items: center;">
+                                <label class="layui-form-label">地址定位：</label>
+                                <div class="layui-input-inline" style="width: 50%;">
+                                    <input type="text" autocomplete="off" name="address" class="layui-input address" id="searchAddress">
                                 </div>
                             </div>
-                            <div class="layui-form-item" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
-                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                                <button class="layui-btn layui-btn-danger" lay-submit lay-filter="searchBox">保存</button>
+
+                            <div class="layui-form-item" style="margin-bottom:0">
+
+                                <div id="container"></div>
+                                <div id="tip" style="text-align: right"></div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">坐标：</div>
+                                <div class="layui-input-inline" style="width: 50%">
+                                    <input type="text" name="coordinate" autocomplete="off" class="layui-input showCoordinate">
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="layui-form-item" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <button class="layui-btn layui-btn-danger" lay-submit lay-filter="searchBox">保存</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
     <script>
@@ -191,7 +192,6 @@
             function initMap(longitude, latitude) {
                 //加载PositionPicker，loadUI的路径参数为模块名中 'ui/' 之后的部分
                 AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
-                    console.log(longitude, latitude);
                     var map = new AMap.Map('container', {
                             resizeEnable: true,
                             center: [longitude, latitude],
@@ -285,11 +285,10 @@
             $('body').on('click', '.back', function () {
                 window.history.back();
             });
-            url=decodeURIComponent(url);
-            var data = parseURL(url);
-            var id = data.id;
-            common.getSinLocateInfo(data.id, function (res) {
-                console.log(res);
+            url = decodeURIComponent(url);
+            var urlData = parseURL(url);
+            var id = urlData.id;
+            common.getSinLocateInfo(urlData.id, function (res) {
                 if (res.code == 200) {
                     form.val("searchBox", {
                         "name": res.data.name,
@@ -299,43 +298,44 @@
                         "buildingNo": res.data.buildingNo,
                         "cordinate": res.data.slng + res.data.slat,
                     });
-                    $('select[name="province"]').next().find('[lay-value="' + data.province + '"]')
-                        .click();
-                    $('select[name="city"]').next().find('[lay-value="' + data.city + '"]').click();
-                    $('select[name="area"]').next().find('[lay-value="' + data.area + '"]').click();
-                    $('select[name="commuType"]').next().find('[lay-value="' + data.type + '"]').click();
-                    if(data.type=="学校"){
-                        $('select[name="school"]').next().find('[lay-value="' + data.cmit + '"]').click();
-                        $('select[name="schoolArea"]').next().find('[lay-value="' + data.cmitId + '"]').click();
-                    }else if(data.type=="社区"){
-                        $('select[name="community"]').next().find('[lay-value="' + data.cmit + '"]').click();
-                        $('select[name="term"]').next().find('[lay-value="' + data.cmitId + '"]').click();
-                    }
-                    
                     community = res.data.community;
+                    $('select[name="province"]').next().find('[lay-value="' + urlData.province + '"]').click();
+                    $('select[name="city"]').next().find('[lay-value="' + urlData.city + '"]').click();
+                    $('select[name="area"]').next().find('[lay-value="' + urlData.area + '"]').click();
+                    $('select[name="commuType"]').next().find('[lay-value="' + urlData.type + '"]').click();
+                    if (urlData.type == "学校") {
+                        $('select[name="school"]').next().find('[lay-value="' + urlData.cmit + '"]').click();
+                        $('select[name="schoolArea"]').next().find('[lay-value="' + urlData.cmitId +'"]').click();
+                    } else if (urlData.type == "社区") {
+                        $('select[name="community"]').next().find('[lay-value="' + urlData.cmit + '"]').click();
+                        $('select[name="term"]').next().find('[lay-value="' + urlData.cmitId + '"]').click();
+                    }
                     initMap(res.data.slng, res.data.slat);
-                    
-                    // 监听学校选择 
-                    form.on('select(community)', function (data) {
-                        $('#searchAddress').val($('select[name="community"]').find(
-                            'option[value="' + data.value +
-                            '"]').attr('data-address'));
-                        form.render();
-                    });
                 } else {
-                    layer.msg('获取数据失败，请重试')
+                    layer.msg('获取数据失败，请重试');
                 }
+                
             });
+            // 监听学校选择 
+            form.on('select(community)', function (data) {
+                $('#searchAddress').val($('select[name="community"]').find(
+                    'option[value="' + data.value +
+                    '"]').attr('data-address'));
+                form.render();
+            });
+
+
+
 
             form.on('submit(searchBox)', function (data) {
                 var position = data.field.coordinate.split(',');
                 data.field.slng = position[0];
                 data.field.slat = position[1];
                 data.field.id = id;
-                if(data.field.school && data.field.schoolArea !=''){
-                    data.field.communityId=data.field.schoolArea;
-                }else{
-                    data.field.communityId=data.field.term;
+                if (data.field.school && data.field.schoolArea != '') {
+                    data.field.communityId = data.field.schoolArea;
+                } else {
+                    data.field.communityId = data.field.term;
                 }
                 delete data.field.province;
                 delete data.field.city;
@@ -361,7 +361,7 @@
                                     },
                                     btn2: function (index) {
                                         layer.close(index);
-                                        layer.closeAll()
+                                        parent.layer.closeAll()
                                         // window.location.href =
                                         //     'pages/Device/address.html';
                                     }
@@ -371,8 +371,8 @@
                         });
 
                     },
-                    
- 
+
+
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });

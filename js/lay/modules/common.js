@@ -4,14 +4,14 @@
             // baseUrl = 'http://api.gelives.com/';
             bxUrl = 'http://api.cloudbox.net.cn:8002/';
         //  baseUrl ='http://192.168.1.200:80/';
-        baseUrl = 'http://192.168.1.48:18080/';
-        // baseUrl = 'http://192.168.1.53:18080/';
+        // baseUrl = 'http://192.168.1.48:18080/';
+        baseUrl = 'http://192.168.1.53:18080/';
         var obj = {
             // baseUrl: 'http://api.gelives.com/',
             bxUrl: 'http://api.cloudbox.net.cn:8002/',
             // baseUrl: 'http://192.168.1.200:80/',
-            baseUrl: 'http://192.168.1.48:18080/',
-            // baseUrl: 'http://192.168.1.53:18080/', 
+            // baseUrl: 'http://192.168.1.48:18080/',
+            baseUrl: 'http://192.168.1.53:18080/', 
             // 注册用户
             regUser: function (field, callback) {
                 $.ajax({
@@ -130,16 +130,55 @@
                     success: callback
                 });
             },
-            // 产品
-            getProductData: function (cate, callback) {
+            // 按日期统计销售额
+            getSaleDataByDate: function (params,callback) {
                 $.ajax({
-                    url: baseUrl + 'vendor/order/pricing',
+                    url: baseUrl + 'vendor/order/income/time',
                     data: {
                         "vendor_id": layui
                             .sessionData("id")
                             .id,
-                        "cate": cate
+                        "timeType":params
                     },
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 产品
+            getSalesOrdersData: function (cate, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/order/trend',
+                    data: {
+                        "vendor_id": layui
+                            .sessionData("id")
+                            .id,
+                        "type": cate
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 产品
+            getProductData: function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/order/pricing',
+                    data: params,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -169,6 +208,25 @@
                     success: callback
                 });
             },
+             // 获取支付方式营收比例
+             getPaywayData: function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/order/payway/revenue',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+           
+
             // 当月设备利用率
             getMonthDeviceUseData: function (callback) {
                 $.ajax({
@@ -312,9 +370,7 @@
                     url: baseUrl + 'db/opt/' + id,
                     type: 'post',
                     headers: {
-                        'Authorization': 'Bearer ' + layui
-                            .sessionData('token')
-                            .token
+                        'Authorization': 'Bearer ' + layui.sessionData('token').token
                     },
                     contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
@@ -1855,6 +1911,21 @@
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 获取订单分类统计
+            getOrderStaticData: function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/order/statistics',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui.sessionData('token').token
                     },
                     contentType: 'application/json',
                     beforeSend: function (request) {

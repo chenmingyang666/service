@@ -23,6 +23,7 @@
             margin-left: 13px;
             flex: 1;
             position: relative;
+            border-radius: 5px;
         }
 
         .four-box ._title {
@@ -40,6 +41,7 @@
             margin: 0 0 15px -15px;
             display: flex;
         }
+
         .row {
             margin-bottom: 15px;
         }
@@ -47,11 +49,13 @@
         .sure {
             color: white
         }
+
         .order_amount {
             text-align: center;
             font-size: 35px;
             margin-top: 15px
         }
+
         .fr {
             float: right;
         }
@@ -62,6 +66,10 @@
 
         .gray {
             color: gray;
+            cursor: pointer;
+        }
+
+        .profit_t {
             cursor: pointer;
         }
 
@@ -76,8 +84,9 @@
         .lineBottom {
             position: absolute;
             bottom: 5px;
-            width: 80%;
+            width: 90%;
         }
+
         .device_icon {
             width: 30px;
             height: 30px;
@@ -100,6 +109,7 @@
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/echarts.min.js"></script>
 </head>
+
 <body>
     <div class="layui-fluid">
         <div class="layui-row" style="margin-top: 15px">
@@ -110,7 +120,7 @@
                         <div class="fr fa fa-info-circle gray fr tip1"></div>
                     </div>
                     <div class="static_num total"></div>
-                    <div class="lineBottom"><span class="gray">七天环比</span><i class="fa fa-caret-up green"></i>&#x3000;<span>12%</span>
+                    <div class="lineBottom"><span class="gray">七天环比</span><span class="total-raise">12%</span>
                         <div class="fr gray more" data-title="设备分类统计" title="设备分类统计" data-url="../Report/orderStatic.html">查看更多<i
                                 class="fa fa-angle-double-right"></i></div>
                     </div>
@@ -122,7 +132,7 @@
                     </div>
                     <div class="static_num order_num_count"></div>
                     <div><img src="../../images/sbg1.png" height="40px" alt=""></div>
-                    <div class="lineBottom"><span class="gray">七天环比</span><i class="fa fa-caret-up green"></i>&#x3000;<span>12%</span>
+                    <div class="lineBottom"><span class="gray">七天环比</span><span class="limit-raise">12%</span>
                         <div class="fr gray more" data-title="订单列表" title="订单列表" data-url="../Report/orderStatic.html">查看更多<i
                                 class="fa fa-angle-double-right"></i></div>
                     </div>
@@ -131,13 +141,14 @@
                     <div>
                         <span class="_title">
                             <select id="sale">
-                                <option value="0" selected>近7天销售额</option>
-                                <option value="1">今日销售额</option>
+                                <option value="1" selected>今日销售额</option>
+                                <option value="2">近7天销售额</option>
+                                <option value="3">30天销售额</option>
                             </select>
                         </span>
                         <div class="fa fa-info-circle gray fr tip3"></div>
                     </div>
-                    <div class="static_num month"></div>
+                    <div class="static_num month">100</div>
                     <div><img src="../../images/sbg2.png" height="40px" alt=""></div>
                     <div class="lineBottom">
                         <div class="fr gray more" data-title="订单列表" title="订单列表" data-url="../Order/list.html">查看更多<i
@@ -154,7 +165,7 @@
                         </span>
                         <div class="fa fa-info-circle gray fr tip4"></div>
                     </div>
-                    <div class="static_num device_use"></div>
+                    <div class="static_num device_use">0</div>
                     <div class="layui-progress layui-progress-big" lay-showPercent="true" style="margin-top:6%">
                         <div class="layui-progress-bar layui-bg-blue" lay-percent="80%"></div>
                     </div>
@@ -163,13 +174,12 @@
         </div>
         <div class="layui-row row">
             <div class="layui-card">
-                <div class="layui-card-header"><span style="font-weight:600">销售额/订单量</span><span class="fr changeType">
-                        <button class="layui-btn layui-btn-sm ">今天</button>
-                        <button class="layui-btn layui-btn-sm layui-btn-primary">7天</button>
-                        <button class="layui-btn layui-btn-sm layui-btn-primary">30天</button></span></div>
+                <div class="layui-card-header trend"><span style="font-weight:600">销售额/订单量</span><span class="fr changeType">
+                        <button class="layui-btn layui-btn-sm" data-type="1">今天</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="2">7天</button>
+                        <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="3">30天</button></span></div>
                 <div id="orderTrend" style="width: 100%;height:400px;"></div>
             </div>
-
         </div>
         <div class="layui-row row">
             <div class="layui-col-md6">
@@ -185,33 +195,33 @@
                             <tr>
 
                                 <th><span class="device_icon device_icon_black">1</span>总数量</th>
-                                <td style="font-weight:600" class="device_total"></td>
+                                <td style="font-weight:600" class="device_total">0</td>
                                 <td class="device_total_per">100%</td>
                             </tr>
                             <tr>
 
                                 <th><span class="device_icon device_icon_black">2</span> 使用中</th>
-                                <td class="use"></td>
+                                <td class="use">0</td>
                                 <td class="use_per">10%</td>
                             </tr>
                             <tr>
                                 <th><span class="device_icon device_icon_black">3</span>空闲</th>
-                                <td class="kongxian"></td>
+                                <td class="kongxian">0</td>
                                 <td class="kongxian_per">10%</td>
                             </tr>
                             <tr>
                                 <th><span class="device_icon">4</span>在线</th>
-                                <td class="online"></td>
+                                <td class="online">0</td>
                                 <td class="online_per">10%</td>
                             </tr>
                             <tr>
                                 <th><span class="device_icon">5</span>离线</th>
-                                <td class="outline"></td>
+                                <td class="outline">0</td>
                                 <td class="outline_per">10%</td>
                             </tr>
                             <tr>
                                 <th><span class="device_icon">6</span>故障</th>
-                                <td class="bad"></td>
+                                <td class="bad">0</td>
                                 <td class="bad_per">10%</td>
                             </tr>
                         </tbody>
@@ -236,10 +246,10 @@
         <div class="layui-row">
             <div class="layui-col-md6" style="padding-right:10px">
                 <div class="layui-card" style="overflow:hidden;margin-bottom: 5px">
-                    <div class="layui-card-header" style="font-weight:600">产品订购对比<span class="fr activity">
-                            <button class="layui-btn layui-btn-sm ">今天</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-primary">7天</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-primary">30天</button></span></div>
+                    <div class="layui-card-header product" style="font-weight:600">产品订购对比<span class="fr activity">
+                            <button class="layui-btn layui-btn-sm" data-type="1">今天</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="2">7天</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="3">30天</button></span></div>
                     <div class="layui-card-body" style="padding:0">
                         <div class="layui-tab  layui-tab-brief" lay-filter="product">
                             <ul class="layui-tab-title">
@@ -261,487 +271,538 @@
             </div>
             <div class="layui-col-md6">
                 <div class="layui-card" style="overflow:hidden">
-                    <div class="layui-card-header" style="font-weight:600"><span class="profit_t">支付方式营收比例</span>&#x3000;&#x3000;<span
-                            class="profit_t gray">设备营收比例</span> <span class="fr activity ">
-                            <button class="layui-btn layui-btn-sm ">今天</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-primary">7天</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-primary">30天</button></span></div>
+                    <div class="layui-card-header pay_way" style="font-weight:600"><span class="profit_t">设备营收比例</span>&#x3000;&#x3000;<span
+                            class="profit_t gray">支付方式营收比例</span> <span class="fr">
+                            <button class="layui-btn layui-btn-sm" data-type="1">今天</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="2">7天</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="3">30天</button></span></div>
                     <div class="layui-card-body" style="padding:2px 0">
-                        <div class="layui-tab  layui-tab-brief" lay-filter="program">
-                            <!-- <ul class="layui-tab-title">
-                                <li class="layui-this" data-type="">全部项目</li>
-                                <li data-type="03">钱包</li>
-                                <li data-type="02">支付宝</li>
-                                <li data-type="01">微信</li>
-                                <li data-type="04">微信公众号</li>
-                            </ul> -->
-                            <div class="layui-tab-content">
-                                <div class="layui-tab-item layui-show" style="height:300px">
-                                    <!-- <div class="timeChoose">
-                                        <button class="layui-btn layui-btn-xs layui-btn-radius layui-btn-primary layui-btn-normal sure"
-                                            data-time="1">本日统计</button>
-                                        <button class="layui-btn layui-btn-xs layui-btn-radius layui-btn-primary"
-                                            data-time="2">本周统计</button>
-                                    </div> -->
-                                    <div id="programData" style="width: 70%;height:280px;"></div>
-                                    <!-- <div style="position:absolute;right:100px;top: 150px">
-                                        <h1>订单总额</h1>
-                                        <h2 class="order_amount"></h2>
-                                    </div> -->
-                                </div>
-                            </div>
-                        </div>
+
+                        <div id="programData" style="width: 70%;height:360px;"></div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        // layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage'], function () {
-        //     var $ = layui.$,
-        //         layer = layui.layer,
-        //         form = layui.form,
-        //         table = layui.table,
-        //         element = layui.element,
-        //         layEvent = layui.event,
-        //         common = layui.common;
-        //     element.render();
-        //     // 统计数据
-        //     common.getStaticData(function (res) {
-        //         // console.log(res);
-        //         $('.static_num.order_num_count').text(res.data.total);
-        //         $('.static_num.total').text(res.data.orderIncome.buyer_pay_amount);
-        //         $('.static_num.month').text(res.data.incomeMouth.buyer_pay_amount);
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage'], function () {
+            var $ = layui.$,
+                layer = layui.layer,
+                form = layui.form,
+                table = layui.table,
+                element = layui.element,
+                layEvent = layui.event,
+                common = layui.common;
+            element.render();
+            // 统计数据
+            common.getStaticData(function (res) {
+                console.log(res);
+                $('.static_num.total').text(res.data.income.total);
+                $('.total-raise').html(parseInt(res.data.income.rate) >= 0 ?
+                    '<i class="fa fa-caret-up green"></i>&#x3000;' + res.data.income.rate + '%' :
+                    '<i class="fa fa-caret-down red"></i>&#x3000;' + res.data.income.rate + '%');
+                $('.static_num.order_num_count').text(res.data.total.total);
+                $('.limit-raise').html(parseInt(res.data.total.rate) >= 0 ?
+                    '<i class="fa fa-caret-up green"></i>&#x3000;' + res.data.total.rate + '%' :
+                    '<i class="fa fa-caret-down red"></i>&#x3000;' + res.data.total.rate + '%');
+            });
 
-        //         function getMonthDay(data) {
-        //             var arr = [0];
-        //             data.list.forEach(ele => {
-        //                 arr.push(data.time + '-' + ele.day);
-        //             });
-        //             return arr;
-        //         }
-        //         // 获取实付金额
-        //         function getMonthDayPayAmount(data) {
-        //             var arr = [0];
-        //             data.list.forEach(ele => {
-        //                 arr.push(ele.buyer_pay_amount);
-        //             });
-        //             return arr;
-        //         };
-        //         // 获取订单数
-        //         function getMonthOrderNum(data) {
-        //             var arr = [0];
-        //             data.list.forEach(ele => {
-        //                 arr.push(ele.order_num);
-        //             });
-        //             return arr;
-        //         };
-        //         // 本月订单趋势图
-        //         var myChart = echarts.init(document.getElementById("orderTrend"));
-        //         option1 = {
-        //             title: {
-        //                 text: '',
-        //                 subtext: ''
-        //             },
-        //             tooltip: {
-        //                 trigger: 'axis',
-        //                 axisPointer: {
-        //                     type: 'cross',
-        //                     label: {
-        //                         backgroundColor: '#283b56'
-        //                     }
-        //                 }
-        //             },
-        //             legend: {
-        //                 data: ['销售额', '订单量'],
-        //                 bottom: 0
-        //             },
-        //             toolbox: {
-        //                 show: true,
-        //                 feature: {
-        //                     dataZoom: {
-        //                         yAxisIndex: 'none'
-        //                     },
-        //                     dataView: {
-        //                         readOnly: false
-        //                     },
-        //                     magicType: {
-        //                         type: ['line', 'bar']
-        //                     },
-        //                     restore: {},
-        //                     saveAsImage: {}
-        //                 }
-        //             },
-        //             xAxis: {
-        //                 type: 'category',
-        //                 boundaryGap: false,
-        //                 data: getMonthDay(res.data.list)
-        //             },
-        //             yAxis: {
-        //                 type: 'value',
+            // 获取销售额/订单量echart
 
-        //             },
-        //             series: [{
-        //                     name: '销售额',
-        //                     type: 'bar',
-        //                     itemStyle: {
-        //                         normal: {
-        //                             color: '#1890ff'
-        //                         }
-        //                     },
-        //                     // data: getMonthDayPayAmount(res.data.list),
-        //                     data: [1113, 222, 333, 444, 455, 5, 53, 3, 2, 222],
-        //                     markPoint: {
-        //                         data: [{
-        //                                 type: 'max',
-        //                                 name: '最大值'
-        //                             },
-        //                             {
-        //                                 type: 'min',
-        //                                 name: '最小值'
-        //                             }
-        //                         ]
-        //                     },
-        //                     markLine: {
-        //                         data: [{
-        //                             type: 'average',
-        //                             name: '平均值'
-        //                         }]
-        //                     }
-        //                 },
-        //                 {
-        //                     name: '订单量',
-        //                     type: 'line',
-        //                     // data: getMonthOrderNum(res.data.list),
-        //                     data: [233, 121, 123, 333, 123, 1222, 333, 222, 444, 555],
-        //                     markPoint: {
-        //                         data: [{
-        //                             name: '周最低',
-        //                             value: -2,
-        //                             xAxis: 1,
-        //                             yAxis: -1.5
-        //                         }]
-        //                     },
-        //                     markLine: {
-        //                         data: [{
-        //                                 type: 'average',
-        //                                 name: '平均值'
-        //                             },
-        //                             [{
-        //                                 symbol: 'none',
-        //                                 x: '90%',
-        //                                 yAxis: 'max'
-        //                             }, {
-        //                                 symbol: 'circle',
-        //                                 label: {
-        //                                     normal: {
-        //                                         position: 'start',
-        //                                         formatter: '最大值'
-        //                                     }
-        //                                 },
-        //                                 type: 'max',
-        //                                 name: '最高点'
-        //                             }]
-        //                         ]
-        //                     }
-        //                 }
-        //             ]
-        //         };
-        //         myChart.setOption(option1);
-        //     })
-        //     //   设备情况统计
-        //     common.getMonthDeviceUseData(function (res) {
-        //         // console.log(res);
-        //         // 月设备使用率
-        //         $('.static_num.device_use').text((res.data).toFixed(2) * 100 + '%');
-        //     });
-        //     common.getDeviceStatusData(function (res) {
-        //         //    console.log(res);
-        //         $('td.device_total').text(res.data.count);
-        //         $('td.kongxian').text(res.data[0]);
-        //         $('td.use').text(res.data[1]);
-        //         $('td.online').text(res.data[2]);
-        //         $('td.outline').text(res.data[3]);
-        //         $('td.bad').text(res.data[4]);
-        //     });
-        //     // 获取设备活跃度
-        //     table.render({
-        //         elem: '#deviceActivity',
-        //         skin: 'nob',
-        //         size: 'lg',
-        //         cols: [
-        //             [{
-        //                 field: 'name',
-        //                 title: '设备/次数',
-        //             }, {
-        //                 field: 'low',
-        //                 title: '低频',
-        //             }, {
-        //                 field: 'normal',
-        //                 title: '正常',
+            $('.trend button').on('click', function () {
+                let type = $(this).attr('data-type');
+                common.getSalesOrdersData(type, function (res) {
+                    console.log(res);
 
-        //             }, {
-        //                 field: 'high',
-        //                 title: '高频',
+                    function newData(data) {
+                        // 定义一个数组存放时间数据
+                        let currentSlot = [];
+                        // 定义一个数组存放订单总数
+                        let orderTotal = [];
+                        // 定义一个数组存放订单总金额
+                        let orderQuota = [];
+                        for (let i = 0; i < data.length; i++) {
+                            if (typeof (data[i]) === "string") {
+                                if (type == 1) {
+                                    let times = data[i].slice(8, 10) + "点"
+                                    currentSlot.push(times);
+                                } else if (type == 2) {
+                                    let times = data[i]
+                                    currentSlot.push(times);
+                                } else if (type == 3) {
+                                    let times = data[i]
+                                    currentSlot.push(times);
+                                }
 
-        //             }]
-        //         ],
-        //         height: 300,
-        //         data: [{
-        //             name: '洗衣机',
-        //             low: '20',
-        //             normal: '50',
-        //             'high': '30'
-        //         }, {
-        //             name: '吹风机',
-        //             low: '20',
-        //             normal: '50',
-        //             'high': '30'
-        //         }, {
-        //             name: '洗衣机',
-        //             low: '20',
-        //             normal: '50',
-        //             'high': '30'
-        //         }, {
-        //             name: '洗衣机',
-        //             low: '20',
-        //             normal: '50',
-        //             'high': '30'
-        //         }]
+                            } else if (typeof (data[i]) === "object") {
+                                for (let datas in data[i]) {
+                                    if (datas === "total") {
+                                        orderTotal.push(data[i][datas])
+                                    } else if (datas === "money") {
+                                        orderQuota.push(data[i][datas])
+                                    }
+                                }
+                            }
+                        }
+                        return {
+                            currentSlot,
+                            orderTotal,
+                            orderQuota
+                        };
+                    };
+                    //     // 本月订单趋势图
+                    var myChart = echarts.init(document.getElementById("orderTrend"));
+                    option1 = {
+                        title: {
+                            text: '',
+                            subtext: ''
+                        },
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'cross',
+                                label: {
+                                    backgroundColor: '#283b56'
+                                }
+                            }
+                        },
+                        legend: {
+                            data: ['销售额', '订单量'],
+                            bottom: 0
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                dataZoom: {
+                                    yAxisIndex: 'none'
+                                },
+                                dataView: {
+                                    readOnly: false
+                                },
+                                magicType: {
+                                    type: ['line', 'bar']
+                                },
+                                restore: {},
+                                saveAsImage: {}
+                            }
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: newData(res.data.time).currentSlot
+                        },
+                        yAxis: {
+                            type: 'value',
 
-        //     });
+                        },
+                        series: [{
+                                name: '销售额',
+                                type: 'bar',
+                                itemStyle: {
+                                    normal: {
+                                        color: '#1890ff'
+                                    }
+                                },
+                                data: newData(res.data.data).orderQuota,
+                                markPoint: {
+                                    data: [{
+                                            type: 'max',
+                                            name: '最大值'
+                                        },
+                                        {
+                                            type: 'min',
+                                            name: '最小值'
+                                        }
+                                    ]
+                                },
+                                markLine: {
+                                    data: [{
+                                        type: 'average',
+                                        name: '平均值'
+                                    }]
+                                }
+                            },
+                            {
+                                name: '订单量',
+                                type: 'line',
+                                // data: getMonthOrderNum(res.data.list),
+                                data: newData(res.data.data).orderTotal,
+                                markPoint: {
+                                    data: [{
+                                        name: '周最低',
+                                        value: -2,
+                                        xAxis: 1,
+                                        yAxis: -1.5
+                                    }]
+                                },
+                                markLine: {
+                                    data: [{
+                                            type: 'average',
+                                            name: '平均值'
+                                        },
+                                        [{
+                                            symbol: 'none',
+                                            x: '90%',
+                                            yAxis: 'max'
+                                        }, {
+                                            symbol: 'circle',
+                                            label: {
+                                                normal: {
+                                                    position: 'start',
+                                                    formatter: '最大值'
+                                                }
+                                            },
+                                            type: 'max',
+                                            name: '最高点'
+                                        }]
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    myChart.setOption(option1);
+                })
+            });
+            $('.trend button[data-type="1"]').click();
 
 
+            //   设备情况统计
+            common.getMonthDeviceUseData(function (res) {
+                // console.log(res);
+                // 月设备使用率
+                $('.static_num.device_use').text((res.data).toFixed(2) * 100 + '%');
+            });
+            common.getDeviceStatusData(function (res) {
+                //    console.log(res);
+                $('td.device_total').text(res.data.count);
+                $('td.kongxian').text(res.data[0]);
+                $('td.use').text(res.data[1]);
+                $('td.online').text(res.data[2]);
+                $('td.outline').text(res.data[3]);
+                $('td.bad').text(res.data[4]);
+            });
+            // 获取设备活跃度
+            table.render({
+                elem: '#deviceActivity',
+                skin: 'nob',
+                size: 'lg',
+                cols: [
+                    [{
+                        field: 'name',
+                        title: '设备/次数',
+                    }, {
+                        field: 'low',
+                        title: '低频',
+                    }, {
+                        field: 'normal',
+                        title: '正常',
 
-        //     //获取产品统计  
-        //     function getProductData(cate) {
-        //         common.getProductData(cate, function (res) {
-        //             // console.log(res);
-        //             table.render({
-        //                 elem: '#product',
-        //                 cols: [
-        //                     [{
-        //                         title: '设备名称',
-        //                         templet: '',
-        //                         align: 'center'
-        //                     }, {
-        //                         field: 'name',
-        //                         title: '订单数量',
-        //                         align: 'center'
+                    }, {
+                        field: 'high',
+                        title: '高频',
 
-        //                     }, {
-        //                         field: 'count',
-        //                         title: '收入金额(元)',
-        //                         align: 'center'
-        //                     }]
-        //                 ],
-        //                 cellMinWidth: 80,
-        //                 data: res.data,
-        //                 text: {
-        //                     none: '暂无相关数据'
-        //                 },
+                    }]
+                ],
+                height: 300,
+                data: [{
+                    name: '洗衣机',
+                    low: '20',
+                    normal: '50',
+                    'high': '30'
+                }, {
+                    name: '吹风机',
+                    low: '20',
+                    normal: '50',
+                    'high': '30'
+                }, {
+                    name: '洗衣机',
+                    low: '20',
+                    normal: '50',
+                    'high': '30'
+                }, {
+                    name: '洗衣机',
+                    low: '20',
+                    normal: '50',
+                    'high': '30'
+                }]
 
-        //             });
-        //         });
-        //     };
-        //     getProductData($('.layui-tab[lay-filter="product"]').find('.layui-this').attr(
-        //         'data-cate'));
-        //     element.on('tab(product)', function (data) {
-        //         getProductData($(data.elem.context).attr('data-cate'))
-        //     });
-        //     // 获得项目统计营收比例
-        //     var params = {};
+            });
+            //获取产品订购统计  
+            function getProductData(type, cate) {
+                var params = {
+                    "vendor_id": layui.sessionData("id").id,
+                    "type": type,
+                    "order_type": cate
+                };
+                common.getProductData(params, function (res) {
+                    console.log(res);
+                    table.render({
+                        elem: '#product',
+                        cols: [
+                            [{
+                                field: 'name',
+                                title: '设备名称',
+                                templet: '',
+                                align: 'center'
+                            }, {
+                                field: 'count',
+                                title: '订单数量',
+                                align: 'center'
 
-        //     function getProgramData(params) {
-        //         params = {
-        //             vendorId: layui.sessionData('id').id,
-        //             pay_way: $('.layui-tab[lay-filter="program"]').find(
-        //                 '.layui-this').attr(
-        //                 'data-type'),
-        //             timeType: $('.timeChoose').find('.sure').attr('data-time')
-        //         };
-        //         // console.log(params);
-        //         common.getProgramData(params, function (res) {
-        //             console.log(res);
-        //             $('.order_amount').text(res.data.total);
-        //             // 获取功能
-        //             function getSinData(data) {
-        //                 var arr = [];
-        //                 // data.forEach(ele => {
-        //                 //     var value = {
-        //                 //         scale: ele.scale,
-        //                 //         name: ele.server_name
-        //                 //     };
-        //                 //     arr.push(value)
-        //                 // });
-        //                 arr=[{
-        //                     scale: 333,
-        //                     name: '洗衣机'
-        //                 },{
-        //                     scale: 444,
-        //                     name: '吹风机'
-        //                 },{
-        //                     scale: 555,
-        //                     name: '充电桩'
-        //                 },{
-        //                     scale: 666,
-        //                     name: '饮水机'
-        //                 }]
-        //                 return arr;
-        //             };
-        //             // 获取钱
-        //             function getMoneyData(data) {
-        //                 var arr = [];
-        //                 // data.forEach(ele => {
-        //                 //     var value = {
-        //                 //         value: ele.money,
-        //                 //         name: ele.server_name
-        //                 //     };
-        //                 //     arr.push(value)
-        //                 // });
-        //                 arr = [{
-        //                     value: 333,
-        //                     name: '洗衣机'
-        //                 },{
-        //                     value: 444,
-        //                     name: '吹风机'
-        //                 },{
-        //                     value: 555,
-        //                     name: '充电桩'
-        //                 },{
-        //                     value: 666,
-        //                     name: '饮水机'
-        //                 }]
-        //                 return arr;
-        //             };
-        //             var programChart = echarts.init(document.getElementById(
-        //                 "programData"));
-        //             option2 = {
-        //                 tooltip: {
-        //                     trigger: 'item',
-        //                     formatter: "{a} <br/>{b}: {c} ({d}%)"
-        //                 },
-        //                 legend: {
-        //                     orient: 'vertical',
-        //                     type: 'scroll',
-        //                     x: 'right',
-        //                     y: 30,
-        //                     data: getSinData(res.data.list),
-        //                     formatter: function (name) {
-        //                         console.log(getSinData(res.data.list));
-        //                         var data = getSinData(res.data.list),
-        //                             scale;
-        //                         data.forEach(function (ele, index) {
-        //                             if (ele.name == name) {
-        //                                 scale = ele.scale
-        //                             }
-        //                         })
-        //                         return name + ' ' + scale + '%';
-        //                     }
-        //                 },
-        //                 series: [{
-        //                     name: '营收占比',
-        //                     type: 'pie',
-        //                     selectedMode: 'single',
-        //                     radius: ['50%', '70%'],
-        //                     avoidLabelOverlap: false,
-        //                     label: {
-        //                         normal: {
-        //                             show: false,
-        //                             position: 'center'
-        //                         },
-        //                         emphasis: {
-        //                             show: true,
-        //                             textStyle: {
-        //                                 fontSize: '30',
-        //                                 fontWeight: 'bolder'
-        //                             }
-        //                         }
-        //                     },
-        //                     labelLine: {
-        //                         normal: {
-        //                             show: false
-        //                         }
-        //                     },
-        //                     center: [150, 150],
-        //                     data: getMoneyData(res.data.list)
-        //                 }]
-        //             };
-        //             programChart.setOption(option2);
-        //         });
-        //     };
-        //     getProgramData(params);
+                            }, {
+                                field: 'money',
+                                title: '订单金额(元)',
+                                align: 'center'
+                            }]
+                        ],
+                        cellMinWidth: 80,
+                        data: res.data,
+                        text: {
+                            none: '暂无相关数据'
+                        },
+
+                    });
+                });
+            };
+            element.on('tab(product)', function (data) {
+                getProductData($('.product button').not('.layui-btn-primary').attr('data-type'), $(data
+                    .elem.context).attr('data-cate'))
+            });
+            getProductData($('.product button').not('.layui-btn-primary').attr('data-type'), $(
+                '.layui-tab[lay-filter="product"]').find('.layui-this').attr(
+                'data-cate'));
+
+            function getProgramData() {
+                var params = {
+                    "vendor_id": layui.sessionData('id').id,
+                    "timeType": $('.pay_way button').not('.layui-btn-primary').attr('data-type')
+                };
+                common.getProgramData(params, function (res) {
+                    console.log(res);
+                    $('.order_amount').text(res.data.total);
+                    // 获取功能
+                    function getSinData(data) {
+                        var arr = [];
+                        data.forEach(ele => {
+                            var value = {
+                                scale: ele.scale,
+                                name: ele.server_name,
+                                money: ele.money
+                            };
+                            arr.push(value)
+                        });
+                        return arr;
+                    };
+                    // 获取钱
+                    function getMoneyData(data) {
+                        var arr = [];
+                        data.forEach(ele => {
+                            var value = {
+                                value: ele.money,
+                                name: ele.server_name
+                            };
+                            arr.push(value)
+                        });
+                        return arr;
+                    };
+                    initPayway(getSinData(res.data.list), getMoneyData(res.data.list))
+                });
+            }
+            // 支付方式营收占比
+            function getPaywayData() {
+                var params = {
+                    "vendor_id": layui.sessionData('id').id,
+                    "timeType": $('.pay_way button').not('.layui-btn-primary').attr('data-type')
+                };
+                // console.log(params);
+                common.getPaywayData(params, function (res) {
+                    console.log(res);
+                    // 获取功能
+                    function getSinData(data) {
+                        var arr = [];
+                        data.forEach(ele => {
+                            var value = {
+                                scale: ele.scale,
+                                name: ele.pay_way,
+                                money:ele.money
+                            };
+                            arr.push(value)
+                        });
+                        return arr;
+                    };
+                    // 获取钱
+                    function getMoneyData(data) {
+                        var arr = [];
+                        data.forEach(ele => {
+                            var value = {
+                                value: ele.money,
+                                name: ele.pay_way
+                            };
+                            arr.push(value)
+                        });
+                        return arr;
+                    };
+
+                  
+                    initPayway(getSinData(res.data.list), getMoneyData(res.data.list))
+
+                });
+            };
+            getProgramData();
+
+            function initPayway(data1, data2) {
+                var programChart = echarts.init(document.getElementById(
+                    "programData"));
+                option2 = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        type: 'scroll',
+                        x: 'right',
+                        y: 30,
+                        data: data1,
+                        formatter: function (name) {
+                            var data = data1,
+                                scale, money;
+                            data.forEach(function (ele, index) {
+                                if (ele.name == name) {
+                                    scale = ele.scale, money = ele.money
+                                }
+                            })
+                            return name + ' ' + scale + '%' + ' ' + '￥' + money;
+                        }
+                    },
+                    series: [{
+                        name: '营收占比',
+                        type: 'pie',
+                        selectedMode: 'single',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '30',
+                                    fontWeight: 'bolder'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        center: [150, 150],
+                        data: data2
+                    }]
+                };
+                programChart.setOption(option2);
+            }
 
 
-        //     element.on('tab(program)', function (data) {
-        //         getProgramData(params)
-        //     });
-        //     $('.timeChoose button').on('click', function () {
-        //         if ($(this).has('.layui-btn-normal')) {
-        //             $(this).addClass('sure').addClass('layui-btn-normal').siblings().removeClass(
-        //                 'sure').removeClass('layui-btn-normal');
-        //             getProgramData(params)
-        //         }
-        //     });
-        //     $('.tip1').on('click', function () {
-        //         var that = this;
-        //         layer.tips('所有设备截止当前产生的销售金额；<br>7天环比：近7天和上一个7天的数据比', that); //在元素的事件回调体中，follow直接赋予this即可
-        //     });
-        //     $('.tip2').on('click', function () {
-        //         var that = this;
-        //         layer.tips('所有设备截止到当前产生的所有订单数据', that); //在元素的事件回调体中，follow直接赋予this即可
-        //     });
-        //     $('.tip3').on('click', function () {
-        //         var that = this;
-        //         layer.tips('所有设备今日/近7天/近30天的销售额', that); //在元素的事件回调体中，follow直接赋予this即可
-        //     });
-        //     $('.tip4').on('click', function () {
-        //         var that = this;
-        //         layer.tips('近7天和近30天被使用过的设备占总设备的占比<br>7天环比：近7天和上一个7天的数据比', that); //在元素的事件回调体中，follow直接赋予this即可
-        //     });
-        //     $("#sale").change(function () {
-        //         var selected = $(this).children('option:selected').val();
-        //         layer.msg(selected);
-        //         // if (selected == "0") {
 
-        //         // } else if (selected == "order_id") {
+            $('.tip1').on('click', function () {
+                var that = this;
+                layer.tips('所有设备截止当前产生的销售金额；<br>7天环比：近7天和上一个7天的数据比', that); //在元素的事件回调体中，follow直接赋予this即可
+            });
+            $('.tip2').on('click', function () {
+                var that = this;
+                layer.tips('所有设备截止到当前产生的所有订单数据', that); //在元素的事件回调体中，follow直接赋予this即可
+            });
+            $('.tip3').on('click', function () {
+                var that = this;
+                layer.tips('所有设备今日/近7天/近30天的销售额', that); //在元素的事件回调体中，follow直接赋予this即可
+            });
+            $('.tip4').on('click', function () {
+                var that = this;
+                layer.tips('近7天和近30天被使用过的设备占总设备的占比<br>7天环比：近7天和上一个7天的数据比', that); //在元素的事件回调体中，follow直接赋予this即可
+            });
 
-        //         // }
 
-        //     });
-        //     $("#deviceUse").change(function () {
-        //         var selected = $(this).children('option:selected').val();
-        //         layer.msg(selected);
-        //         // if (selected == "order_time") {
+            $("#sale").change(function () {
+                var selected = $(this).children('option:selected').val();
+                layer.msg(selected);
+                saleChange(selected);
 
-        //         // } else if (selected == "order_id") {
+            });
 
-        //         // }
+            function saleChange(selected) {
+                common.getSaleDataByDate(selected, function (res) {
+                    $('.static_num.month').text(res.data.money)
+                })
+            };
+            saleChange('1');
 
-        //     });
-        //     $('.more').on('click', function (e) {
-        //         var url = $(this).attr('data-url');
-        //         var title = $(this).attr('data-title');
-        //         layer.open({
-        //             type: 2,
-        //             title: title,
-        //             shade: false,
-        //             area: ['100%', '100%'],
-        //             maxmin: true,
-        //             content: url,
-        //             zIndex: layer.zIndex, //重点1
-        //             success: function (layero) {
-        //                 layer.setTop(layero); //重点2
-        //             }
-        //         });
-        //     });
-        //     $('.changeType button,.activity button').on('click', function () {
-        //         $(this).removeClass('layui-btn-primary').siblings('button').addClass(
-        //             'layui-btn-primary')
-        //     });
-        //     $('.profit_t').on('click', function () {
-        //         $(this).removeClass('gray').siblings().addClass('gray');
-        //     })
-        // })
+
+            $("#deviceUse").change(function () {
+                var selected = $(this).children('option:selected').val();
+                layer.msg(selected);
+                // if (selected == "order_time") {
+
+                // } else if (selected == "order_id") {
+
+                // }
+
+            });
+            $('.more').on('click', function (e) {
+                var url = $(this).attr('data-url');
+                var title = $(this).attr('data-title');
+                layer.open({
+                    type: 2,
+                    title: title,
+                    shade: false,
+                    area: ['100%', '100%'],
+                    maxmin: true,
+                    content: url,
+                    zIndex: layer.zIndex, //重点1
+                    success: function (layero) {
+                        layer.setTop(layero); //重点2
+                    }
+                });
+            });
+            $('.changeType button,.activity button').on('click', function () {
+                $(this).removeClass('layui-btn-primary').siblings('button').addClass(
+                    'layui-btn-primary')
+            });
+            $('.activity button').on('click', function () {
+                getProductData($(this).attr('data-type'), $('.layui-tab[lay-filter="product"]').find(
+                    '.layui-this').attr(
+                    'data-cate'))
+            });
+            // 获得设备营收比例
+            $('.profit_t:first').on('click', function () {
+                getProgramData();
+            });
+            // 支付方式营收比例
+            $('.profit_t:last').on('click', function () {
+                getPaywayData();
+            });
+
+            $('.pay_way button').on('click', function () {
+
+                $(this).removeClass('layui-btn-primary').siblings().addClass('layui-btn-primary');
+                console.log($('.profit_t:first').is('.gray'));
+                if ($('.profit_t:first').is('.gray')) {
+                    getPaywayData();
+                } else {
+                    getProgramData();
+                }
+
+
+            })
+            $('.profit_t').on('click', function () {
+                $(this).removeClass('gray').siblings().addClass('gray');
+            });
+
+
+        })
     </script>
 </body>

@@ -151,18 +151,12 @@
 
             $('body').on('click', '.initQr', function (e) {
                 e.preventDefault();
-
                 $('#qrcode').qrcode({
                     render: "canvas",
                     text: "http://www.jq22.com"
                 });
             });
-            laydate.render({
-                elem: '#beginTime',
-                type: 'datetime',
-                format: 'yyyy-MM-dd HH:mm:ss',
-                theme: '#393D49',
-            });
+           
             // 表单提交
             form.on('submit(searchBox)', function (data) {
 
