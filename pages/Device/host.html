@@ -95,12 +95,12 @@
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">状态：</label>
-                <div class="layui-input-inline" style="width: 80px;">
-                    <select name="device_state" lay-filter="state" lay-verify="">
+                <div class="layui-input-inline" style="width: 100px;">
+                    <select name="useStatus" lay-filter="state" lay-verify="">
                         <option value="">全部</option>
                         <option value="0">未使用</option>
                         <option value="1">使用中</option>
-                        <option value="2">已损坏</option>
+                        <option value="2">已报废</option>
                     </select>
                 </div>
             </div>
@@ -122,28 +122,26 @@
         <!-- 分页控件 -->
         <div id="laypage"></div>
     </div>
-    <script type="text/html" id="sexTpl">
-        {{# if(d.sex === '女'){ }}
-        <span style="color: #F581B2;">{{ d.sex }}</span>
-        {{# } else { }} {{ d.sex }} {{# } }}
+    
+    <script type="text/html" id="owned">
+        {{# if(d.owned == 1){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">服务商</button>
+        {{# } else if(d.owned == 0){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">集优生活</button>
+        {{# } }}
     </script>
     <script type="text/html" id="toolBar">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
+        {{# if(d.owned==1 && d.useStatus == 0){ }}
+         <a class="layui-btn layui-btn-xs" title="仅自有主机可编辑" lay-event="edit">编辑</a>
+        {{# } }}
     </script>
     <script type="text/html" id="stateTpl">
-        {{# if(d.state == '已处理'){ }}
+        {{# if(d.useStatus == 0){ }}
         <button class="layui-btn layui-btn-normal layui-btn-xs">未使用</button>
-        {{# } else if(d.state == '未分配'){ }}
+        {{# } else if(d.useStatus == 1 ){ }}
         <button class="layui-btn layui-btn-primary layui-btn-xs">使用中</button>
-        {{# } else{ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">未分配</button>
-        {{# } else{ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">已分配</button>
-        {{# } else{ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">损坏</button>
-        {{# } else{ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">报废</button>
+        {{# } else if(d.useStatus == 2){ }}
+        <button class="layui-btn layui-btn-warm layui-btn-xs">已报废</button>
         {{# } }}
     </script>
     <script>
@@ -161,29 +159,31 @@
                     getCheckData: function () { //获取选中数据
                         var checkStatus = table.checkStatus('data_demo'),
                             data = checkStatus.data;
-                        // if (data.length == 0) {
-                        //     return layer.msg('请选择数据')
-                        // }
-                        parent.layer.confirm('确认导出物联网卡数据?', {
+                        parent.layer.confirm('确认导出主机数据?', {
                             icon: 3,
                             title: '提示',
                             btn: ['确认', '取消'],
                             yes: function (index) {
-                                var simCode = $("input[name='simCode']").val(),
-                                    status = $("select[name='status']").next().find(
-                                        'dl dd.layui-this').attr('lay-value'),
-                                    activeTimeStart = $("input[name='activeTimeStart']").val(),
-                                    activeTimeEnd = $("input[name='activeTimeEnd']").val();
-                                var urlStr = common.baseUrl +
-                                    'common/exportSim?userId=' +
-                                    layui.sessionData('id').id + '&simCode=' +
-                                    simCode +
-                                    '&activeTimeStart=' +
-                                    activeTimeStart +
-                                    '&activeTimeEnd=' + activeTimeEnd +
-                                    '&status=' + status + '&source=' + $(
-                                        "select[name='source']").next().find(
-                                        'dl dd.layui-this').attr('lay-value');
+                                 
+                                    var status = $("select[name='useStatus']").next().find(
+                                        'dl dd.layui-this').attr('lay-value')
+                                        , cate = $(
+                                        "select[name='cate']").next().find(
+                                        'dl dd.layui-this').attr('lay-value')
+                                        , brand = $("select[name='brandName']").next().find(
+                                        '.layui-select-title input').val()
+                                        , modelId = $(
+                                        "select[name='brandCode']").next().find(
+                                        '.layui-select-title input').val();
+                                        
+                                        var urlStr = common.baseUrl +
+                                    'eq/export?userId=' +
+                                    layui.sessionData('id').id 
+                                    
+                                    + '&cate='+cate
+                                    +'&brand=' + brand 
+                                    +'&useStatus=' + status 
+                                    + '&modelId=' +modelId ;
                                 urlStr = urlStr.replace(/undefined/g, '');
                                 console.log(urlStr);
                                 window.location.href = urlStr;
@@ -255,6 +255,12 @@
                 format: 'yyyy-MM-dd HH:mm:ss',
                 theme: '#393D49',
             });
+            // 品牌的3级联动
+            common.getDeviceLinked(function (res) {
+                console.log(res);
+                pca.init(res.data, 'select[name=cate]', 'select[name=brandName]',
+                    'select[name=brandCode]', '','','');
+            });
             var limitcount = 10,
                 curnum = 1,
                 param = {
@@ -281,24 +287,22 @@
                             }, {
                                 field: 'owned',
                                 title: '设备归属方',
+                                templet:'#owned'
                             }, {
-                                field: 'source',
+                                field: 'cate',
                                 title: '主机类型',
-                                templet: '#'
                             },  {
-                                field: 'source',
+                                field: 'brand',
                                 title: '品牌',
-                                templet: '#'
                             }, {
-                                field: 'status',
+                                field: 'model',
                                 title: '主机型号',
-                                templet: '#',
                             }, {
-                                field: 'activeTime',
+                                field: 'number',
                                 title: '主机编号',
 
                             }, {
-                                field: 'period',
+                                field: 'useStatus',
                                 title: '设备状态',
                                 templet: '#stateTpl'
                             }, {
@@ -310,7 +314,7 @@
                             }]
                         ],
                         cellMinWidth: 80,
-                        data: res.content,
+                        data: res.data.content,
                         limit: limitcount,
                         done: function (res1, curr, count) {
                             console.log(res1);
@@ -318,7 +322,7 @@
                             //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                             laypage.render({
                                 elem: 'laypage',
-                                count: res.totalElements,
+                                count: res.data.totalElements,
                                 curr: param.page,
                                 limit: limitcount,
                                 theme: 'right',
@@ -347,9 +351,10 @@
             form.render();
             //表单查询提交
             form.on('submit(searchBox)', function (data) {
-                console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
-                console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
-                console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
+               data.field.brand=data.field.brandName;
+               data.field.modelId=data.field.brandCode;
+               delete data.field.brandName;
+               delete data.field.brandCode;
                 var needData = data.field,
                     param = {
                         page: 1,
@@ -391,7 +396,10 @@
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
                 //   window.location.href="editHost.html?isTrue=1"
-                  initModal('编辑主机','editHost.html')
+                  initModal('编辑主机','editHost.html?id='+data.id+
+                  '&cate='+data.cate+'&brand='+data.brand+'&modelId='+data.modelId
+                  +'&number='+data.number
+                  +'&owned='+data.owned+'&useStatus='+data.useStatus)
                 } else if (layEvent === 'del') {
                     console.log(data.id);
                     layer.confirm('真的删除行么', function (index) {
@@ -401,24 +409,13 @@
                     });
                 }
             });
-            // 监听表格内编辑
-            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                console.log(obj.value); //得到修改后的值
-                console.log(obj.field); //当前编辑的字段名
-                console.log(obj.data); //所在行的所有相关数据  
-                layer.msg('编辑保存')
-            });
-            //    设备控制开关
-            form.on('switch(deviceControl)', function (data) {
-                console.log($(data.elem).parents('tr').attr('data-index'));
-                console.log(data.elem.checked); //开关是否开启，true或者false
-                console.log(data.value); //开关value值，也可以通过data.elem.value得到
-                console.log(data.othis); //得到美化后的DOM对象
-                layer.tips(this.value + ' ' + this.name + '：' + data.elem.checked, data.othis);
-            });
+            
+            
             $('body').on('click', '.demoTable .layui-btn', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
+            }).on('click', '[type="reset"]', function () {
+                $('select[name="cate"').next().find("[lay-value='']").click()
             });
         });
     </script>

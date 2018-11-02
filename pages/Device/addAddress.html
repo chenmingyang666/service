@@ -159,8 +159,6 @@
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">*</div>
                             </div>
-
-
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">地址类型：</label>
@@ -199,13 +197,8 @@
                                     </select>
                                 </div>
                             </span>
-
-                            <label class="layui-form-label w50">楼号：</label>
-                            <div class="layui-input-inline" style="width: 100px">
-                                <input class="layui-input" name="buildingNo"  >
-
-                            </div>
-                            <div class="layui-form-mid layui-word-aux">*(地点类型为“学校”时，楼号为必填项)</div>
+ 
+                            <div class="layui-form-mid layui-word-aux">*</div>
                         </div>
                         <div class="layui-form-item" style="display: flex;align-items: center;">
                             <label class="layui-form-label">地址定位：</label>
@@ -400,10 +393,12 @@
                                     btn: ['继续添加', '返回地址列表'],
                                     yes: function (index) {
                                         layer.close(index);
+                                        window.location.reload();
                                     },
                                     btn2: function (index) {
                                         layer.close(index);
                                         parent.layer.closeAll();
+                                        parent.location.reload();
                                         // window.location.href =
                                         //     'pages/Device/address.html';
                                     }

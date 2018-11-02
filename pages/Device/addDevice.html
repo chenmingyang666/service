@@ -159,8 +159,14 @@
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
                             <div class="layui-form-item">
+                               
+                            <label class="layui-form-label w50">楼号：</label>
+                            <div class="layui-input-inline" style="width: 100px">
+                                <input class="layui-input" name="buildingNo"  >
+
+                            </div>
                                 <label class="layui-form-label">楼层：</label>
-                                <div class="layui-input-inline" style="width: 50%;">
+                                <div class="layui-input-inline" style="width: 100px;">
                                     <input class="layui-input" name="floorNo" id="floorNo" lay-filter="floorNo" lay-verify="">
                                          
                                 </div>
@@ -565,10 +571,12 @@
                                     yes: function (index) {
                                         layer.close(index);
                                         // window.location.reload();
+                                        parent.location.reload();
                                     }, 
                                     btn2: function (index) {
                                         layer.close(index);
                                         parent.layer.closeAll();
+                                        parent.location.reload();
                                         // window.location.href =
                                         //     'pages/Device/list.html';
                                     }

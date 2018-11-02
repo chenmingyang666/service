@@ -74,7 +74,7 @@
 
                                 <div class="layui-input-inline">
 
-                                    <input type="text" name="workTime1" class="layui-input workTime1" placeholder="开始时间"
+                                    <input type="text" name="firstStartTime" class="layui-input firstStartTime" placeholder="开始时间"
                                         autocomplete="off">
                                 </div>
 
@@ -82,7 +82,7 @@
                                     至
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="workTime2" class="layui-input workTime2" placeholder="结束时间"
+                                    <input type="text" name="firstEndTime" class="layui-input firstEndTime" placeholder="结束时间"
                                         autocomplete="off">
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                                     <input type="checkbox" name="time2" lay-skin="primary" value="">
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="weekendTime1" class="layui-input weekendTime1" placeholder="开始时间"
+                                    <input type="text" name="secondStartTime" class="layui-input secondStartTime" placeholder="开始时间"
                                         autocomplete="off">
                                 </div>
 
@@ -102,7 +102,7 @@
                                     至
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="weekendTime2" class="layui-input weekendTime2" placeholder="结束时间"
+                                    <input type="text" name="secondEndTime" class="layui-input secondEndTime" placeholder="结束时间"
                                         autocomplete="off">
                                 </div>
                             </div>
@@ -141,27 +141,27 @@
            
             // 日期
             laydate.render({
-                elem: '.workTime1',
+                elem: '.firstStartTime',
                 type: 'time',
                 format: 'HH:mm:ss',
                 theme: '#393D49',
                 value: '00:00:00'
             });
             laydate.render({
-                elem: '.workTime2',
+                elem: '.firstEndTime',
                 type: 'time',
                 format: 'HH:mm:ss',
                 theme: '#393D49',
                 value: '23:59:59'
             });
             laydate.render({
-                elem: '.weekendTime1',
+                elem: '.secondStartTime',
                 type: 'time',
                 format: 'HH:mm:ss',
                 theme: '#393D49',
             });
             laydate.render({
-                elem: '.weekendTime2',
+                elem: '.secondEndTime',
                 type: 'time',
                 format: 'HH:mm:ss',
                 theme: '#393D49',
@@ -175,11 +175,9 @@
             });
             form.render();
             form.on('submit(searchBox)', function (data) {
-
-                if (data.field.community == '') {
-                    layer.msg('请选择学校')
-                } else {
-                    parent.layer.open({
+                    console.log(data.field);
+                    
+                    layer.open({
                         content: '确定保存信息?',
                         btn: ['确定', '取消'],
                         fixed: true,
@@ -188,20 +186,19 @@
                             //do something
                             common.addRule(data.field, function (res) {
                                 if (res.code == 200) {
-                                    parent.layer.confirm('保存成功，继续添加信息?', {
+                                    layer.confirm('保存成功，继续添加信息?', {
                                         icon: 3,
                                         title: '提示',
                                         fixed: true,
                                         offset: '40%',
                                         btn: ['继续添加', '返回列表'],
                                         yes: function (index) {
-                                            parent.layer.close();
+                                            layer.close(index);
                                             window.location.reload();
                                         },
                                         btn2: function (index) {
-                                            parent.layer.closeAll()
-                                            // window.location.href =
-                                            //     'pages/Project/info.html';
+                                            parent.layer.closeAll();
+                                            parent.location.reload()
                                         }
 
                                     });
@@ -216,12 +213,9 @@
                                 }
                             })
                         },
-                        btn2: function (index) {
-                            parent.layer.close()
-
-                        },
+                       
                     });
-                }
+                
 
 
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。

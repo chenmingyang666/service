@@ -4,14 +4,14 @@
             // baseUrl = 'http://api.gelives.com/';
             bxUrl = 'http://api.cloudbox.net.cn:8002/';
         //  baseUrl ='http://192.168.1.200:80/';
-        // baseUrl = 'http://192.168.1.48:18080/';
-        baseUrl = 'http://192.168.1.53:18080/';
+        baseUrl = 'http://192.168.1.48:18080/';
+        // baseUrl = 'http://192.168.1.53:18080/';
         var obj = {
             // baseUrl: 'http://api.gelives.com/',
             bxUrl: 'http://api.cloudbox.net.cn:8002/',
             // baseUrl: 'http://192.168.1.200:80/',
-            // baseUrl: 'http://192.168.1.48:18080/',
-            baseUrl: 'http://192.168.1.53:18080/', 
+            baseUrl: 'http://192.168.1.48:18080/',
+            // baseUrl: 'http://192.168.1.53:18080/', 
             // 注册用户
             regUser: function (field, callback) {
                 $.ajax({
@@ -352,9 +352,7 @@
                 $.ajax({
                     url: baseUrl + 'db',
                     headers: {
-                        'Authorization': 'Bearer ' + layui
-                            .sessionData('token')
-                            .token
+                        'Authorization': 'Bearer ' + layui.sessionData('token').token
                     },
                     data: param,
                     contentType: 'application/json,application/x-www-form-urlencoded',
@@ -929,6 +927,25 @@
                     success: callback
                 })
             },
+            
+            // 导出主板
+            exportMB: function (param, callback) {
+                $.ajax({
+                    url: baseUrl + 'me/export',
+                    data: param,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+
             // 主板3级联动
             getBoardDropList:function (callback) {
                 $.ajax({
@@ -991,9 +1008,7 @@
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
-                            // ,'Content-Type': 'application/json'
                     },
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -1238,7 +1253,7 @@
             //二维码改状态
             updateQrList: function (param, callback) {
                 $.ajax({
-                    url: baseUrl + 'common/discardQr/' + param,
+                    url: baseUrl + 'qr/opt/' + param,
                     type: 'post',
                     // data: param,
                     headers: {
@@ -1272,98 +1287,27 @@
                 });
             },
 
-            // 新增二维码
-            addQr: function (params, callback) {
-                $.ajax({
-                    type: 'post',
-                    url: baseUrl + 'qr/add',
-                    data: params,
-                    headers: {
-                        'Authorization': 'Bearer ' + layui
-                            .sessionData('token')
-                            .token
-                    },
-                    beforeSend: function (request) {
-                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
-                    },
-                    success: callback
-                });
-            },
-            // 删除多个二维码
-            deleteQrs: function (ids, callback) {
-                $.ajax({
-                    type: 'post',
-                    url: baseUrl + 'qr/deletes',
-                    data: {
-                        "ids": ids
-                    },
-                    headers: {
-                        'Authorization': 'Bearer ' + layui
-                            .sessionData('token')
-                            .token
-                    },
-                    beforeSend: function (request) {
-                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
-                    },
-                    success: callback
-                });
-            },
-
-            // 新增二维码
-            addQr: function (params, callback) {
-                $.ajax({
-                    type: 'post',
-                    url: baseUrl + 'qr/add',
-                    data: params,
-                    headers: {
-                        'Authorization': 'Bearer ' + layui
-                            .sessionData('token')
-                            .token
-                            // ,'Content-Type': 'application/json'
-                    },
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
-                    beforeSend: function (request) {
-                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
-                    },
-                    success: callback
-                });
-            },
-            // 获得编辑二维码信息
-            getSinQrInfo: function (id, callback) {
-                $.ajax({
-                    url: baseUrl + 'qr/get/' + id,
-                    headers: {
-                        'Authorization': 'Bearer ' + layui
-                            .sessionData('token')
-                            .token,
-                        'Content-Type': 'application/json'
-                    },
-                    contentType: 'application/json,application/x-www-form-urlencoded',
-                    beforeSend: function (request) {
-                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
-                    },
-                    success: callback
-                });
-            },
-            // 更新编辑保存二维码
-            updateQr: function (params, callback) {
-                $.ajax({
-                    type: 'post',
-                    url: baseUrl + 'qr/update',
-                    data: params,
-                    headers: {
-                        'Authorization': 'Bearer ' + layui
-                            .sessionData('token')
-                            .token
-                    },
-                    beforeSend: function (request) {
-                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
-                    },
-                    success: callback
-                });
-            },
+           
+           
 
 
+            // 营业时间下拉
+            getHourDropList: function (callback) {
+                $.ajax({
+                    type: 'get',
+                    url: baseUrl + 'dlc/getRules',
+                    
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
             // 营业时间
             getHourList: function (params, callback) {
                 $.ajax({
@@ -1411,9 +1355,7 @@
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
-                            // ,'Content-Type': 'application/json'
                     },
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },

@@ -124,11 +124,16 @@
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
                             <div class="layui-form-item">
-                                <label class="layui-form-label">楼层：</label>
-                                <div class="layui-input-inline" style="width: 50%;">
-                                    <input class="layui-input" name="floorNo" id="floorNo" lay-filter="floorNo" lay-verify="">
-                                         
+                                <label class="layui-form-label w50">楼号：</label>
+                                <div class="layui-input-inline" style="width: 100px">
+                                    <input class="layui-input" name="buildingNo"  >
+    
                                 </div>
+                                    <label class="layui-form-label">楼层：</label>
+                                    <div class="layui-input-inline" style="width: 100px;">
+                                        <input class="layui-input" name="floorNo" id="floorNo" lay-filter="floorNo" lay-verify="">
+                                             
+                                    </div>
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
                         </div>
@@ -397,7 +402,9 @@
                 imeiNumber = res.data.imeiNumber;
                 // 如果有物联网网卡
                 if(res.data.simCode!=null){
-                    $('.wulianwang').addClass('layui-disabled');
+                    $('.wulianwang').show();
+                    $('#simSelf').val(res.data.simCode).attr('disabled','disabled').css('border','none');
+                    form.render()
                 }else{
                     $('.wulianwang').hide();
                 }
@@ -476,26 +483,7 @@
                     form.render();
                 });
                 form.render();
-                //    source   0：平台 1：服务商
-                // if (res.data.simOwned == 0) {
-                //     // 物联卡下拉列表
-
-                //     $('#simId').parents('.layui-form-item').find('.showPingtaibtn').click();
-                //     form.render()
-                // } else {
-
-                //     $('#simSelf').parents('.layui-form-item').find('.showSelfbtn').click();
-                //     $('#simSelf').val(res.data.simCode);
-                // };
-                // if (res.data.eqptOwned == 0) {
-
-                //     $('#eqptId').parents('.layui-form-item').find('.showPingtaibtn').click();
-                //     form.render();
-                // } else {
-
-                //     $('#eqptId').parents('.layui-form-item').find('.showSelfbtn').click();
-                //     $('input[name="number"]').val(res.data.number);
-                // };
+                 
 
             });
             

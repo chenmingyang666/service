@@ -59,7 +59,7 @@
                     <div class="layui-card-body" style="padding: 15px;">
                         <div class="layui-form-item">
                             <label class="layui-form-label">项目名称：</label>
-                            <div class="layui-input-inline" style="width: 50%">
+                            <div class="layui-input-inline" style="width: 535px">
                                 <input type="text" name="name" id="pjtName" lay-verify="required" placeholder="输入名称"
                                     autocomplete="off" class="layui-input">
                             </div>
@@ -68,7 +68,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">项目编号：</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="contract" placeholder="输入项目编号" autocomplete="off" class="layui-input">
+                                <input type="text" name="number" placeholder="输入项目编号" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -127,7 +127,7 @@
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">联系方式：</label>
-                            <div class="layui-input-inline" style="width: 50%">
+                            <div class="layui-input-inline" style="width: 535px">
                                 <input type="text" name="phone" lay-verify="required|phone" placeholder="输入联系方式"
                                     autocomplete="off" class="layui-input">
                             </div>
@@ -156,25 +156,49 @@
                                 </select>
                             </div>
 
-                            <div class="layui-input-inline">
-                                <select name="community" lay-filter="community" disabled lay-verify="required">
-                                    <option value="">请选择学校/社区</option>
+                            
+                            <div class="layui-form-mid layui-word-aux">*</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">地址类型：</label>
+                            <div class="layui-input-inline" style="width: auto">
+                                <select name="commuType" lay-filter="commuType" lay-verify="required">
+                                    <!-- <option value="0">学校</option>
+                                    <option value="1">社区</option> -->
                                 </select>
 
                             </div>
+                            <span class="type1">
+                                <label class="layui-form-label w50">学校：</label>
+                                <div class="layui-input-inline" style="width: auto">
+                                    <select name="school" lay-filter="school" lay-verify="required">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label w50">校区：</label>
+                                <div class="layui-input-inline" style="width: auto">
+                                    <select name="schoolArea" lay-filter="schoolArea" lay-verify="required">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </span>
+                            <span class="type2" style="display:none">
+                                <label class="layui-form-label w50">社区：</label>
+                                <div class="layui-input-inline" style="width: auto">
+                                    <select name="community" lay-filter="community" lay-verify="required">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label w50">期号：</label>
+                                <div class="layui-input-inline" style="width: auto">
+                                    <select name="term" lay-filter="term" lay-verify="required">
+                                        <option></option>
+                                    </select>
+                                </div>
+                            </span>
                             <div class="layui-form-mid layui-word-aux">*</div>
-
                         </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">校区/地址：</label>
-                            <div class="layui-input-inline" style="width: 50%">
-                                <input type="text" name="address" placeholder="输入项目校区/地址" autocomplete="off" class="layui-input"
-                                    lay-verify="required">
-                            </div>
-                            <div class="layui-form-mid layui-word-aux">*</div>
-                            <div class="layui-form-mid"><i class="fa fa-plus addFunc addAddress"></i></div>
-                            <div class="layui-form-mid"><i class="fa fa-minus addFunc removeAddress"></i></div>
-                        </div>
+                         
                     </div>
                     <div class="layui-form-item" style="overflow: hidden;border:1px solid #f6f6f6;text-align: center">
                         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -196,32 +220,15 @@
                 form = layui.form;
             var url = location.href;
             let urlData = parseURL(url);
-            if (urlData) {
-                if (urlData.isTrue) {
-                    $('.back').show();
-                }
-
-            };
-            $('.removeAddress').hide();
+           
             $('body').on('click', '.back', function () {
                 window.history.back();
-            }).on('click', '.addAddress', function () {
-                $(this).parent().parent().find('.layui-input-inline').append(
-                    '<input type="text" name="community" placeholder="输入项目校区/地址" autocomplete="off" class="layui-input" lay-verify="required">'
-                );
-                if ($(this).parent().parent().find('.layui-input-inline input').length > 1) {
-                    $('.removeAddress').show();
-                }
-            }).on('click', '.removeAddress', function () {
-                $(this).parent().parent().find('.layui-input-inline').children().last().remove()
-                if ($(this).parent().parent().find('.layui-input-inline input').length == 1) {
-                    $('.removeAddress').hide();
-
-                }
             }).on('click', '.addTime', function () {
                 initModal('新增营业时间','addHour.html')
             });
-
+            common.getHourDropList(function(res){
+                console.log(res);
+            });
             form.render();
             // 日期
             laydate.render({
@@ -237,37 +244,37 @@
                 theme: '#393D49',
             });
             // 监听完区县然后加载学校
-            form.on('select(area)', function (data) {
-                $("select[name=community]").removeAttr("disabled");
-                form.render();
-                getSchool();
-            });
+            // form.on('select(area)', function (data) {
+            //     $("select[name=community]").removeAttr("disabled");
+            //     form.render();
+            //     getSchool();
+            // });
             // 获取学校信息
-            function getSchool() {
-                var data = {
-                    'province': $('select[name="province"]').siblings(
-                        "div.layui-form-select").find(
-                        'dl dd.layui-this').text(),
-                    'city': $('select[name="city"]').siblings(
-                        "div.layui-form-select").find(
-                        'dl dd.layui-this').text(),
-                    'area': $('select[name="area"]').siblings(
-                        "div.layui-form-select").find(
-                        'dl dd.layui-this').text(),
-                };
-                common.getSchoolList(data, function (res) {
+            // function getSchool() {
+            //     var data = {
+            //         'province': $('select[name="province"]').siblings(
+            //             "div.layui-form-select").find(
+            //             'dl dd.layui-this').text(),
+            //         'city': $('select[name="city"]').siblings(
+            //             "div.layui-form-select").find(
+            //             'dl dd.layui-this').text(),
+            //         'area': $('select[name="area"]').siblings(
+            //             "div.layui-form-select").find(
+            //             'dl dd.layui-this').text(),
+            //     };
+            //     common.getSchoolList(data, function (res) {
 
-                    $('select[name=community]').html('');
-                    res.data.forEach(ele => {
-                        $('select[name="community"]').append('<option value=' + ele.name +
-                            ' data-address=' + ele.address +
-                            ' data-province=' + ele.province +
-                            ' data-city=' + ele.city +
-                            ' data-area=' + ele.area + '>' + ele.name + '</option>')
-                    });
-                    form.render()
-                })
-            };
+            //         $('select[name=community]').html('');
+            //         res.data.forEach(ele => {
+            //             $('select[name="community"]').append('<option value=' + ele.name +
+            //                 ' data-address=' + ele.address +
+            //                 ' data-province=' + ele.province +
+            //                 ' data-city=' + ele.city +
+            //                 ' data-area=' + ele.area + '>' + ele.name + '</option>')
+            //         });
+            //         form.render()
+            //     })
+            // };
             form.on('submit(searchBox)', function (data) {
                 if (data.field.community == '') {
                     layer.msg('请选择学校')

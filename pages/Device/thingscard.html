@@ -32,13 +32,13 @@
         <div class="layui-form-item" style="margin-bottom: 0">
             <div class="layui-inline">
                 <label class="layui-form-label" style="width:100px ;">物联网卡号码：</label>
-                <div class="layui-input-block">
+                <div class="layui-input-inline">
                     <input type="text" name="simCode" placeholder="输入号码" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">状态：</label>
-                <div class="layui-input-block">
+                <label class="layui-form-label" style="width:100px ;">状态：</label>
+                <div class="layui-input-inline">
                     <select name="status" lay-filter="state" lay-verify="">
                         <option value="">全部</option>
                         <option value="0">已分配</option>
@@ -49,7 +49,7 @@
             </div>
             <!-- <div class="layui-inline">
                 <label class="layui-form-label">卡来源：</label>
-                <div class="layui-input-block">
+                <div class="layui-input-inline">
                     <select name="source" lay-verify="">
                         <option value="">全部</option>
                         <option value="0">平台</option>
@@ -57,18 +57,9 @@
                     </select>
                 </div>
             </div> -->
+             
             <div class="layui-inline">
-                <label class="layui-form-label">是否过期：</label>
-                <div class="layui-input-block">
-                    <select name="isExpire" lay-verify="">
-                        <option value="">全部</option>
-                        <option value="0">已过期</option>
-                        <option value="1">未过期</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">安装时间：</label>
+                <label class="layui-form-label" style="width:100px ;">安装时间：</label>
                 <div class="layui-input-inline">
                     <input type="text" name="activeTimeStart" class="layui-input" id="beginTime" placeholder="开始日期"
                         autocomplete="off" lay-key="1">
@@ -91,8 +82,8 @@
     <div class="layui-form">
         <table class="layui-table" id="data_demo" style="margin: 0;" lay-filter="datatable">
             <div class="demoTable" style="text-align: right;margin: 10px 0 0">
-                <button class="layui-btn layui-btn-primary" data-type="add">+新增</button>
-                <button class="layui-btn layui-btn-primary" data-type="delete">-删除</button>
+                <!-- <button class="layui-btn layui-btn-primary" data-type="add">+新增</button>
+                <button class="layui-btn layui-btn-primary" data-type="delete">-删除</button> -->
                 <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出</button>
 
             </div>
@@ -135,7 +126,7 @@
         <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
     </script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage','main'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage', 'main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -149,9 +140,6 @@
                     getCheckData: function () { //获取选中数据
                         var checkStatus = table.checkStatus('data_demo'),
                             data = checkStatus.data;
-                        // if (data.length == 0) {
-                        //     return layer.msg('请选择数据')
-                        // }
                         parent.layer.confirm('确认导出物联网卡数据?', {
                             icon: 3,
                             title: '提示',
@@ -163,14 +151,12 @@
                                     activeTimeStart = $("input[name='activeTimeStart']").val(),
                                     activeTimeEnd = $("input[name='activeTimeEnd']").val();
                                 var urlStr = common.baseUrl +
-                                    'common/exportSim?userId=' +
-                                    layui.sessionData('id').id + '&simCode=' +
-                                    simCode +
-                                    '&activeTimeStart=' +
-                                    activeTimeStart +
+                                    'sim/export?userId=' + layui.sessionData('id').id +
+                                    '&simCode=' + simCode + 
+                                    '&activeTimeStart=' + activeTimeStart +
                                     '&activeTimeEnd=' + activeTimeEnd +
-                                    '&status=' + status + '&source=' + $(
-                                        "select[name='source']").next().find(
+                                    '&status=' + status + 
+                                    '&source=' + $("select[name='source']").next().find(
                                         'dl dd.layui-this').attr('lay-value');
                                 urlStr = urlStr.replace(/undefined/g, '');
                                 console.log(urlStr);
@@ -191,9 +177,10 @@
                     isAll: function () { //验证是否全选
                         var checkStatus = table.checkStatus('data_demo');
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
-                    }, add: function () {
+                    },
+                    add: function () {
                         // window.location.href = "addCard.html?isTrue=1"
-                        initModal('新增物联网卡','addCard.html')
+                        // initModal('新增物联网卡','addCard.html')
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -250,73 +237,46 @@
                         elem: '#data_demo',
                         cols: [
                             [{
-                                checkbox: true,
-                                fixed: 'left',
-                                width: 50
-                            }, {
-                                title: '序号',
-                                templet: function (d) {
-                                    return d.LAY_TABLE_INDEX + 1
-                                }
-                            }, {
-                                field: 'simCode',
-                                title: '物联网卡号码',
-                            }, {
-                                field: 'source',
-                                title: '设备归属方',
-                                templet: '#sourceTpl'
-                            }, {
-                                field: 'status',
-                                title: '状态',
-                                templet: '#activeStateTpl',
-                            }, {
-                                field: 'activeTime',
-                                title: '安装时间',
-                                templet: function (d) {
-                                    if (d.activeTime) {
-                                        return timeChange(d.activeTime)
-                                    } else {
-                                        return ''
+                                    checkbox: true,
+                                    fixed: 'left',
+                                    width: 50
+                                }, {
+                                    title: '序号',
+                                    templet: function (d) {
+                                        return d.LAY_TABLE_INDEX + 1
                                     }
+                                }, {
+                                    field: 'simCode',
+                                    title: '物联网卡号码',
+                                }, {
+                                    field: 'source',
+                                    title: '设备归属方',
+                                    templet: '#sourceTpl'
+                                }, {
+                                    field: 'status',
+                                    title: '状态',
+                                    templet: '#activeStateTpl',
+                                }, {
+                                    field: 'activeTime',
+                                    title: '安装时间',
+                                    templet: function (d) {
+                                        if (d.activeTime) {
+                                            return timeChange(d.activeTime)
+                                        } else {
+                                            return ''
+                                        }
+                                    }
+                                }, {
+                                    // fixed: 'right',
+                                    // width: 150,
+                                    align: 'center',
+                                    title: '操作',
+                                    toolbar: '#toolBar',
                                 }
-                            }
-                            // , {
-                            //     field: 'expire',
-                            //     title: '到期时间',
-                            //     templet: function (d) {
-                            //         if (d.expire) {
-                            //             return timeChange(d.expire)
-                            //         } else {
-                            //             return ''
-                            //         }
-                            //     }
-                            // }
-                            // , {
-                            //     field: 'period',
-                            //     title: '有效期',
-                            //     templet: function (d) {
-                            //         if (d.period) {
-                            //             return d.period + '天'
-                            //         } else {
-                            //             return ''
-                            //         }
-                            //     }
-                            // }, {
-                            //     field: 'expire',
-                            //     title: '是否过期',
-                            //     templet: '#outdateTpl',
-                            //     align: 'center'
-                            // }
-                            , {
-                                // fixed: 'right',
-                                // width: 150,
-                                align: 'center',
-                                title: '操作',
-                                toolbar: '#toolBar',
-                            }]
+                            ]
                         ],
                         cellMinWidth: 80,
-                        data: res.content,
+                        data: res.data.content,
                         limit: limitcount,
                         done: function (res1, curr, count) {
                             console.log(res1);
@@ -324,7 +284,7 @@
                             //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                             laypage.render({
                                 elem: 'laypage',
-                                count: res.totalElements,
+                                count: res.data.totalElements,
                                 curr: param.page,
                                 limit: limitcount,
                                 theme: 'right',
@@ -353,9 +313,7 @@
             form.render();
             //表单查询提交
             form.on('submit(searchBox)', function (data) {
-                console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
-                console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
-                console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
+
                 var needData = data.field,
                     param = {
                         page: 1,
@@ -396,7 +354,7 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
-                  initModal('编辑物联网卡',editCard.html)
+                    //   initModal('编辑物联网卡','editCard.html')
                 } else if (layEvent === 'del') {
                     console.log(data.id);
                     layer.confirm('真的删除行么', function (index) {
@@ -406,13 +364,7 @@
                     });
                 }
             });
-            // 监听表格内编辑
-            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                console.log(obj.value); //得到修改后的值
-                console.log(obj.field); //当前编辑的字段名
-                console.log(obj.data); //所在行的所有相关数据  
-                layer.msg('编辑保存')
-            });
+
             //    设备控制开关
             form.on('switch(deviceControl)', function (data) {
                 console.log($(data.elem).parents('tr').attr('data-index'));

@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
     <title>编辑主板</title>
     <style>
         .site-title fieldset {
@@ -95,31 +96,35 @@
                     <!-- <div class="layui-card-header">编辑主板</div> -->
                     <div class="layui-card-body" style="padding: 15px;display: flex;">
                         <div class="layui-col-md8">
+                            <input type="text" class="hide" name="id">
+                            <span class="makeAbled">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">主板分类：</label>
+                                    <div class="layui-input-inline" style="width: 50%;">
+                                        <select name="cate" lay-filter="cate" id="cate" lay-verify="">
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">*必填</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">主板品牌：</label>
+                                    <div class="layui-input-inline" style="width: 50%;">
+                                        <select name="brandName" lay-filter="brandName" id="brandName" lay-verify="">
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">*必填</div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">主板型号：</label>
+                                    <div class="layui-input-inline" style="width: 50%;">
+                                        <select name="brandCode" lay-filter="brandCode" id="brandCode" lay-verify="">
+                                        </select>
+                                    </div>
+                                    <div class="layui-form-mid layui-word-aux">*必填</div>
+                                </div>
 
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">主板分类：</label>
-                                <div class="layui-input-inline" style="width: 50%;">
-                                    <select name="cate" lay-filter="cate" id="cate" lay-verify="">
-                                    </select>
-                                </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">主板品牌：</label>
-                                <div class="layui-input-inline" style="width: 50%;">
-                                    <select name="brandName" lay-filter="brandName" id="brandName" lay-verify="">
-                                    </select>
-                                </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">主板型号：</label>
-                                <div class="layui-input-inline" style="width: 50%;">
-                                    <select name="brandCode" lay-filter="brandCode" id="brandCode" lay-verify="">
-                                    </select>
-                                </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
-                            </div>
+                            </span>
+
                             <div class="layui-form-item">
 
                                 <label class="layui-form-label">主板编号：</label>
@@ -163,83 +168,218 @@
                 laytpl = layui.laytpl,
                 form = layui.form,
                 element = layui.element,
-                common = layui.common;
+                common = layui.common,
+                useStatus;
 
-            $('body').on('click', '.back', function () {
-                window.history.back();
-            });
+            (function ($) {
+                var pca = {};
+                pca.keys = {};
+                pca.ckeys = {};
+                pca.init = function (initData, province, city, area, initprovince, initcity, initarea) { //jQuery选择器, 省-市-区
+                    if (!province || !$(province).length)
+                        return;
+                    $(province).html('');
+                    $(province).append('<option value="" selected>请选择</option>');
+                    for (var i in initData) {
+                        $(province).append('<option value="' + initData[i].name + '">' + initData[i].name +
+                            '</option>');
+                        pca.keys[initData[i].name] = initData[i];
+                    }
+                    form.render();
+                    if (initprovince)
+                        $(province).next().find('[lay-value="' + initprovince + '"]').click();
+                    if (!city || !$(city).length)
+                        return;
+                    pca.formRender(city);
+                    form.on('select(cate)', function (data) {
+                        if (data.value == '') {
+                            $(city)
+                                .next()
+                                .find('dl dd')
+                                .eq(0)
+                                .click();
+                        } else {
+                            var cs = pca.keys[
+                                $(data.elem)
+                                .find('option[value=' + data.value + ']')
+                                .text()
+                            ];
+                        };
 
-            var url = location.href;
-            var data = parseURL(url);
-            // if (data) {
-            //     if (data.isTrue) {
-            //         $('.back').show();
-            //     };
-            // }
-            // 获取单条数据
-            common.getSinMBInfo(data.id, function (res) {
-                console.log(res);
-                form.render();
-                form.val("searchBox", {
-                    'cate': res.data.cate,
-                    'brandname': res.data.brandname,
-                    'brand_code': res.data.brand_code,
-                    'imei': res.data.imei,
-                    'number': res.data.number,
-                    'code': res.data.code,
-                });
+                        $(city).html('');
+                        $(city).append('<option value="" selected>请选择</option>');
+                        if (cs) {
+                            cs = cs.child;
+                            for (var i in cs) {
+                                $(city).append('<option>' + cs[i].name + '</option>');
+                                pca.ckeys[cs[i].name] = cs[i];
+                            }
+                            $(city)
+                                .find('option:eq(1)')
+                                .attr('selected', true);
+                        }
+                        form.render();
+                        $(city)
+                            .next()
+                            .find('.layui-this')
+                            .removeClass('layui-this')
+                            .click();
+                        pca.formHidden('cate', data.value);
+                    });
+                    if (initprovince)
+                        $(province).next().find('[lay-value="' + initprovince + '"]').click();
+                    if (initcity)
+                        $(city).next().find('[lay-value="' + initcity + '"]').click();
+                    if (!area || !$(area).length)
+                        return;
+                    pca.formRender(area);
+                    form.on('select(brandName)', function (data) {
+                        var cs = pca.ckeys[data.value];
+                        $(area).html('');
+                        $(area).append('<option value="" selected>请选择</option>');
+                        if (cs) {
+                            cs = cs.child;
+                            for (var i in cs) {
+                                $(area).append('<option value=' + cs[i].id + '>' + cs[i].name +
+                                    '</option>');
+                            }
+                            $(area)
+                                .find('option:eq(1)')
+                                .attr('selected', true);
+                        }
+                        form.render();
+                        $(area)
+                            .next()
+                            .find('.layui-this')
+                            .removeClass('layui-this')
+                            .click();
+                        pca.formHidden('brandName', data.value);
+                    });
+                    form.on('select(brandCode)', function (data) {
+                        pca.formHidden('brandCode', data.value);
+                        $('.makeAbled').addClass('disabled');
+                        $('.makeAbled').find('select').attr('disabled', 'disabled');
+                        form.render();
+                    });
+                    if (initprovince)
+                        $(province).next().find('[lay-value="' + initprovince + '"]').click();
+                    if (initcity)
+                        $(city).next().find('[lay-value="' + initcity + '"]').click();
+                    if (initarea)
+                        $(area).next().find('[lay-value="' + initarea + '"]').click();
+                }
 
-                form.render();
-                // 主板3级联动
-                common.getBoardDropList(function (res) {
-                    console.log(res);
-                    pca.init(res.data, 'select[name=cate]', 'select[name=brandName]',
-                        'select[name=brandCode]', '', '', '');
-                });
-                // useStatus    
-                if (res.data.useStatus == 0) {
-                    $('#useStatus').val('0');
-                }else{
-                    $('#useStatus').val('1');
-                    $('#useStatus').attr('checked','checked');
+                pca.formRender = function (obj) {
+                    $(obj).html('');
+                    // $(obj).append('<option>全部</option>');
                     form.render();
                 }
+                pca.formHidden = function (obj, val) {
+                    if (!$('#pca-hide-' + obj).length)
+                        $('body').append('<input id="pca-hide-' + obj + '" type="hidden" value="' + val +
+                            '" />');
+                    else
+                        $('#pca-hide-' + obj).val(val);
+                }
+
+                window.pca = pca;
+                return pca;
+            })($);
+
+            var url = location.href;
+            var data = parseURL(decodeURIComponent(url));
+            console.log(data);
+            form.val("searchBox", {
+                'id': data.id,
+                'imei': data.imei,
+                'owned': data.owned
             });
+            form.render();
+            // 主板3级联动
+            common.getBoardDropList(function (res) {
+                console.log(res);
+                pca.init(res.data, 'select[name=cate]', 'select[name=brandName]',
+                    'select[name=brandCode]', data.meBrand, data.classify, data.typeId);
+            });
+            // useStatus  
+            useStatus = data.useStatus;
+            if (data.useStatus == "0" || data.useStatus == "1") {
+
+                $('#useStatus').val('0');
+                $('#useStatus').attr('checked', 'checked');
+            } else {
+                $('#useStatus').val('1');
+
+                form.render();
+            }
+
+            // 获取单条数据
+            // common.getSinMBInfo(data.id, function (res) {
+            //     console.log(res);
+            //     form.render();
+            //     form.val("searchBox", {
+            //         'cate': res.data.cate,
+            //         'brandname': res.data.brandname,
+            //         'brand_code': res.data.brand_code,
+            //         'imei': res.data.imei,
+            //         'number': res.data.number,
+            //         'code': res.data.code,
+            //     });
+
+            //     form.render();
+            //     // 主板3级联动
+            //     common.getBoardDropList(function (res) {
+            //         console.log(res);
+            //         pca.init(res.data, 'select[name=cate]', 'select[name=brandName]',
+            //             'select[name=brandCode]', '', '', '');
+            //     });
+            //     // useStatus    
+            //     if (res.data.useStatus == 0) {
+            //         $('#useStatus').val('0');
+            //     }else{
+            //         $('#useStatus').val('1');
+            //         $('#useStatus').attr('checked','checked');
+            //         form.render();
+            //     }
+            // });
 
 
             // 表单提交
             form.on('submit(searchBox)', function (data) {
-                if($('#useStatus').next().is('.layui-form-onswitch')){
-                   data.field.useStatus=1
-               }else{
-                data.field.useStatus=0
-               }
-               console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
-               
-                parent.layer.open({
+                if ($('#useStatus').next().is('.layui-form-onswitch')) {
+                    data.field.useStatus = useStatus
+                } else {
+                    data.field.useStatus = 2
+                }
+                data.field.typeId = data.field.brandCode;
+                delete data.field.cate;
+                delete data.field.brandName;
+                delete data.field.brandCode;
+                console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
+
+                layer.open({
                     content: '确定保存信息?',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
-
-                        //do something
                         common.updateMBInfo(data.field, function (res) {
                             if (res.code == 200) {
-                                parent.layer.confirm('保存成功，继续添加?', {
+                                layer.confirm('保存成功，继续添加?', {
                                     icon: 3,
                                     title: '提示',
                                     btn: ['继续添加', '返回列表'],
                                     yes: function (index) {
-                                        parent.layer.close();
+                                        layer.close();
                                         window.location.reload();
                                     },
                                     btn2: function (index) {
+                                        layer.close(index);
                                         parent.layer.closeAll()
                                         // window.location.href =
                                         //     'pages/Device/list.html';
                                     }
                                 });
                             } else {
-                                parent.layer.closeAll();
+                                layer.closeAll();
                                 if (res.message != null || res.message != '') {
                                     layer.msg(res.message);
                                 } else {

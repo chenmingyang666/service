@@ -16,17 +16,19 @@
         }
 
         .layui-table-cell {
-            height: 70px;
-            line-height: 70px;
+            height: 110px;
+            line-height: 110px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
+        .layui-table img {
+            max-width: 200px;
+        }
         .laytable-cell-1-image {
-            /*最后的pic为字段的field*/
-            /* height: 100% !important;
-            max-width: 100%; */
+            /*最后的image为字段的field*/
+            height: 100% !important;
+            max-width: 100%;
         }
     </style>
 
@@ -34,6 +36,7 @@
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/global.js"></script>
 </head>
+
 <body>
     <div id="codeImg"></div>
     <form class="layui-form layui-layer-border" style=" padding: 10px;background-color: white" lay-filter="searchBox">
@@ -47,10 +50,10 @@
             <div class="layui-inline">
                 <label class="layui-form-label">状态：</label>
                 <div class="layui-input-inline">
-                    <select name="status" lay-verify="">
+                    <select name="useStatus" lay-verify="">
                         <option value="">全部</option>
-                        <option value="0">已使用</option>
-                        <option value="1">未使用</option>
+                        <option value="0">未使用</option>
+                        <option value="1">已使用</option>
                         <option value="2">已损坏</option>
                         <option value="3">已报废</option>
                     </select>
@@ -60,10 +63,7 @@
                 <button class="layui-btn layui-btn-sm" lay-submit lay-filter="searchBox">查询</button>
                 <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
             </div>
-
         </div>
-
-
     </form>
     <!-- 结果显示表格 -->
     <div class="layui-form">
@@ -84,27 +84,31 @@
     </script>
 
     <script type="text/html" id="stateTpl">
-        {{# if(d.status == 0){ }}
-        <button class="layui-btn layui-btn-normal layui-btn-xs">已绑定</button>
-        {{# } else if(d.status==1){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">未使用</button>
-        {{# } else if(d.status==2){ }}
-        <button class="layui-btn layui-btn-danger layui-btn-xs">已废弃</button>
-
-        {{#} }}
+        {{# if(d.useStatus == 0){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">未使用</button>
+        {{# } else if(d.useStatus == 1 ){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">已使用</button>
+        {{# } else if(d.useStatus == 2){ }}
+        <button class="layui-btn layui-btn-warm layui-btn-xs">已损坏</button>
+        {{# } else if(d.useStatus == 3){ }}
+        <button class="layui-btn layui-btn-warm layui-btn-xs">已报废</button>
+        {{# } }}
     </script>
-
     <script type="text/html" id="toolBar">
-        {{# if(d.status == 2){ }}
-        <a class="layui-btn layui-btn-danger layui-btn-xs layui-disabled" >作废</a>
-        {{#}else{ }}
-         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="obsolete">作废</a>
+        {{# if(d.useStatus == 3 || d.useStatus == 1){ }}
+        <!-- <a class="layui-btn layui-btn-danger layui-btn-xs layui-disabled" >作废</a> -->
+        <input type="checkbox"  lay-skin="switch" lay-text="报废|正常" checked disabled>
+
+        {{# }else if(d.useStatus == 0 || d.useStatus == 2 ){ }}
+         <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="obsolete">作废</a> -->
+         <input type="checkbox"  lay-skin="switch" data-qrCode="{{d.qrCode}}" data-id="{{d.id}}" lay-filter="disCard" lay-text="报废|正常">
+
         {{#} }}
        
     </script>
 
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage','main'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -117,21 +121,17 @@
                     getCheckData: function () { //获取选中数据
                         var checkStatus = table.checkStatus('data_demo'),
                             data = checkStatus.data;
-                        // if (data.length == 0) {
-                        //     return layer.msg('请选择数据')
-                        // }
                         parent.layer.confirm('确认导出二维码数据?', {
                             icon: 3,
                             title: '提示',
                             btn: ['确认', '取消'],
                             yes: function (index) {
-
                                 var qrCode = $("input[name='qrCode']").val(),
-                                    status = $("select[name='status']").next().find(
+                                    status = $("select[name='useStatus']").next().find(
                                         'dl dd.layui-this').attr('lay-value');
                                 var urlStr = common.baseUrl +
-                                    'common/exportQR?userId=' +
-                                    layui.sessionData('id').id + '&qrCode=' + qrCode +
+                                    'qr/export?userId=' + layui.sessionData('id').id +
+                                    '&qrCode=' + qrCode +
                                     '&status=' + status;
                                 urlStr = urlStr.replace("undefined", '');
                                 console.log(urlStr);
@@ -139,10 +139,8 @@
                                 parent.layer.closeAll()
                             },
                             btn2: function (index) {
-                                parent.layer.closeAll()
-
+                                parent.layer.closeAll();
                             }
-
                         });
                     },
                     getCheckLength: function () { //获取选中数目
@@ -154,9 +152,9 @@
                         var checkStatus = table.checkStatus('data_demo');
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
-                    add:function(){
-                        initModal('新增二维码','addEwm.html');
-                    
+                    add: function () {
+                        initModal('新增二维码', 'addEwm.html');
+
                     }
                 };
 
@@ -182,20 +180,17 @@
                                 fixed: 'left',
                                 width: 50
                             }, {
-                                   title: '序号',
-                                   templet:function (d) {
-                                       return d.LAY_TABLE_INDEX+1
-                                   }
-                               },{
+                                title: '序号',
+                                templet: function (d) {
+                                    return d.LAY_TABLE_INDEX + 1
+                                }
+                            }, {
                                 field: 'qrCode',
                                 title: '二维码编号'
                             }, {
-                                field: 'url',
-                                title: 'URL地址',
-                            }, {
                                 field: 'image',
                                 title: '图片',
-                                templet: '<div><img src="{{d.image}}"/></div>',
+                                templet: '<div><img width="140px" height="140px" src="{{d.image}}"/></div>',
                                 align: 'center',
                             }, {
                                 field: 'status',
@@ -211,15 +206,15 @@
                             }]
                         ],
 
-                        data: res.content,
-                        limit:limitcount,
+                        data: res.data.content,
+                        limit: limitcount,
                         done: function (res1, curr, count) {
                             console.log(res1);
                             //如果是异步请求数据方式，res即为你接口返回的信息。
                             //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                             laypage.render({
                                 elem: 'laypage',
-                                count: res.totalElements,
+                                count: res.data.totalElements,
                                 curr: param.page,
                                 limit: limitcount,
                                 theme: 'right',
@@ -252,9 +247,9 @@
                 var param = {
                     page: 1,
                     pageSize: 10,
-                    size:10
+                    size: 10
                 };
-                var obj = Object.assign(needData,param );
+                var obj = Object.assign(needData, param);
                 console.log(obj);
                 productsearch(obj, curnum, limitcount);
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
@@ -282,12 +277,30 @@
                 }
             });
 
-            // 监听表格内编辑
-            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                console.log(obj.value); //得到修改后的值
-                console.log(obj.field); //当前编辑的字段名
-                console.log(obj.data); //所在行的所有相关数据  
-                layer.msg('编辑保存')
+            form.on('switch(disCard)', function (data) {
+                var id = $(this).attr('data-id');
+                var qrCode = $(this).attr('data-qrCode');
+                layer.open({
+                    content: '作废本行' + qrCode + '二维码后不能更改',
+                    btn: ['确定', '取消'],
+                    yes: function (index, layero) {
+
+                        //do something
+                        common.updateQrList(id, function (res) {
+                            if (res.code == 200) {
+
+                                layer.close(index);
+                                layer.msg(res.message)
+                                productsearch(param, curnum, limitcount);
+                            } else {
+                                layer.msg(res.message)
+                                layer.close(index)
+                            };
+                        })
+                    },
+
+                });
+             
             });
             //监听工具条
             table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
@@ -295,24 +308,7 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'obsolete') {
-                    parent.layer.confirm('作废本行二维码?', function (index) {
 
-                        common.updateQrList(data.id, function (res) {
-                            console.log(res);
-                            if (res.code == 200) {
-                                obj.del();
-                                productsearch(param, curnum, limitcount);
-                            };
-                        });
-
-                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-
-                        parent.layer.closeAll();
-                        productsearch(param, curnum, limitcount);
-                        layer.msg('删除成功')
-                        //向服务端发送删除指令
-
-                    });
                 }
             });
             $('body').on('click', '.demoTable .layui-btn', function () {

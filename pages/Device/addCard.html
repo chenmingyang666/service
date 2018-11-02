@@ -96,7 +96,7 @@
                             <div class="layui-form-item">
                                     <label class="layui-form-label">物联网卡号：</label>
                                     <div class="layui-input-inline" style="width: 50%;">
-                                        <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input">
+                                        <input type="text" name="simCode" lay-verify="required" autocomplete="off" class="layui-input">
                                     </div>
                                     <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
@@ -105,7 +105,7 @@
                                     <label class="layui-form-label">设备归属方：</label>
                                     <div class="layui-input-inline" style="width: 50%;">
                                         <!-- <input type="text" name="devSeq" lay-verify="required" autocomplete="off" class="layui-input"> -->
-                                        <select name="belong"  lay-filter="devSeq">
+                                        <select name="owned"  lay-filter="devSeq">
                                                 <option value="01">集优科技</option>
                                             </select>
                                     </div>
@@ -116,7 +116,7 @@
                                     <label class="layui-form-label">安装时间：</label>
                                     <div class="layui-input-inline" style="width: 50%;">
                                         <input type="text" name="activeTimeStart" class="layui-input" id="beginTime" placeholder="开始日期"
-                        autocomplete="off" lay-key="1">
+                                            autocomplete="off" lay-key="1">
                                     </div>
                                     <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
@@ -177,9 +177,11 @@
                                     yes: function (index) {
                                         parent.layer.closeAll();
                                         window.location.reload();
+                                        parent.location.reload();
                                     },
                                     btn2: function (index) {
-                                        parent.layer.closeAll()
+                                        parent.layer.closeAll();
+                                        parent.location.reload();
                                         // window.location.href ='pages/Device/thingscard.html';
                                     }
                                 });
