@@ -101,9 +101,7 @@
 </head>
 
 <body>
-    <div class="layui-form-item">
-        <button class="layui-btn layui-btn-sm layui-btn-danger  back">返回</button>
-    </div>
+
 
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
@@ -119,7 +117,7 @@
                                         <option value="">请选择</option>
                                     </select>
                                 </div>
-                                <div class="layui-form-mid layui-word-aux">*必填</div>
+                                <div class="layui-form-mid layui-word-aux">*必选</div>
                             </div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">负责人：</label>
@@ -136,7 +134,7 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <label class="layui-form-label">校区/社区：</label>
+                                <label class="layui-form-label">学校/社区：</label>
                                 <div class="layui-input-inline">
                                     <span class="community"></span>
                                 </div>
@@ -144,19 +142,13 @@
                         </div>
                         <div class="layui-col-md7">
                             <div class="layui-form-item">
-                                <label class="layui-form-label"></label>
-                                <div class="layui-input-block">
-                                    <span class=""></span>
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">合同编号：</label>
+                                <label class="layui-form-label">项目编号：</label>
                                 <div class="layui-input-inline">
                                     <span class="contract"></span>
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <label class="layui-form-label">合同服务期：</label>
+                                <label class="layui-form-label">项目服务期：</label>
                                 <div class="layui-input-inline" width="auto">
                                     <span class="contractPeriod"></span>
                                 </div>
@@ -167,6 +159,12 @@
                                     <span class="address"></span>
                                 </div>
                             </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">营业时间：</label>
+                                <div class="layui-input-inline">
+                                    <span class="rule"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -174,7 +172,7 @@
                 <div class="layui-card">
                     <div class="layui-card-body">
                         <div class="layui-form-item">
-                            <label class="layui-form-label">设备分类：</label>
+                            <label class="layui-form-label">主机类型：</label>
                             <div class="layui-input-inline">
 
                                 <select name="cate" lay-filter="cate" id="cate" lay-verify="">
@@ -182,14 +180,14 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">设备品牌：</label>
+                            <label class="layui-form-label">主机品牌：</label>
                             <div class="layui-input-inline">
                                 <select name="brandName" lay-filter="brandName" id="brandName" lay-verify="">
                                 </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">设备型号：</label>
+                            <label class="layui-form-label">主机型号：</label>
                             <div class="layui-input-inline">
                                 <select name="brandCode" lay-filter="brandCode" id="brandCode" lay-verify="">
                                 </select>
@@ -198,7 +196,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">定价名称：</label>
                             <div class="layui-input-inline">
-                                <select name="pricingId" lay-filter="pricingId" required lay-verify="required" id="pricingId"
+                                <select name="priceId" lay-filter="priceId" required lay-verify="required" id="priceId"
                                     lay-verify="">
                                     <option value="">请选择定价名称</option>
                                 </select>
@@ -223,11 +221,8 @@
             </div>
         </div>
     </form>
-    <!-- <script src="../../js/lay/modules/projectRelate.js"></script> -->
-    <!-- <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-    <script>
-        console.log($('#cate').siblings("div.layui-form-select").find('dl dd.layui-this').val());
-    </script> -->
+    <script src="../../js/lay/modules/projectRelate.js"></script>
+    <!-- <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script> -->
     <script>
         layui.use(['form', 'table', 'jquery', 'laytpl', 'laypage', 'layer', 'common'], function () {
             var table = layui.table,
@@ -237,7 +232,14 @@
                 laypage = layui.laypage,
                 form = layui.form,
                 common = layui.common,
-                url = location.href;
+                url = location.href,
+                _data = [];
+            var limitcount = 10,
+                curnum = 1,
+                param = {
+                    page: 1,
+                    size: 10
+                };
             // 初始化三级联动
             (function ($) {
                 var pca = {};
@@ -250,7 +252,7 @@
                     $(province).append('<option value="" selected>请选择设备分类</option>');
                     for (var i in initData) {
 
-                        $(province).append('<option value="0' + (Number(i) + Number(1)) + '">' +
+                        $(province).append('<option value="' + initData[i].name + '">' +
                             initData[i].name +
                             '</option>');
                         pca.keys[initData[i].name] = initData[i];
@@ -268,12 +270,12 @@
                             var cs = pca.keys[$(data.elem).find('option[value=' + data.value +
                                     ']')
                                 .text()];
+                            console.log(cs);
                         };
-
                         $(city).html('');
                         $(city).append('<option value="" selected>请选择设备品牌</option>');
                         if (cs) {
-                            cs = cs.brand;
+                            cs = cs.child;
                             for (var i in cs) {
                                 $(city).append('<option value="' + cs[i].name + '">' + cs[i].name +
                                     '</option>');
@@ -290,7 +292,7 @@
                             .removeClass('layui-this')
                             .click();
                         pca.formHidden('cate', data.value);
-                        // doIt();
+
                     });
                     if (initprovince)
                         $(province).next().find('[lay-value="' + initprovince + '"]').click();
@@ -304,9 +306,9 @@
                         $(area).html('');
                         $(area).append('<option value="" selected>请选择设备型号</option>');
                         if (cs) {
-                            cs = cs.model;
+                            cs = cs.child;
                             for (var i in cs) {
-                                $(area).append('<option value="' + cs[i] + '">' + cs[i] +
+                                $(area).append('<option value="' + cs[i].id + '">' + cs[i].name +
                                     '</option>');
                             }
                             $(area)
@@ -320,11 +322,12 @@
                             .removeClass('layui-this')
                             .click();
                         pca.formHidden('brandName', data.value);
-                        // doIt();
+
                     });
                     form.on('select(brandCode)', function (data) {
                         pca.formHidden('brandCode', data.value);
                         doIt();
+                        productsearch(param, curnum, limitcount);
                     });
                     if (initprovince)
                         $(province).next().find('[lay-value="' + initprovince + '"]').click();
@@ -350,72 +353,46 @@
                 window.pca = pca;
                 return pca;
             })($);
-
-
-
-
-
-
-            $('body').on('click', '.back', function () {
-                window.history.back();
-            });
+            // $('body').on('click', '.back', function () {
+            //     window.history.back();
+            // });
             const queryCondition = {};
-
             // 获取项目下拉列表
             common.getProjectDropList(function (res) {
                 console.log(res);
                 res.data.forEach(function (ele, index) {
                     $('#pjtId').append("<option value=" + ele.id + ">" + ele.name +
                         "</option>");
-
                     form.render();
-                    productsearch(param, curnum, limitcount);
+                    // productsearch(param, curnum, limitcount);
 
                 });
             });
-
-
-            // 获取定价下拉列表
-            // common.getPricingDropList(function (res) {
-            //     console.log(res);
-            //     res.data.forEach(function (ele, index) {
-            //         if (ele.id && ele.name != null) {
-            //             $('#pricingId').append("<option value=" + ele.id + ">" + ele.name +
-            //                 "</option>");
-            //             form.render();
-            //         }
-
-            //     });
-            // });
             // 选定项目名称之后
             form.on('select(pjtId)', function (data) {
-                console.log(data.elem);
-                console.log(data.value);
                 queryCondition.pjtId = data.value;
                 common.getProjectDropListInfo(data.value, function (res) {
                     console.log(res);
-                    $('.principal').text(res.data.principal);
-                    $('.phone').text(res.data.phone);
-                    $('.contract').text(res.data.contract);
+                    $('.principal').text(res.data.chargePerson);
+                    $('.phone').text(res.data.chargePhone);
+                    $('.contract').text(res.data.number);
                     $('.contractPeriod').text(timeChange(res.data.startTime) + ' 至 ' +
                         timeChange(
                             res.data.endTime));
-                    $('.address').text(res.data.address);
-                    $('.community').text(res.data.community);
+                    $('.address').text(res.data.province + res.data.city + res.data.area);
+                    $('.community').text(res.data.cmitName);
+                    $('.rule').text(res.data.ruleTime);
                 });
                 // 初始化三级联动
                 common.getDeviceLinked(function (res) {
                     console.log(res);
-                    res.data.forEach(function (ele, index) {
-                        $('#cate').append("<option value=" + index + ">" + ele.name +
-                            "</option>");
-                    });
+
                     pca.init(res.data, 'select[name=cate]',
                         'select[name=brandName]',
-                        'select[name=brandCode]', '北京', '北京', '朝阳区');
+                        'select[name=brandCode]', '', '', '');
                     form.render();
                 });
-                productsearch(param, curnum, limitcount);
+                // productsearch(param, curnum, limitcount);
             });
             // 获取定价名称
             form.render();
@@ -434,17 +411,17 @@
                     'pjtId': queryCondition.pjtId,
                 };
                 console.log(urlStr);
-                productsearch(urlStr, curnum, limitcount);
-                common.getPricingListby(urlStr, function (res) {
+
+                common.getPricingListby(urlStr.brandCode, function (res) {
                     console.log(res);
                     if (res.data.length == 0) {
-                        $('#pricingId').html('');
+                        $('#priceId').html('');
                         form.render();
                     } else {
-                        $('#pricingId').html('');
+                        $('#priceId').html('');
                         res.data.forEach(function (ele, index) {
                             if (ele.id && ele.name != null) {
-                                $('#pricingId').append("<option value=" + ele.id + ">" +
+                                $('#priceId').append("<option value=" + ele.id + ">" +
                                     ele.name +
                                     "</option>");
                                 form.render();
@@ -453,21 +430,19 @@
                     }
                 });
             };
-            var limitcount = 10,
-                curnum = 1,
-                param = {
-                    page: 1,
-                    size: 10
-                };
+
             // 刷新设备列表
             function productsearch(param, start, limitsize) {
                 param.page = start;
                 param.size = limitsize;
                 console.log(param);
-                common.addProjectDetail(param, function (res) {
+                common.addProjectDetail($('#brandCode').siblings(
+                    "div.layui-form-select").find(
+                    'dl dd.layui-this').attr('lay-value'), function (res) {
                     console.log(res);
                     if (res.code == 200) {
                         layer.msg('请勾选设备');
+                        _data = res.data;
                         table.render({
                             elem: '#chooseDevice',
                             cols: [
@@ -477,51 +452,51 @@
                                     fixed: true
                                 }, {
                                     field: 'name',
-                                    title: '设备名',
+                                    title: '设备名称',
+                                }, {
+                                    field: 'qrCode',
+                                    title: '二维码编号',
                                 }, {
                                     field: 'number',
-                                    title: '设备编号',
+                                    title: '主机编号',
                                 }, {
-                                    field: 'locatename',
+                                    field: 'lctName',
                                     title: '设备点名称',
-                                }, {
-                                    field: 'sim_id',
-                                    title: '二维码编号',
                                 }]
                             ],
                             width: 950,
                             cellMinWidth: 80,
-                            data: res.data.content,
+                            data: res.data,
                             limit: limitcount,
-                            done: function (res1, curr, count) {
-                                //如果是异步请求数据方式，res即为你接口返回的信息。
-                                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
-                                laypage.render({
-                                    elem: 'laypage',
-                                    count: res.data.totalElements,
-                                    curr: curnum,
-                                    limit: limitcount,
-                                    theme: 'right',
-                                    limits: [10, 20, 50, 100],
-                                    layout: ['prev', 'page', 'next', 'skip',
-                                        'count',
-                                        'limit'
-                                    ],
-                                    jump: function (obj, first) {
-                                        if (!first) {
-                                            curnum = obj.curr;
-                                            limitcount = obj.limit;
-                                            param.page = obj.curr;
-                                            param.size = obj.limit;
-                                            productsearch(param, curnum,
-                                                limitcount);
-                                        }
-                                    }
-                                });
-                            },
+                            // done: function (res1, curr, count) {
+                            //     //如果是异步请求数据方式，res即为你接口返回的信息。
+                            //     //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                            //     laypage.render({
+                            //         elem: 'laypage',
+                            //         count: res.data.totalElements,
+                            //         curr: curnum,
+                            //         limit: limitcount,
+                            //         theme: 'right',
+                            //         limits: [10, 20, 50, 100],
+                            //         layout: ['prev', 'page', 'next', 'skip',
+                            //             'count',
+                            //             'limit'
+                            //         ],
+                            //         jump: function (obj, first) {
+                            //             if (!first) {
+                            //                 curnum = obj.curr;
+                            //                 limitcount = obj.limit;
+                            //                 param.page = obj.curr;
+                            //                 param.size = obj.limit;
+                            //                 productsearch(param, curnum,
+                            //                     limitcount);
+                            //             }
+                            //         }
+                            //     });
+                            // },
                         });
-                        res.data.content.forEach(function (ele, index) {
-                            if (ele.pjtid != null) {
+                        res.data.forEach(function (ele, index) {
+                            if (ele.checked) {
 
                                 $('#chooseDevice').next().find(
                                     '.layui-table-fixed .layui-table-body .layui-table tbody tr[data-index=' +
@@ -536,66 +511,58 @@
                 });
             }
             //    获取选定之后的设备
-            form.on('select(pricingId)', function (data) {
-                var urlStr = {
-                    'pjtId': queryCondition.pjtId,
-                    'cate': $('#cate').siblings(
-                        "div.layui-form-select").find(
-                        'dl dd.layui-this').attr('lay-value'),
-                    'brandCode': $('#brandCode').siblings(
-                        "div.layui-form-select").find(
-                        'dl dd.layui-this').attr('lay-value'),
-                    'brandName': $('#brandName').siblings(
-                        "div.layui-form-select").find(
-                        'dl dd.layui-this').attr('lay-value'),
-                    'pricingId': data.value
-                };
-                console.log(urlStr);
-                productsearch(urlStr, curnum, limitcount)
-                
+            form.on('select(priceId)', function (data) {
+
+
             });
             form.on('submit(searchBox)', function (data) {
-                // console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
-                // console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
-                // console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
-                data.field.devices = [];
                 // 监听表格选择点击
-                var checkedData = table.checkStatus('chooseDevice').data;
-                console.log(checkedData);
+                var checkedData = table.checkStatus('chooseDevice').data,
+                    chooseArr = [];
+
                 var submitData = {
                     "pjtId": data.field.pjtId,
-                    "pricingId": data.field.pricingId,
-                    "devices": []
+                    "priceId": data.field.priceId,
+                    "modelId": data.field.brandCode,
+                    "devIds": []
                 };
                 checkedData.forEach(function (ele, index) {
-                    console.log(ele.id);
-                    submitData.devices.push({
-                        "deviceId": ele.id,
-                        "checked": true
-                    })
+                    chooseArr.push(ele.id)
                 });
-                console.log(JSON.stringify(submitData));
-                parent.layer.open({
+                _data.forEach(function (ele, index) {
+                    if (ele.id == chooseArr[index]) {
+                        let _id = JSON.stringify(ele.id),
+                            newObj = {};
+
+                        newObj[ele.id] = true;
+                        submitData.devIds.push(newObj);
+                    } else {
+                        let _id = JSON.stringify(ele.id),
+                            newObj = {};
+                        newObj[ele.id] = false;
+                        submitData.devIds.push(newObj);
+                    }
+                });
+                layer.open({
                     content: '确定保存项目?',
                     btn: ['确定', '取消'],
                     fixed: true,
                     offset: '40%',
                     yes: function (index, layero) {
                         common.addProjectDevice(submitData, function (res) {
-                            console.log(res);
                             if (res.code == 200) {
-                                parent.layer.confirm('保存成功，继续添加?', {
+                                layer.confirm('保存成功，继续添加?', {
                                     icon: 3,
                                     title: '提示',
                                     fixed: true,
                                     offset: '40%',
                                     btn: ['继续添加', '返回列表'],
                                     yes: function (index) {
-                                        window.location.reload();
-                                        parent.layer.closeAll()
+                                        layer.close(index);
                                     },
                                     btn2: function (index) {
-                                        parent.layer.closeAll()
+                                        parent.layer.closeAll();
+                                        parent.location.reload();
                                         // window.location.href = 'pages/Project/list.html';
                                     }
 
@@ -605,10 +572,8 @@
 
                         })
                     },
-                    btn2: function (index) {
-                        parent.layer.close()
-                    },
-                 
+
+
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });

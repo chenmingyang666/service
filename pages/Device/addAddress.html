@@ -322,8 +322,7 @@
                 common = layui.common,
                 address = layui.address(),
                 element = layui.element;   
-            var url = location.href;
-
+            var url = location.href,urlData = parseURL(url);
             // 监听完区县然后加载学校
             // form.on('select(area)', function (data) {
             //     console.log(data.value);
@@ -361,6 +360,14 @@
                     '"]').attr('data-address'));
                 form.render()
             });
+            // 引导式录入 向entry.html发成功消息回调
+            function transData() {
+                layer.msg('保存成功');
+                var autoMessage = {
+                    "sureAddress": true
+                };
+                window.parent.postMessage(autoMessage, '*');
+            }
             form.on('submit(searchBox)', function (data) {
                 var position = data.field.coordinate.split(',');
                 data.field.slng = position[0];
@@ -385,8 +392,12 @@
                     yes: function (index, layero) {
                         common.addLocate(data.field, function (res) {
                             // console.log(res);
+                             
                             if (res.code == 200) {
-                                layer.confirm('保存成功，继续添加地址?', {
+                                if(urlData.isEntry){
+                                       transData();  
+                                   }else {
+                                       layer.confirm('保存成功，继续添加地址?', {
                                     icon: 3,
                                     title: '提示',
                                     fixed: true,
@@ -403,6 +414,8 @@
                                         //     'pages/Device/address.html';
                                     }
                                 });
+                                   };
+                                
                             } else {
                                 layer.msg(res.message)
                             }
@@ -415,9 +428,7 @@
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
-            // 解析url
-
-            var data = parseURL(url);
+            
 
 
         });

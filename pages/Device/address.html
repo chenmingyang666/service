@@ -34,19 +34,19 @@
             <div class="layui-inline">
                 <label class="layui-form-label">省份：</label>
                 <div class="layui-input-inline" >
-                    <select name="province" lay-filter="province" lay-verify="required" class="province">
+                    <select name="province" lay-filter="province" class="province">
                         <option value="">请选择省</option>
                     </select>
                 </div>
                 <label class="layui-form-label">城市：</label>
                 <div class="layui-input-inline" >
-                    <select name="city" lay-filter="city" lay-verify="required">
+                    <select name="city" lay-filter="city">
                         <option></option>
                     </select>
                 </div>
                 <label class="layui-form-label">区县：</label>
                 <div class="layui-input-inline" >
-                    <select name="area" lay-filter="area" lay-verify="required">
+                    <select name="area" lay-filter="area">
                         <option></option>
                     </select>
                 </div>
@@ -74,8 +74,6 @@
                 <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
             </div>
         </div>
-
-
     </form>
     <!-- 结果显示表格 -->
     <div class="layui-form">
@@ -90,12 +88,7 @@
         <div id="laypage"></div>
 
     </div>
-
-    <script type="text/html" id="sexTpl">
-        {{# if(d.sex === '女'){ }}
-        <span style="color: #F581B1;">{{ d.sex }}</span>
-        {{# } else { }} {{ d.sex }} {{# } }}
-    </script>
+ 
     <script type="text/html" id="toolBar">
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -343,15 +336,11 @@
                 }
             });
             //设备控制开关
-            form.on('switch(deviceControl)', function (data) {
-                console.log($(data.elem).parents('tr').attr('data-index'));
-                console.log(data.elem.checked); //开关是否开启，true或者false
-                console.log(data.value); //开关value值，也可以通过data.elem.value得到
-                console.log(data.othis); //得到美化后的DOM对象
-                // layer.tips(this.value + ' ' + this.name + '：' + data.elem.checked, data.othis);
+            form.on('switch(deviceControl)', function (data) {              
                 common.activeLocate(this.name, function (res) {
+                    
                     if (res.code == 200) {
-                        layer.msg('操作成功');
+                        layer.msg(res.message);
                     } else {
                         layer.msg(res.message);
                     }

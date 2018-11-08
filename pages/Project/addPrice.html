@@ -90,6 +90,7 @@
         .hide{
             display: none;
         }
+         
     </style>
     <script src="../../js/layui.js"></script>
     <script src="../../js/lay/modules/jquery.js"></script>
@@ -99,7 +100,7 @@
 </head>
 
 <body>
-    
+
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
@@ -107,8 +108,8 @@
                 <div class="layui-card">
                     <div class="layui-card-body">
                         <div class="layui-form-item pjtNameLine hide">
-                            <label class="layui-form-label">项目名称：</label>
-                            <div class="layui-input-inline">
+                            <label class="layui-form-label">产品项目名称：</label>
+                            <div class="layui-input-inline" style="margin-top:5px">
                                 <span id="pjtName" class="pjtName"></span>
 
                             </div>
@@ -124,27 +125,27 @@
                             <div class="layui-form-mid layui-word-aux">*必填</div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">设备类型：</label>
+                            <label class="layui-form-label">主机类型：</label>
                             <div class="layui-input-inline">
                                 <select name="cate" id="cate" lay-filter="cate" lay-verify=""></select>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">设备品牌：</label>
+                            <label class="layui-form-label">主机品牌：</label>
                             <div class="layui-input-inline">
                                 <select name="brandName" id="brandName" lay-filter="brandName" lay-verify="">
                                 </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">设备型号：</label>
+                            <label class="layui-form-label">主机型号：</label>
                             <div class="layui-input-inline">
                                 <select name="brandCode" id="brandCode" lay-filter="brandCode" lay-verify="">
                                 </select>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label">产品价格：</label>
+                            <label class="layui-form-label">产品定价：</label>
                             <div class="layui-input-inline">
                                 <table class="layui-table" id="chooseDevice"></table>
                                 <div id="laypage"></div>
@@ -161,11 +162,8 @@
             </div>
 
         </div>
-
     </form>
-
-
-    <!-- <script src="../../js/lay/modules/projectRelate.js"></script> -->
+    <script src="../../js/lay/modules/projectRelate.js"></script>
     <script>
         layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'common', 'laypage'], function () {
             var table = layui.table,
@@ -183,111 +181,104 @@
                     }
                 };
             // 初始化三级联动
-            (function ($) {
-                var pca = {};
-                pca.keys = {};
-                pca.ckeys = {};
-                pca.init = function (initData, province, city, area, initprovince, initcity, initarea) { //jQuery选择器, 省-市-区
-                    if (!province || !$(province).length)
-                        return;
-                    $(province).html('');
-                    $(province).append('<option value="" selected>请选择设备分类</option>');
-                    for (var i in initData) {
-
-                        $(province).append('<option value="0' + (Number(i) + Number(1)) + '">' +
-                            initData[i].name +
-                            '</option>');
-                        pca.keys[initData[i].name] = initData[i];
-                    }
-                    form.render();
-                    // if (initprovince)
-                    //     $(province).next().find('[lay-value="' + initprovince + '"]').click();
-                    if (!city || !$(city).length)
-                        return;
-                    pca.formRender(city);
-                    form.on('select(cate)', function (data) {
-                        if (data.value == '') {
-                            // $(city).next().find('dl dd').eq(0).click();
-                        } else {
-                            var cs = pca.keys[$(data.elem).find('option[value=' + data.value +
-                                    ']')
-                                .text()];
-                        };
-
-                        $(city).html('');
-                        $(city).append('<option value="" selected>请选择设备品牌</option>');
-                        if (cs) {
-                            cs = cs.brand;
-                            for (var i in cs) {
-                                $(city).append('<option value="' + cs[i].name + '">' + cs[i].name +
-                                    '</option>');
-                                pca.ckeys[cs[i].name] = cs[i];
-                            }
-                            $(city)
-                                .find('option:eq(0)')
-                                .attr('selected', true);
-                        }
-                        form.render();
-                        // $(city)
-                        //     .next()
-                        //     .find('.layui-this')
-                        //     .removeClass('layui-this')
-                        //     .click();
-                        pca.formHidden('cate', data.value);
-                        // doIt();
-                    });
-                    // if (initprovince)
-                    //     $(province).next().find('[lay-value="' + initprovince + '"]').click();
-                    // if (initcity)
-                    //     $(city).next().find('[lay-value="' + initcity + '"]').click();
-                    if (!area || !$(area).length)
-                        return;
-                    pca.formRender(area);
-                    form.on('select(brandName)', function (data) {
-                        var cs = pca.ckeys[data.value];
-                        $(area).html('');
-                        $(area).append('<option value="" selected>请选择设备型号</option>');
-                        if (cs) {
-                            cs = cs.model;
-                            for (var i in cs) {
-                                $(area).append('<option value="' + cs[i] + '">' + cs[i] +
-                                    '</option>');
-                            }
-                            $(area)
-                                .find('option:eq(0)')
-                                .attr('selected', true);
-                        }
-                        form.render();
-                        // $(area)
-                        //     .next()
-                        //     .find('.layui-this')
-                        //     .removeClass('layui-this')
-                        //     .click();
-                        pca.formHidden('brandName', data.value);
-                    });
-                    form.on('select(brandCode)', function (data) {
-                        pca.formHidden('brandCode', data.value);
-
-                    });
-
-                }
-
-                pca.formRender = function (obj) {
-                    $(obj).html('');
-                    // $(obj).append('<option>全部</option>');
-                    form.render();
-                }
-
-                pca.formHidden = function (obj, val) {
-                    if (!$('#pca-hide-' + obj).length)
-                        $('body').append('<input id="pca-hide-' + obj + '" type="hidden" value="' + val +
-                            '" />');
-                    else
-                        $('#pca-hide-' + obj).val(val);
-                }
-                window.pca = pca;
-                return pca;
-            })($);
+            // (function ($) {
+            //     var pca = {};
+            //     pca.keys = {};
+            //     pca.ckeys = {};
+            //     pca.init = function (initData, province, city, area, initprovince, initcity, initarea) { //jQuery选择器, 省-市-区
+            //         if (!province || !$(province).length)
+            //             return;
+            //         $(province).html('');
+            //         $(province).append('<option value="" selected>请选择设备分类</option>');
+            //         for (var i in initData) {
+            //             $(province).append('<option value="0' + (Number(i) + Number(1)) + '">' +
+            //                 initData[i].name +
+            //                 '</option>');
+            //             pca.keys[initData[i].name] = initData[i];
+            //         }
+            //         form.render();
+            //         // if (initprovince)
+            //         //     $(province).next().find('[lay-value="' + initprovince + '"]').click();
+            //         if (!city || !$(city).length)
+            //             return;
+            //         pca.formRender(city);
+            //         form.on('select(cate)', function (data) {
+            //             if (data.value == '') {
+            //                 // $(city).next().find('dl dd').eq(0).click();
+            //             } else {
+            //                 var cs = pca.keys[$(data.elem).find('option[value=' + data.value +']')
+            //                     .text()];
+            //             };
+            //             $(city).html('');
+            //             $(city).append('<option value="" selected>请选择设备品牌</option>');
+            //             if (cs) {
+            //                 cs = cs.brand;
+            //                 for (var i in cs) {
+            //                     $(city).append('<option value="' + cs[i].name + '">' + cs[i].name +
+            //                         '</option>');
+            //                     pca.ckeys[cs[i].name] = cs[i];
+            //                 }
+            //                 $(city)
+            //                     .find('option:eq(0)')
+            //                     .attr('selected', true);
+            //             }
+            //             form.render();
+            //             // $(city)
+            //             //     .next()
+            //             //     .find('.layui-this')
+            //             //     .removeClass('layui-this')
+            //             //     .click();
+            //             pca.formHidden('cate', data.value);
+            //             // doIt();
+            //         });
+            //         // if (initprovince)
+            //         //     $(province).next().find('[lay-value="' + initprovince + '"]').click();
+            //         // if (initcity)
+            //         //     $(city).next().find('[lay-value="' + initcity + '"]').click();
+            //         if (!area || !$(area).length)
+            //             return;
+            //         pca.formRender(area);
+            //         form.on('select(brandName)', function (data) {
+            //             var cs = pca.ckeys[data.value];
+            //             $(area).html('');
+            //             $(area).append('<option value="" selected>请选择设备型号</option>');
+            //             if (cs) {
+            //                 cs = cs.model;
+            //                 for (var i in cs) {
+            //                     $(area).append('<option value="' + cs[i] + '">' + cs[i] +
+            //                         '</option>');
+            //                 }
+            //                 $(area)
+            //                     .find('option:eq(0)')
+            //                     .attr('selected', true);
+            //             }
+            //             form.render();
+            //             // $(area)
+            //             //     .next()
+            //             //     .find('.layui-this')
+            //             //     .removeClass('layui-this')
+            //             //     .click();
+            //             pca.formHidden('brandName', data.value);
+            //         });
+            //         form.on('select(brandCode)', function (data) {
+            //             pca.formHidden('brandCode', data.value);
+            //         });
+            //     }
+            //     pca.formRender = function (obj) {
+            //         $(obj).html('');
+            //         // $(obj).append('<option>全部</option>');
+            //         form.render();
+            //     }
+            //     pca.formHidden = function (obj, val) {
+            //         if (!$('#pca-hide-' + obj).length)
+            //             $('body').append('<input id="pca-hide-' + obj + '" type="hidden" value="' + val +
+            //                 '" />');
+            //         else
+            //             $('#pca-hide-' + obj).val(val);
+            //     }
+            //     window.pca = pca;
+            //     return pca;
+            // })($);
 
             var limitcount = 10,
                 curnum = 1,
@@ -295,14 +286,21 @@
                     page: 1,
                     size: 10
                 };
-            var url = location.href;
-            $('body').on('click', '.back', function () {
-                window.history.back();
-            });
-         
+            const url = location.href,urlData = parseURL(url);
+ 
+            if (urlData) {
+                if (urlData.isTrue) {
+                    $('.back').show()
+                } else if (urlData.isEntry) {
+                    $('.pjtNameLine').show();
+                    $('#pjtName').text(parent.document.getElementById("entryProject").contentWindow.document.getElementById(
+                        'pjtName').value);
+
+                }
+            };
             // 初始化三级联动
             common.getDeviceLinked(function (res) {
-                // console.log(res);
+                console.log(res);
                 pca.init(res.data, 'select[name=cate]', 'select[name=brandName]',
                     'select[name=brandCode]', 'a', 'a', 'a');
             });
@@ -315,41 +313,51 @@
                 var needData = data.field;
                 var chooseData = active.getCheckData();
                 data.field.funcs = chooseData;
-                data.field.type = 'SAVE';
-                // console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
                 var isPrice = true;
                 data.field.funcs.forEach(ele => {
                     if (ele.price == '' || ele.price == null) {
                         isPrice = false;
                     };
+                    ele.funcId = ele.id;
+                    ele.name = ele.funcName;
                 });
-                // console.log(isPrice);
                 if (isPrice) {
-                    parent.layer.open({
+                    var obj = {
+                        "name": data.field.name,
+                        "pid": 0,
+                        "modelId": data.field.brandCode
+                    };
+                    chooseData.unshift(obj);
+                    console.log(chooseData);
+                    layer.open({
                         content: '确定保存价格?',
                         btn: ['确定', '取消'],
                         fixed: true,
                         offset: '40%',
                         yes: function (index, layero) {
-                            common.savePricing(data.field, function (res) {
+                            common.savePricing(chooseData, function (res) {
+                                console.log(urlData);
                                 if (res.code == 200) {
-                                    parent.layer.confirm('保存成功，继续添加产品价格?', {
-                                        icon: 3,
-                                        title: '提示',
-                                        fixed: true,
-                                        offset: '40%',
-                                        btn: ['继续添加', '返回产品价格管理'],
-                                        yes: function (index) {
-                                            parent.layer.close();
-                                            window.location.reload();
-                                        },
-                                        btn2: function (index) {
-                                            parent.layer.closeAll();
-                                            // window.location.href =
-                                            //     'pages/Project/price.html';
-                                        }
-
-                                    });
+                                    if (urlData.isEntry) {
+                                        transData();
+                                    } else {
+                                        layer.confirm('保存成功，继续添加产品价格?', {
+                                            icon: 3,
+                                            title: '提示',
+                                            fixed: true,
+                                            offset: '40%',
+                                            btn: ['继续添加', '返回产品价格管理'],
+                                            yes: function (index) {
+                                                layer.close(index);
+                                            },
+                                            btn2: function (index) {
+                                                parent.layer.closeAll();
+                                                parent.location.reload();
+                                                // window.location.href =
+                                                //'pages/Project/price.html';
+                                            }
+                                        });
+                                    }
                                 } else {
                                     if (res.message != null || res.message != '') {
                                         layer.msg(res.message);
@@ -359,80 +367,78 @@
                                 }
                             });
                         },
-                        btn2: function (index) {
-                            parent.layer.close();
-                        },
-                       
                     })
                 } else {
                     layer.msg('请设定功能价格');
                 }
-
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
             productsearch(param, curnum, limitcount);
+            // 引导式录入 向entry.html发成功消息回调
+            function transData() {
+                layer.msg('保存成功');
+                var autoMessage = {
+                    "surePrice": true
+                };
+                window.parent.postMessage(autoMessage, '*');
+            }
             // 重绘定价列表
             function productsearch(param, start, limitsize) {
                 param.size = start;
                 param.page = limitsize;
-                param.cate = $('#cate').siblings(
+
+                var id = $('#brandCode').siblings(
                     "div.layui-form-select").find(
                     'dl dd.layui-this').attr('lay-value');
-                param.brandCode = $('#brandCode').siblings(
-                    "div.layui-form-select").find(
-                    'dl dd.layui-this').attr('lay-value');
-                param.brandName = $('#brandName').siblings(
-                    "div.layui-form-select").find(
-                    'dl dd.layui-this').attr('lay-value');
-                common.getPriceFuncs(param, function (res) {
+
+                common.getPriceFuncs(id, function (res) {
                     function colsData(param) {
-                        if (param.cate == '03') {
-                            var data = [
-                                [{
-                                    checkbox: true,
-                                    fixed: true
-                                }, {
-                                    field: 'funcName',
-                                    title: '功能名称',
+                        // if (param.cate == '03') {
+                        var data = [
+                            [{
+                                checkbox: true,
+                                fixed: true
+                            }, {
+                                field: 'funcName',
+                                title: '功能名称',
 
-                                }, {
-                                    field: 'price',
-                                    title: '价格(元)',
-                                    width: 150,
-                                    edit: true
+                            }, {
+                                field: 'price',
+                                title: '价格(元)',
+                                width: 150,
+                                edit: true
 
-                                }, {
-                                    field: 'remarks',
-                                    title: '备注',
-                                    edit: true
-                                }, ]
-                            ];
-                            return data;
-                        } else {
-                            var data = [
-                                [{
-                                    checkbox: true,
-                                    fixed: true
-                                }, {
-                                    field: 'funcName',
-                                    title: '功能名称',
-
-                                }, {
-                                    field: 'runTime',
-                                    title: '运行时间(分钟)'
-                                }, {
-                                    field: 'price',
-                                    title: '价格(元)',
-                                    width: 150,
-                                    edit: true
-                                }, {
-                                    field: 'remarks',
-                                    title: '备注',
-                                    edit: true
-                                }, ]
-                            ]
-                            return data
-                        }
+                            }, {
+                                field: 'remarks',
+                                title: '备注',
+                                edit: true
+                            }, ]
+                        ];
+                        return data;
+                        // } else {
+                        //     var data = [
+                        //         [{
+                        //             checkbox: true,
+                        //             fixed: true
+                        //         }, {
+                        //             field: 'funcName',
+                        //             title: '功能名称',
+                        //         }, {
+                        //             field: 'runTime',
+                        //             title: '运行时间(分钟)'
+                        //         }, {
+                        //             field: 'price',
+                        //             title: '价格(元)',
+                        //             width: 150,
+                        //             edit: true
+                        //         }, {
+                        //             field: 'remarks',
+                        //             title: '备注',
+                        //             edit: true
+                        //         }, ]
+                        //     ]
+                        //     return data
+                        // }
                     }
                     table.render({
                         elem: '#chooseDevice',
@@ -467,21 +473,6 @@
                     });
                 });
             };
-            var data = parseURL(url);
-            // var index = data.index;
-            if (data) {
-                if (data.isTrue) {
-                    $('.back').show()
-                }else if(data.isEntry){
-                    $('.pjtNameLine').show();
-                $('#pjtName').text(parent.document.getElementById("entryProject").contentWindow.document.getElementById(
-                    'pjtName').value);
-                }
-
-            };
-           
-            
-
 
         });
     </script>

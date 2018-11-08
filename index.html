@@ -86,12 +86,27 @@
                 <ul class="layui-nav layui-nav-tree" lay-filter="test">
                     <li class="layui-nav-item layui-nav-itemed layui-this">
 
-                        <a style="cursor: pointer;" data-url="pages/Index/index.html" data-id="pages/Index/index.html" data-title="服务商首页">
+                        <a style="cursor: pointer;" data-url="pages/Index/index.html" data-id="pages/Index/index.html"
+                            data-title="服务商首页">
 
                             <i class="fa fa-desktop"></i>
                             <span>服务商首页</span>
                         </a>
 
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="fa fa-user-plus"></i>
+                            <span>订单管理</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="pages/Order/list.html" data-url="pages/Order/list.html" data-id="pages/Order/list.html"
+                                    data-title="订单列表">
+                                    <span>订单列表</span>
+                                </a>
+                            </dd>
+                        </dl>
                     </li>
                     <li class="layui-nav-item">
                         <a href="javascript:;">
@@ -144,20 +159,7 @@
                                 </dd> -->
                         </dl>
                     </li>
-                    <li class="layui-nav-item">
-                        <a href="javascript:;">
-                            <i class="fa fa-user-plus"></i>
-                            <span>订单管理</span>
-                        </a>
-                        <dl class="layui-nav-child">
-                            <dd>
-                                <a href="pages/Order/list.html" data-url="pages/Order/list.html" data-id="pages/Order/list.html"
-                                    data-title="订单列表">
-                                    <span>订单列表</span>
-                                </a>
-                            </dd>
-                        </dl>
-                    </li>
+                    
                     <li class="layui-nav-item">
                         <a href="javascript:;">
                             <i class="fa fa-drivers-license"></i>
@@ -213,7 +215,7 @@
                             </dd>
                         </dl>
                     </li>
-
+                   
 
                     <!-- <li class="layui-nav-item airManage">
                         <a href="javascript:;">
@@ -287,6 +289,32 @@
                     </li>
                     <li class="layui-nav-item">
                         <a href="javascript:;">
+                            <i class="fa  fa-yelp"></i>
+                            <span>水卡管理</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="pages/Water/recharge.html" data-url="pages/Water/recharge.html" data-id="pages/Water/recharge.html"
+                                    data-title="充值列表">
+                                    <span>充值列表</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Water/user.html" data-url="pages/Water/user.html" data-id="pages/Water/user.html"
+                                    data-title="水卡用户列表">
+                                    <span>水卡用户列表</span>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="pages/Water/waterStatic.html" data-url="pages/Water/waterStatic.html" data-id="pages/Water/waterStatic.html"
+                                    data-title="水卡统计">
+                                    <span>水卡统计</span>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
                             <i class="fa fa-dollar"></i>
                             <span>财务管理</span>
                         </a>
@@ -331,6 +359,7 @@
                             </dd>
                         </dl>
                     </li>
+                   
                 </ul>
 
             </div>
@@ -381,8 +410,8 @@
         </div>
         <div class="layui-footer">
             <!-- 底部固定区域 -->
-            <p style="text-align: center;">© 2018
-                <a href="http://jiyoukeji.cn" target="_blank">gelives.com</a> - 集优生活服务商管理平台
+            <p style="text-align: center;">© 豫ICP备16007926号 - 集优生活服务商管理平台
+                <!-- <a href="http://jiyoukeji.cn" target="_blank">gelives.com</a> -->
             </p>
         </div>
     </div>
@@ -545,10 +574,9 @@
     <script src="js/global.js"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
-  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <script src="js/indexPage.js"> </script>
 </body>
-
 </html>

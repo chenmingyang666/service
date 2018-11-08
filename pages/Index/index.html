@@ -159,15 +159,16 @@
                     <div>
                         <span class="_title">
                             <select id="deviceUse">
-                                <option value="0" selected>近3天设备使用率</option>
-                                <option value="1">近30天设备使用率</option>
+                                <option value="3" selected>近3天设备使用率</option>
+                                <option value="30">近30天设备使用率</option>
                             </select>
                         </span>
                         <div class="fa fa-info-circle gray fr tip4"></div>
                     </div>
                     <div class="static_num device_use">0</div>
-                    <div class="layui-progress layui-progress-big" lay-filter="deviceProgress" lay-showPercent="true" style="margin-top:6%">
-                        <div class="layui-progress-bar layui-bg-blue" lay-percent="80%"></div>
+                    <div class="layui-progress layui-progress-big" lay-filter="deviceProgress" lay-showPercent="true"
+                        style="margin-top:6%">
+                        <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
                     </div>
                 </div>
             </div>
@@ -191,37 +192,8 @@
                                 style="margin:0 15px"><i class="fa fas fa-angle-double-right"></i></span></div>
                     <table class="layui-table" lay-filter="deviceStatus" id="deviceStatus" style="margin:0;height: 300px;"
                         lay-skin="nob">
-                        <tbody>
-                            <tr>
-                                <th><span class="device_icon device_icon_black">1</span>总数量</th>
-                                <td style="font-weight:600" class="device_total">0</td>
-                                <td class="device_total_per">100%</td>
-                            </tr>
-                            <tr>
-                                <th><span class="device_icon device_icon_black">2</span> 使用中</th>
-                                <td class="use">0</td>
-                                <td class="use_per">10%</td>
-                            </tr>
-                            <tr>
-                                <th><span class="device_icon device_icon_black">3</span>空闲</th>
-                                <td class="kongxian">0</td>
-                                <td class="kongxian_per">10%</td>
-                            </tr>
-                            <tr>
-                                <th><span class="device_icon">4</span>在线</th>
-                                <td class="online">0</td>
-                                <td class="online_per">10%</td>
-                            </tr>
-                            <tr>
-                                <th><span class="device_icon">5</span>离线</th>
-                                <td class="outline">0</td>
-                                <td class="outline_per">10%</td>
-                            </tr>
-                            <tr>
-                                <th><span class="device_icon">6</span>故障</th>
-                                <td class="bad">0</td>
-                                <td class="bad_per">10%</td>
-                            </tr>
+                        <tbody id="deviceUsing">
+
                         </tbody>
                     </table>
                 </div>
@@ -307,7 +279,6 @@
             });
 
             // 获取销售额/订单量echart
-
             $('.trend button').on('click', function () {
                 let type = $(this).attr('data-type');
                 common.getSalesOrdersData(type, function (res) {
@@ -471,14 +442,35 @@
                 // 月设备使用率
                 $('.static_num.device_use').text((res.data).toFixed(2) * 100 + '%');
             });
+            // 设备状态统计
             common.getDeviceStatusData(function (res) {
-                //    console.log(res);
-                $('td.device_total').text(res.data.count);
-                $('td.kongxian').text(res.data[0]);
-                $('td.use').text(res.data[1]);
-                $('td.online').text(res.data[2]);
-                $('td.outline').text(res.data[3]);
-                $('td.bad').text(res.data[4]);
+                console.log(res);
+                let html = new String();
+                res.data.forEach((ele, index) => {
+                    if (index < 3) {
+                        html += ` <tr><th><span class="device_icon device_icon_black">` + (
+                                index + 1) + `</span>` + ele.name +
+                            `</th>
+                                <td style="font-weight:600">` +
+                            ele.total + `</td>
+                                <td>` + ele.pre +
+                            `</td></tr>`
+                    } else {
+                        html += ` <tr><th><span class="device_icon">` + (index + 1) + `</span>` +
+                            ele.name + `</th>
+                                <td>` + ele.total +
+                            `</td>
+                                <td>` + ele.pre +
+                            `</td></tr>`
+                    }
+                });
+                $('#deviceUsing').html(html);
+                // $('td.device_total').text(res.data.count);
+                // $('td.kongxian').text(res.data[0]);
+                // $('td.use').text(res.data[1]);
+                // $('td.online').text(res.data[2]);
+                // $('td.outline').text(res.data[3]);
+                // $('td.bad').text(res.data[4]);
             });
             // 获取设备活跃度
             table.render({
@@ -539,8 +531,14 @@
                         elem: '#product',
                         cols: [
                             [{
+                                title: '排名',
+                                templet: function (d) {
+                                    return d.LAY_TABLE_INDEX + 1
+                                },
+                                width: 80
+                            }, {
                                 field: 'name',
-                                title: '设备名称',
+                                title: '产品名称',
                                 templet: '',
                                 align: 'center'
                             }, {
@@ -623,7 +621,7 @@
                             var value = {
                                 scale: ele.scale,
                                 name: ele.pay_way,
-                                money:ele.money
+                                money: ele.money
                             };
                             arr.push(value)
                         });
@@ -642,7 +640,7 @@
                         return arr;
                     };
 
-                  
+
                     initPayway(getSinData(res.data.list), getMoneyData(res.data.list))
 
                 });
@@ -672,6 +670,9 @@
                                 }
                             })
                             return name + ' ' + scale + '%' + ' ' + '￥' + money;
+                        },
+                        textStyle:{
+                            fontSize:'16'
                         }
                     },
                     series: [{
@@ -682,16 +683,22 @@
                         avoidLabelOverlap: false,
                         label: {
                             normal: {
-                                show: false,
-                                position: 'center'
+                                show: true,
+                                position: 'center',
+                                formatter: `订单总数\n12333`,
+                                textStyle: {
+                                    color: '#4893ff',
+                                    fontSize: '20',
+                                    fontWeight: 'bold'
+                                }
                             },
                             emphasis: {
-                                show: true,
+                                show: false,
                                 textStyle: {
                                     fontSize: '30',
                                     fontWeight: 'bolder'
                                 }
-                            }
+                            },
                         },
                         labelLine: {
                             normal: {
@@ -727,7 +734,7 @@
 
             $("#sale").change(function () {
                 var selected = $(this).children('option:selected').val();
-                
+
                 saleChange(selected);
 
             });
@@ -737,19 +744,23 @@
                     $('.static_num.month').text(res.data.money)
                 })
             };
-            saleChange('1');
+            saleChange($("#sale").children('option:selected').val());
 
 
             $("#deviceUse").change(function () {
                 var selected = $(this).children('option:selected').val();
-                layer.msg(selected);
-                element.progress('deviceProgress', '50%')
-                // if (selected == "order_time") {
-                    
-                // } else if (selected == "order_id") {
-                    
-                // } 
+                useRate(selected);
             });
+
+            function useRate(selected) {
+                common.getDeviceRateByDate(selected, function (res) {
+                    element.progress('deviceProgress', res.data);
+                    $('.layui-progress-text').text(res.data);
+                });
+            }
+
+            useRate($('#deviceUse').children('option:selected').val());
+
             $('.more').on('click', function (e) {
                 var url = $(this).attr('data-url');
                 var title = $(this).attr('data-title');

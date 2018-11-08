@@ -3,13 +3,13 @@
         var $ = layui.jquery,
             // baseUrl = 'http://api.gelives.com/';
             bxUrl = 'http://api.cloudbox.net.cn:8002/';
-        //  baseUrl ='http://192.168.1.200:80/';
+        //  baseUrl ='http://192.168.1.200:18080/';
         baseUrl = 'http://192.168.1.48:18080/';
         // baseUrl = 'http://192.168.1.53:18080/';
         var obj = {
             // baseUrl: 'http://api.gelives.com/',
             bxUrl: 'http://api.cloudbox.net.cn:8002/',
-            // baseUrl: 'http://192.168.1.200:80/',
+            // baseUrl: 'http://192.168.1.200:18080/',
             baseUrl: 'http://192.168.1.48:18080/',
             // baseUrl: 'http://192.168.1.53:18080/', 
             // 注册用户
@@ -152,6 +152,27 @@
                     success: callback
                 });
             },
+            // 按日期统计设备使用率
+            getDeviceRateByDate: function (params,callback) {
+                $.ajax({
+                    url: baseUrl + 'rpt/usedPre?day='+params,
+                    // data: {
+                    //     "vendor_id": layui
+                    //         .sessionData("id")
+                    //         .id,
+                    //     "timeType":params
+                    // },
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
             // 产品
             getSalesOrdersData: function (cate, callback) {
                 $.ajax({
@@ -245,7 +266,8 @@
             },
             getDeviceStatusData: function (callback) {
                 $.ajax({
-                    url: baseUrl + 'device/countDeviceByStauts',
+                    // url: baseUrl + 'device/countDeviceByStauts',
+                    url: baseUrl + 'rpt/byDevStatus',
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -362,7 +384,7 @@
                     success: callback
                 });
             },
-            //启用设备点
+            //启用设备
             activeSinDevice: function (id, callback) {
                 $.ajax({
                     url: baseUrl + 'db/opt/' + id,
@@ -377,10 +399,10 @@
                     success: callback
                 });
             },
-            //启用设备点
+            //启用项目设备
             activeDevice: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'device/online/' + id,
+                    url: baseUrl + 'pb/opt/' + id,
                     type: 'post',
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -394,10 +416,11 @@
                     success: callback
                 });
             },
-            // 设备导出
-            exportDeviceList: function (callback) {
+            //启用项目信息
+            activeProject: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'device/export',
+                    url: baseUrl + 'pjt/opt/' + id,
+                    type: 'post',
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -410,6 +433,7 @@
                     success: callback
                 });
             },
+            
             // 获取设备状态数量
             getDeviceStatusLength: function (start, limitsize, status, callback) {
                 $.ajax({
@@ -649,7 +673,7 @@
             activeLocate: function (id, callback) {
                 // console.log(id);
                 $.ajax({
-                    url: baseUrl + 'locate/enbale/' + id,
+                    url: baseUrl + 'lct/opt/' + id,
                     type: 'post',
                     headers: {
                         'Authorization': 'Bearer ' + layui
@@ -1311,7 +1335,6 @@
             // 营业时间
             getHourList: function (params, callback) {
                 $.ajax({
-                    type: 'post',
                     url: baseUrl + 'rule',
                     data: params,
                     headers: {
@@ -1409,7 +1432,6 @@
                             .sessionData('token')
                             .token
                     },
-                    contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -1419,15 +1441,14 @@
             // 项目批量删除
             deleteProjectDevices: function (ids, callback) {
                 $.ajax({
-                    url: baseUrl + 'dev/deletes',
+                    url: baseUrl + 'pb/delete',
                     type: 'post',
                     data:{'ids':ids},
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
-                    },
-                    contentType: 'application/json',
+                    }, 
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -1437,15 +1458,14 @@
             // 项目批量上下线
             setProjectOnline: function (param, callback) {
                 $.ajax({
-                    url: baseUrl + 'device/onlines',
+                    url: baseUrl + 'pb/opts',
                     type: 'post',
-                    data: JSON.stringify(param),
+                    data:  param,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
-                    },
-                    contentType: 'application/json',
+                    }, 
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -1456,7 +1476,8 @@
             // 新增项目 下拉列表
             getProjectDropList: function (callback) {
                 $.ajax({
-                    url: baseUrl + 'project/dropList',
+                    // url: baseUrl + 'project/dropList',
+                     url: baseUrl + 'dlc/getProjects',
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -1492,13 +1513,12 @@
                     // url: baseUrl + 'project/update',
                     url: baseUrl + 'pjt/update',
                     type: 'post',
-                    data: JSON.stringify(param),
+                    data: param,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
                     },
-                    contentType: 'application/json',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -1544,10 +1564,9 @@
                 })
             },
             // 项目设备选择设备
-            addProjectDetail: function (datas, callback) {
+            addProjectDetail: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'project/listDetail',
-                    data: datas,
+                    url: baseUrl + 'db/devs?modelId='+id,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -1561,10 +1580,10 @@
                 })
             },
             // 按条件获取定价
-            getPricingListby: function (datas, callback) {
+            getPricingListby: function (id, callback) {
                 $.ajax({
-                    url: baseUrl + 'pricing/listBy',
-                    data: datas,
+                    // url: baseUrl + 'pricing/listBy',
+                    url: baseUrl + 'dlc/getPricing/'+id,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -1581,38 +1600,54 @@
             addProjectDevice: function (datas, callback) {
                 $.ajax({
                     // url: baseUrl + 'project/relate',
-                    url: baseUrl + 'pjt/update',
+                    url: baseUrl + 'pb/add',
                     type: 'post',
-                    data: JSON.stringify(datas),
+                    data: datas,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
                     },
-                    contentType: 'application/json',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
                     success: callback
                 })
             },
-            // 添加项目信息post请求
-            addProjectInfo: function (datas, callback) {
+            //编辑项目设备
+            getProjectSinInfo: function (id, callback) {
                 $.ajax({
-                    type: 'post',
-                    // url: baseUrl + 'project/save',
-                    url: baseUrl + 'pjt/add',
-                    data: JSON.stringify(datas),
+                    // url: baseUrl + 'project/relate',
+                    url: baseUrl + 'pb/get/'+id,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
                     },
-                    contentType: 'application/json',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
-                    dataType: 'json',                   
+                    success: callback
+                })
+            },
+
+
+
+            // 添加项目信息
+            addProjectInfo: function (params, callback) {
+                $.ajax({
+                    type: 'post',
+                    // url: baseUrl + 'project/save',
+                    url: baseUrl + 'pjt/add',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    }, 
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },                 
                     success: callback
                 })
             },
@@ -1669,10 +1704,10 @@
                 });
             },
             // 编辑单个的定价
-            getSinPricing: function (id, callback) {
+            getSinPricing: function (params, callback) {
                 $.ajax({
                     // url: baseUrl + 'pricing/list/' + id,
-                    url: baseUrl + 'pic/get/' + id,
+                    url: baseUrl + 'pic/get/'+params.pid+'/'+params.modelId,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -1696,7 +1731,7 @@
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
-                    },
+                    }, 
                     contentType: 'application/json',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
@@ -1710,9 +1745,7 @@
                     // url: baseUrl + 'pricing/deletes',
                     url: baseUrl + 'pic/deletes',
                     type: 'post',
-                    data: {
-                        "ids": ids
-                    },
+                    data:{"ids":ids},
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
@@ -1768,8 +1801,7 @@
                     // data: params,
                     headers: {
                         'Authorization': 'Bearer ' + layui.sessionData('token').token
-                    },
-                    contentType: 'application/json',
+                    }, 
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -1896,6 +1928,23 @@
             getProfitData: function (params, callback) {
                 $.ajax({
                     url: baseUrl + 'vendor/order/project/income',
+                    data: params, 
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 获取设备活跃度统计
+            getDeviceActivityData: function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'rpt/byActivity',
                     data: params, 
                     headers: {
                         'Authorization': 'Bearer ' + layui

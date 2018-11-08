@@ -34,8 +34,6 @@
         .layui-word-aux {
             color: red
         }
-    </style>
-    <style>
         .layui-side-menu,
         .layadmin-pagetabs .layui-tab-title li:after,
         .layadmin-pagetabs .layui-tab-title li.layui-this:after,
@@ -97,7 +95,7 @@
         <div class="layui-fluid">
                 <div class="layui-row layui-col-space15">
                         <div class="layui-form-item" style="border:1px solid #f6f6f6;">
-                            <div class="layui-card-header">编辑营业时间</div>
+                            <!-- <div class="layui-card-header">编辑营业时间</div> -->
                             <div class="layui-card-body" style="padding: 15px;">
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">营业时间名称：</label>
@@ -117,7 +115,7 @@
         
                                         <div class="layui-input-inline">
         
-                                            <input type="text" name="workTime1" class="layui-input workTime1" placeholder="开始时间"
+                                            <input type="text" name="firstStartTime" class="layui-input firstStartTime" placeholder="开始时间"
                                                 autocomplete="off">
                                         </div>
         
@@ -125,7 +123,7 @@
                                             至
                                         </div>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="workTime2" class="layui-input workTime2" placeholder="结束时间"
+                                            <input type="text" name="firstEndTime" class="layui-input firstEndTime" placeholder="结束时间"
                                                 autocomplete="off">
                                         </div>
                                     </div>
@@ -137,7 +135,7 @@
                                             <input type="checkbox" name="time2" lay-skin="primary" value="">
                                         </div>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="weekendTime1" class="layui-input weekendTime1" placeholder="开始时间"
+                                            <input type="text" name="secondStartTime" class="layui-input secondStartTime" placeholder="开始时间"
                                                 autocomplete="off">
                                         </div>
         
@@ -145,7 +143,7 @@
                                             至
                                         </div>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="weekendTime2" class="layui-input weekendTime2" placeholder="结束时间"
+                                            <input type="text" name="secondEndTime" class="layui-input secondEndTime" placeholder="结束时间"
                                                 autocomplete="off">
                                         </div>
                                     </div>
@@ -192,7 +190,6 @@
                 format: 'yyyy-MM-dd HH:mm:ss',
                 theme: '#393D49',
             });
-
             var data = parseURL(url),
                 id = data.id;
             common.getSinRuleInfo(id, function (res) {
@@ -204,20 +201,17 @@
                     form.render();
                 });
                 form.val("searchBox", {
-                    "name": res.data.name,
-                    'principal': res.data.principal,
-                    'phone': res.data.phone,
-                    'province': res.data.province,
-                    'city': res.data.city,
-                    'area': res.data.area,
-                    'community': res.data.community,
-                    'contract': res.data.contract,
-                    'startTime': timeChange(res.data.startTime),
-                    'endTime': timeChange(res.data.endTime),
-                    'address': res.data.address
+                    'name': res.data.name,
+                    'firstStartTime':res.data.firstStartTime,
+                    'firstEndTime': res.data.firstEndTime,
+                    'secondStartTime': res.data.secondStartTime,
+                    'secondEndTime': res.data.secondEndTime
 
                 });
-              
+                if(res.data.secondStartTime!=null || res.data.secondEndTime!=null){
+                    $('input[name="time2"]').attr('checked','checked');
+                    form.render()
+                }
                 form.render();
                
             });
@@ -229,7 +223,6 @@
                 console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
                 data.field.id = id;
                 console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{'name': value}
-               
                     parent.layer.open({
                         content: '确定保存编辑内容?',
                         btn: ['确定', '取消'],

@@ -19,6 +19,7 @@
     <script src="../../js/lay/modules/jquery.js"></script>
     <script src="../../js/global.js"></script>
 </head>
+
 <body>
     <form class="layui-form layui-layer-border" style="  padding: 10px 0 0;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item" style="margin-bottom: 0">
@@ -29,33 +30,46 @@
                 </div>
             </div>
             <div class="layui-inline">
+                <label class="layui-form-label">项目编号：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="number" required placeholder="输入编号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">学校/社区：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="cmit" required placeholder="输入学校/社区" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
                 <label class="layui-form-label">负责人：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="principal" required placeholder="输入学校/社区" autocomplete="off" class="layui-input">
+                    <input type="text" name="chargePerson" required placeholder="输入负责人" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">联系方式：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="phone" required placeholder="输入学校/社区" autocomplete="off" class="layui-input">
+                    <input type="text" name="chargePhone" required placeholder="输入联系方式" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <!-- <div class="layui-inline">
-                <label class="layui-form-label">是否启用：</label>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">是否上线：</label>
                 <div class="layui-input-block">
                     <select name="status" lay-verify="">
                         <option value="">全部</option>
-                        <option value="0">启动</option>
-                        <option value="1">关闭</option>
+                        <option value="0">上线</option>
+                        <option value="1">下线</option>
                     </select>
                 </div>
-            </div> -->
-
+            </div>
             <div class="layui-inline">
                 <button class="layui-btn layui-btn-sm" lay-submit lay-filter="searchBox">查询</button>
                 <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
             </div>
-
         </div>
     </form>
     <!-- 结果显示表格 -->
@@ -64,7 +78,6 @@
             <div class="demoTable" style="text-align: right;margin: 10px 0 0">
                 <button class="layui-btn layui-btn-primary" data-type="addInfo">+新增</button>
                 <button class="layui-btn layui-btn-primary" data-type="delete">删除</button>
-                <!-- <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出</button> -->
 
             </div>
         </table>
@@ -101,13 +114,14 @@
     </script>
     <script type="text/html" id="checkboxTpl">
         {{# if(d.status ==0){ }}
-        <input type="checkbox" checked='' value="{{d.status}}" name="open" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# }else{ }}
-        <input type="checkbox" name="{{d.status}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# } }}
+        <input type="checkbox" checked='' value="{{d.id}}" name="open" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl">
+         {{# }else{ }}
+        <input type="checkbox" name="{{d.id}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# } }}
     </script>
 
     <!-- <script src="../data.js"></script> -->
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage','main'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -136,7 +150,7 @@
                     },
                     addInfo: function () { //新增设备
                         // window.location.href = 'addInfo.html?isTrue=1';
-                        initModal('新增项目信息','addInfo.html')
+                        initModal('新增项目信息', 'addInfo.html')
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -145,8 +159,6 @@
                         data.forEach(function (ele, index) {
                             ids.push(ele.id);
                         });
-                        // ids=ids.toString();
-                        console.log(ids.toString());
                         if (ids == '') {
                             layer.msg('请选择要删除的项目信息');
                         } else {
@@ -163,11 +175,8 @@
                                 });
                             })
                         }
-
                     }
-
                 };
-
             var limitcount = 10,
                 curnum = 1,
                 param = {
@@ -185,21 +194,21 @@
                             [{
                                     checkbox: true,
                                     fixed: true,
-                                    width:50
+                                    width: 50
                                 }, {
 
                                     title: '序号',
                                     templet: function (d) {
                                         return d.LAY_TABLE_INDEX + 1
                                     },
-                                    width:80
+                                    width: 80
                                 }, {
                                     field: 'name',
                                     title: '项目名称',
-                                    minWidth:250
+                                    minWidth: 250
                                 }, {
-                                    field: 'contract',
-                                    title: '合同编码',
+                                    field: 'number',
+                                    title: '项目编码',
                                 }, {
                                     field: 'chargePerson',
                                     title: '负责人',
@@ -207,16 +216,16 @@
                                     field: 'chargePhone',
                                     title: '联系方式',
                                 }, {
-                                    field: 'community',
-                                    title: '校区/社区',
+                                    field: 'cmit',
+                                    title: '学校/社区',
                                 }, {
                                     field: 'address',
                                     title: '项目地址',
                                 }, {
-                                    field: 'cate',
+                                    field: 'cates',
                                     title: '项目类型',
                                 },
-                                 {
+                                {
                                     field: 'status',
                                     title: '是否上线',
                                     templet: '#checkboxTpl',
@@ -232,7 +241,7 @@
                             ]
                         ],
                         cellMinWidth: 80,
-                        data: res.content,
+                        data: res.data.content,
                         limit: limitcount,
                         done: function (res1, curr, count) {
                             console.log(res1);
@@ -240,7 +249,7 @@
                             //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                             laypage.render({
                                 elem: 'laypage',
-                                count: res.totalElements,
+                                count: res.data.totalElements,
                                 curr: param.page,
                                 limit: limitcount,
                                 theme: 'right',
@@ -310,7 +319,7 @@
                 if (layEvent === 'edit') { //查看
                     //do somehing
                     // window.location.href = 'editInfo.html?id=' + data.id;
-                    initModal('编辑项目信息','editInfo.html?id=' + data.id)
+                    initModal('编辑项目信息', 'editInfo.html?id=' + data.id)
                 } else if (layEvent === 'del') {
                     console.log(data.id);
 
@@ -337,11 +346,13 @@
             });
             //    设备控制开关
             form.on('switch(deviceControl)', function (data) {
-                console.log($(data.elem).parents('tr').attr('data-'));
-                console.log(data.elem.checked); //开关是否开启，true或者false
-                console.log(data.value); //开关value值，也可以通过data.elem.value得到
-                console.log(data.othis); //得到美化后的DOM对象
-                layer.tips(this.value + ' ' + this.name + '：' + data.elem.checked, data.othis);
+                common.activeProject(this.name, function (res) {
+                    if (res.code == 200) {
+                        layer.msg(res.message);
+                    } else {
+                        layer.msg(res.message);
+                    }
+                });
             });
             $('body').on('click', '.demoTable .layui-btn', function () {
                 var type = $(this).data('type');

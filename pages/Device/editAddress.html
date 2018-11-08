@@ -299,6 +299,7 @@
                     $('select[name="city"]').next().find('[lay-value="' + urlData.city + '"]').click();
                     $('select[name="area"]').next().find('[lay-value="' + urlData.area + '"]').click();
                     $('select[name="commuType"]').next().find('[lay-value="' + urlData.type + '"]').click();
+                    // 0 学校 1社区
                     if (urlData.type == "学校") {
                         $('select[name="school"]').next().find('[lay-value="' + urlData.cmit + '"]').click();
                         $('select[name="schoolArea"]').next().find('[lay-value="' + urlData.cmitId +'"]').click();

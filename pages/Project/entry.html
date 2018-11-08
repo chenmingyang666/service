@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../css/layui.css">
-    <link rel="stylesheet" href="../../css/main.css">
+    <!-- <link rel="stylesheet" href="../../css/main.css"> -->
     <title>引导式录入</title>
     <style>
         .site-title fieldset {
@@ -81,9 +81,14 @@
             text-align: center;
             position: fixed;
             bottom: 0;
-            width: 100%;
+            right: 20%;
+            width: auto;
             padding-left: 10%;
             border: none;
+        }
+
+        .hide {
+            display: none;
         }
     </style>
     <script src="../../js/layui.js"></script>
@@ -129,95 +134,118 @@
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item  layui-show">
-
             </div>
             <div class="layui-tab-item">
-
             </div>
             <div class="layui-tab-item">
-
             </div>
             <div class="layui-tab-item">
-
             </div>
         </div>
-        <div class="layui-form-item btnGroup">
-            <button class="layui-btn layui-btn-warm hide prevBtn">上一步</button>
-            <button class="layui-btn layui-btn-success nextBtn">下一步</button>
-            <button class="layui-btn layui-btn-primary hide finish">完成</button>
+        <div class="btnGroup">
+            <input type="button" class="layui-btn layui-btn-warm hide prevBtn" value="上一步">
+            <input type="button" class="layui-btn layui-btn-success nextBtn" value="下一步">
+            <input type="button" class="layui-btn layui-btn-primary hide finish" value="完成">
+            <input type="button" class="layui-btn layui-btn-danger hide jixu" title="四步保存继续" value="继续添加">
         </div>
     </div>
     <script>
-        layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'common', 'laydate', 'address','main'], function () {
+        layui.use(['form', 'table', 'jquery', 'laytpl', 'layer', 'common', 'laydate', 'address', 'main'], function () {
             var table = layui.table,
                 $ = layui.jquery,
                 layer = layui.layer,
                 laytpl = layui.laytpl,
-                // element = layui.element,
                 common = layui.common,
                 laydate = layui.laydate,
                 form = layui.form,
+                sureProject, surePrice, sureAddress, sureDevice,
                 address = layui.address();
-            // element.render();
+            $('.nextBtn').attr('disabled', true).addClass('layui-btn-disabled');
+            $('.jixu').attr('disabled', true).addClass('layui-btn-disabled');
+            form.render();
+            window.addEventListener('message', function (e) {
+                let data = e.target;
+                console.log(arguments[0].data);
+                if (arguments[0].data.sureProject) {
+                    sureProject=arguments[0].data.sureProject;
+                    $('.nextBtn').removeAttr('disabled').removeClass('layui-btn-disabled');
+                    form.render();
+                } else if (arguments[0].data.surePrice) {
+                    surePrice=arguments[0].data.surePrice;
+                    $('.nextBtn').removeAttr('disabled').removeClass('layui-btn-disabled');
+                    form.render();
+                } else if (arguments[0].data.sureAddress) {
+                    sureAddress=arguments[0].data.sureAddress;
+                    $('.nextBtn').removeAttr('disabled').removeClass('layui-btn-disabled');
+                    form.render();
+                } else if (arguments[0].data.sureDevice) {
+                    sureDevice=arguments[0].data.sureDevice;
+                    $('.nextBtn,.jixu').removeAttr('disabled').removeClass('layui-btn-disabled');
+                    form.render();
+                }
+            }, false);
+
             $('.nextBtn').show();
             var iframArr = [
-                '<iframe scrolling="auto" frameborder="0" src="../../pages/Project/addInfo.html" name="entryProject" id="entryProject" style="width:100%;height:100%"></iframe>',
-                '<iframe scrolling="auto" frameborder="0" src="../../pages/Project/addPrice.html" name="entryPrice" id="entryPrice" style="width:100%;height:100%"></iframe>',
-                '<iframe scrolling="auto" frameborder="0" src="../../pages/Device/addAddress.html" name="entryAddress" id="entryAddress" style="width:100%;height:100%"></iframe>',
-                '<iframe scrolling="auto" frameborder="0" src="../../pages/Device/addDevice.html" name="entryDevice" id="entryDevice" style="width:100%;height:100%"></iframe>'
+                '<iframe scrolling="auto" frameborder="0" src="../../pages/Project/addInfo.html?isEntry=1" name="entryProject" id="entryProject" style="width:100%;height:100%"></iframe>',
+                '<iframe scrolling="auto" frameborder="0" src="../../pages/Project/addPrice.html?isEntry=1" name="entryPrice" id="entryPrice" style="width:100%;height:100%"></iframe>',
+                '<iframe scrolling="auto" frameborder="0" src="../../pages/Device/addAddress.html?isEntry=1" name="entryAddress" id="entryAddress" style="width:100%;height:100%"></iframe>',
+                '<iframe scrolling="auto" frameborder="0" src="../../pages/Device/addDevice.html?isEntry=1" name="entryDevice" id="entryDevice" style="width:100%;height:100%"></iframe>'
             ];
             var index = 0;
             $('.layui-tab-item').eq(index).append(iframArr[index]);
+            console.log($('.nextBtn').attr("disabled"));
             $('body').on('click', '.btnGroup .nextBtn', function () {
                 index++;
+                console.log(index);
+                if (typeof ($(this).attr("disabled")) != "undefined") {
+                    layer.msg('请添加保存当前内容');
+                    return false;
+                };
                 if (index == 0) {
                     $('.prevBtn').hide();
                     $('.nextBtn').show();
-                } else if (index == 3) {
-                    $('.finish').show();
-                    $('.prevBtn').show();
+                     
+                }   else if (index == 3) {
+                    $('.finish,.jixu,.prevBtn').show();
                     $('.nextBtn').hide();
-
                 } else if (0 < index < 3) {
-                    $('.finish').hide();
-                    $('.nextBtn').show();
-                    $('.prevBtn').show();
-                }
+                    $('.finish,.jixu').hide();
+                    $('.nextBtn,.prevBtn').show();
+                    $('.nextBtn').attr('disabled', true).addClass('layui-btn-disabled');
+                };
                 if (index < 4) {
                     console.log(index);
                     $('.layui-tab-title li').eq(index).addClass('layui-this').siblings().removeClass(
                         'layui-this');
                     $('.layui-tab-item').eq(index).addClass('layui-show').siblings().removeClass(
                         'layui-show');
-                    if ($('.layui-tab-item').eq(index).find('iframe').length == 0) {
-                       
 
+                    if ($('.layui-tab-item').eq(index).find('iframe').length == 0) {
                         if (index == 1) {
-                            
-                            $('.layui-tab-item').eq(index).append('<iframe scrolling="auto" frameborder="0" src="../../pages/Project/addPrice.html?isEntry=1" name="entryPrice" id="entryPrice" style="width:100%;height:100%"></iframe>');
-                        }else{
+                            $('.layui-tab-item').eq(index).append(iframArr[index]);
+                        } else {
                             $('.layui-tab-item').eq(index).append(iframArr[index]);
                         }
                     }
-
                 } else {
                     return false;
                 }
-
             }).on('click', '.prevBtn', function () {
+                $('.nextBtn').removeAttr('disabled').removeClass('layui-btn-disabled');
+                    form.render();
                 index--;
+                console.log(index);
                 if (index == 0) {
                     $('.prevBtn').hide();
                     $('.nextBtn').show();
                 } else if (index == 3) {
-                    $('.finish').show();
-                    $('.prevBtn').show();
+                    $('.finish,.jixu,.prevBtn').show();
                     $('.nextBtn').hide();
                 } else if (0 < index < 3) {
-                    $('.finish').hide();
-                    $('.nextBtn').show();
-                    $('.prevBtn').show();
-                }
+                    $('.finish,.jixu').hide();
+                    $('.nextBtn,.prevBtn').show();
+                };
                 if (index >= 0) {
                     $('.layui-tab-title li').eq(index).addClass('layui-this').siblings().removeClass(
                         'layui-this');
@@ -230,15 +258,13 @@
                     return false;
                 }
             }).on('click', '.finish', function () {
-
+                index == 0
+                window.location.reload();
+            }).on('click', '.jixu', function () {
+                index == 0
+                window.location.reload();
             });
-
-            // 添加产品价格
-
-            // 添加设备点
-
-            // 新增设备
-
+             
         });
     </script>
 </body>

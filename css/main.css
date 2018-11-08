@@ -1,6 +1,4 @@
-
-
-  /* .layui-table-cell{
+/* .layui-table-cell{
     height:70px;
     line-height: 70px;
     display: flex;
@@ -11,6 +9,10 @@
        height: 100%!important;
        max-width: 100%;
    }  */
+.layui-form-select .layui-input {
+    padding-right: 0!important;
+}
+
 .layui-side-menu,
 .layadmin-pagetabs .layui-tab-title li:after,
 .layadmin-pagetabs .layui-tab-title li.layui-this:after,
@@ -398,14 +400,18 @@ body {
     background-color: #1890ff !important;
     color: #fff;
 }
-.layui-col-md5 .layui-form-item, .layui-col-md7 .layui-form-item {
+
+.layui-col-md5 .layui-form-item,
+.layui-col-md7 .layui-form-item {
     display: flex;
     align-items: center;
 }
+
 .layui-form-item {
     /* display: flex;
     align-items: center; */
 }
+
 .layui-table-cell {
     /* height: 70px; */
     /* line-height: 70px; */
@@ -413,9 +419,11 @@ body {
     align-items: center;
     justify-content: center;
 }
-.addFunc{
-    font-size: 20px!important;
+
+.addFunc {
+    font-size: 20px !important;
 }
-.hide{
-    display: none
+
+.hide {
+    display: none!important;
 }

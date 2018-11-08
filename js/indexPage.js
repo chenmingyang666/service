@@ -6,21 +6,21 @@ layui
         'jquery',
         'element',
         'common',
-        'address'
+        'indexAddress'
     ], function () {
         var $ = layui.$,
             layer = layui.layer,
             form = layui.form,
             element = layui.element,
             layEvent = layui.event,
-            address = layui.address(),
+            address = layui.indexAddress(),
             common = layui.common;
         element.init();
         layer.msg('欢迎您，尊贵的服务商！');
         if (!layui.sessionData('token').token) {
             window.location.href = 'login.html'
         } else {
-            if (!layui.sessionData('nickName').nickName && layui.sessionData('is_vendor').is_vendor==0) {
+            if (!layui.sessionData('nickName').nickName && layui.sessionData('is_vendor').is_vendor == 0) {
                 $('.shadeBg').show();
                 $('.userData').show();
                 form.on('submit(sendInfo)', function (data) {
@@ -54,7 +54,6 @@ layui
                                     $('.shadeBg').hide();
                                     $('.userData').hide();
                                     layer.close(index); //如果设定了yes回调，需进行手工关闭
-
                                 }
                             })
                         },
@@ -249,23 +248,28 @@ layui
         });
         // 加载权限菜单
         common.getUserMenuList({
-            "user_id": layui.sessionData('role_id').role_id
-        ,"vendor_id":layui.sessionData('id').id}, function (res) { 
+            "user_id": layui
+                .sessionData('role_id')
+                .role_id,
+            "vendor_id": layui
+                .sessionData('id')
+                .id
+        }, function (res) {
             var menu1 = [];
-            res.data.forEach(function (ele) {
+            res
+                .data
+                .forEach(function (ele) {
                     menu1.push(ele.name)
-                }); 
+                });
             $('.layui-side ul .layui-nav-item a[data-title]').each(function () {
                 var title = $(this).attr('data-title');
-                
                 // 当前菜单标题与返还的权限菜单不匹配，则隐藏
-                if (menu1.indexOf(title)<0) {
+                if (menu1.indexOf(title) < 0) {
                     var that = $(this);
                     that.addClass('layui-hide');
                     //  that.parent().addClass('layui-hide')
                 }
             });
-
         });
         $('.layadmin-pagetabs .layui-tab li')
             .first()

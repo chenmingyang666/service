@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../css/layui.css">
@@ -15,9 +16,11 @@
         .layui-laypage-right {
             float: right !important;
         }
-        
-    </style>
-    <style>
+        .layui-form-label{
+            width: 100px;
+            padding: 9px 0;
+        }
+     
         .layui-side-menu,
         .layadmin-pagetabs .layui-tab-title li:after,
         .layadmin-pagetabs .layui-tab-title li.layui-this:after,
@@ -65,50 +68,64 @@
             background-color: #1890ff !important;
             color: #fff;
         }
+        .w150{
+            width: 150px;
+        }
     </style>
     <script src="../../js/layui.js"></script>
     <script src="../../js/lay/modules/jquery.js"></script>
     <script src="../../js/global.js"></script>
 </head>
+
 <body>
     <form class="layui-form layui-layer-border searchBOx" style=" padding: 10px 0 0;background-color: white" action=""
         lay-filter="searchBox">
-        <div class="layui-form-item">
+        <div class="layui-form-item" style="margin-bottom:0">
             <div class="layui-inline">
-                <label class="layui-form-label">项目名字：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="pjtName" placeholder="输入项目名字" autocomplete="off" class="layui-input">
+                <label class="layui-form-label">项目名称：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" placeholder="输入项目名字" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">社区/校区：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="community" placeholder="输入社区/校区" autocomplete="off" class="layui-input">
+                <label class="layui-form-label">学校/社区：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="cmit" placeholder="输入学校/社区" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">设备编号：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="devSeq" placeholder="输入设备编号" autocomplete="off" class="layui-input">
+                <label class="layui-form-label">主机编号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="number" placeholder="输入主机编号" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">设备类型：</label>
-                <div class="layui-input-block">
-                    <select name="cate" lay-filter="cate" lay-verify="">
+                <label class="layui-form-label">设备名称：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="devName" placeholder="输入设备名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">主机类型：</label>
+                <div class="layui-input-inline">
+                    <select name="cate" lay-filter="cate" id="cate" lay-verify="">
                         <option value="">请选择</option>
-                        <option value="01">洗衣机</option>
-                        <option value="02">吹风机</option>
-                        <option value="03">饮水机</option>
-                        <option value="04">充电桩</option>
-                        <option value="05">洗鞋机</option>
                     </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">二维码编号：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="qrCode" required placeholder="二维码编号" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">设备状态：</label>
-                <div class="layui-input-block">
-                    <select name="status" lay-filter="status" lay-verify="">
+                <div class="layui-input-inline">
+                    <select name="devStatus" lay-filter="status" lay-verify="">
                         <option value="">全部</option>
                         <option value="2">使用中</option>
                         <option value="0">空闲</option>
@@ -119,30 +136,24 @@
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label" style="width:auto">二维码编号：</label>
+                <label class="layui-form-label">楼号：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="qrCode" required placeholder="二维码编号" autocomplete="off" class="layui-input">
+                    <input type="text" name="buildingNo" required placeholder="楼号" autocomplete="off" class="layui-input">
 
                 </div>
             </div>
-            <!-- <div class="layui-inline">
-                <label class="layui-form-label">位置&#x3000;：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="locate" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
-
-                </div>
-            </div> -->
             <div class="layui-inline">
                 <label class="layui-form-label">是否上线：</label>
-                <div class="layui-input-block">
-                    <select name="online" lay-verify="">
+                <div class="layui-input-inline">
+                    <select name="status" lay-verify="">
                         <option value="">全部</option>
-                        <option value="上线">已上线</option>
-                        <option value="下线">已下线</option>
+                        <option value="0">上线</option>
+                        <option value="1">下线</option>
                     </select>
                 </div>
             </div>
             <div class="layui-inline">
+                <label class="layui-form-label"></label>
                 <button class="layui-btn layui-btn-sm" lay-submit lay-filter="searchBox">查询</button>
                 <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
             </div>
@@ -163,17 +174,13 @@
     </div>
     <script type="text/html" id="toolBar">
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="order">订单</a>
     </script>
-    <script type="text/html" id="sexTpl">
-        {{# if(d.sex === '女'){ }}
-        <span style="color: #F581B1;">{{ d.sex }}</span>
-        {{# } else { }} {{ d.sex }} {{# } }}
-    </script>
+
     <script type="text/html" id="checkboxTpl">
-        {{# if(d.online ==="上线"){ }}
-        <input type="checkbox" checked='' value="{{d.online}}" name="{{d.device_id}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# }else{ }}
-        <input type="checkbox" name="{{d.device_id}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# } }}
+        {{# if(d.status ===0){ }}
+        <input type="checkbox" checked='' value="{{d.status}}" name="{{d.devId}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# }else{ }}
+        <input type="checkbox" name="{{d.devId}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# } }}
     </script>
     <script type="text/html" id="deviceCate">
         {{# if(d.cate == "01"){ }}
@@ -187,7 +194,6 @@
         {{# } else if(d.cate == "05"){ }}
         <span>洗鞋机</span>
         {{# } }}
-        
     </script>
     <script type="text/html" id="deviceState">
         {{# if(d.status == 0){ }}
@@ -215,9 +221,9 @@
         <button class="layui-btn layui-btn-warm layui-btn-xs">处理中</button>
         {{# } }}
     </script>
-
+    <script src="../../js/lay/modules/projectRelate.js"></script>
     <script>
-        layui.use(['layer', 'form', 'table', 'laytpl', 'laypage', 'common','main'], function () {
+        layui.use(['layer', 'form', 'table', 'laytpl', 'laypage', 'common', 'main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -242,7 +248,7 @@
                     },
                     addDevice: function () { //新增项目
                         // window.location.href = 'addProject.html';
-                        initModal('添加项目设备','addProject.html');
+                        initModal('添加项目设备', 'addProject.html');
                     },
                     batchEnable: function () { //批量启用
                         var checkStatus = table.checkStatus('data_demo'),
@@ -250,25 +256,25 @@
                         console.log(data);
                         var ids = [];
                         data.forEach(function (ele, index) {
-                            ids.push(ele.id);
+                            ids.push(ele.devId);
                         });
                         if (data.length > 0) {
                             var data = {
-                                online: '上线',
-                                deviceIds: ids.toString()
+                                status: 0,
+                                ids: ids.toString()
                             };
-
+                            console.log(data);
                             common.setProjectOnline(data, function (res) {
                                 console.log(res);
                                 if (res.code == 200) {
-                                    layer.msg('批量上线成功');
+                                    layer.msg(res.message);
                                     productsearch(param, curnum, limitcount);
                                 } else {
-                                    layer.msg('批量上线失败')
+                                    layer.msg(res.message);
                                 }
                             });
                         } else {
-                            layer.msg('请先勾选项目')
+                            layer.msg('请先勾选项目');
                         }
                     },
                     batchDisable: function () { //批量禁用
@@ -277,54 +283,72 @@
                         console.log(data);
                         var ids = [];
                         data.forEach(function (ele, index) {
-                            ids.push(ele.id);
+                            ids.push(ele.devId);
                         });
                         if (data.length > 0) {
                             var data = {
-                                online: '下线',
-                                deviceIds: ids.toString()
+                                status: 1,
+                                ids: ids.toString()
                             };
                             console.log(data);
                             common.setProjectOnline(data, function (res) {
                                 console.log(res);
                                 if (res.code == 200) {
-                                    layer.msg('批量下线成功');
+                                    layer.msg(res.message);
                                     productsearch(param, curnum, limitcount);
                                 } else {
-                                    layer.msg('批量下线失败')
+                                    layer.msg(res.message)
                                 }
                             });
                         } else {
                             layer.msg('请先勾选项目')
                         }
                     },
-                    delete:function(){
+                    delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
                             data = checkStatus.data;
-                        var ids = [];
-                        data.forEach(function (ele, index) {
-                            ids.push(ele.id);
+
+                        parent.layer.confirm('确认删除吗?', function () {
+                            var ids = [];
+                            data.forEach(function (ele, index) {
+                                if (ele.status == 0) {
+                                    parent.layer.closeAll();
+                                    layer.msg('上线中设备不能删除');
+                                    return false;
+                                }
+                                ids.push(ele.id + ":" + ele.devId);
+                            });
+
+                            if (ids == '') {
+                                layer.msg('请选择要删除的信息');
+                                return false;
+                            }
+                            console.log(ids.toString());
+                            common.deleteProjectDevices(ids.toString(), function (res) {
+                                if (res.code == 200) {
+                                    productsearch(param, curnum, limitcount);
+                                    layer.msg(res.message);
+                                    layer.close();
+                                    parent.layer.closeAll();
+                                } else {
+                                    parent.layer.closeAll();
+                                    layer.msg(res.message);
+
+                                }
+                            });
                         });
-                        // ids=ids.toString();
-                        console.log(ids.toString());
-                        if (ids == '') {
-                            layer.msg('请选择要删除的信息');
-                        } else {
-                            parent.layer.confirm('确认删除吗?', function () {
-                                common.deleteProjectDevices(ids.toString(), function (res) {
-                                    if (res.code == 200) {
-                                        productsearch(param, curnum, limitcount);
-                                        layer.msg('已删除');
-                                        parent.layer.closeAll();
-                                    } else {
-                                        layer.msg('删除失败');
-                                        parent.layer.closeAll();
-                                    }
-                                });
-                            })
-                        }
+
                     }
                 };
+            // 初始化三级联动
+            common.getDeviceLinked(function (res) {
+                console.log(res);
+
+                pca.init(res.data, 'select[name=cate]',
+                    'select[name=brandName]',
+                    'select[name=brandCode]', '', '', '');
+                form.render();
+            });
             var limitcount = 10,
                 curnum = 1,
                 param = {
@@ -342,42 +366,44 @@
                             [{
                                     checkbox: true,
                                     fixed: true,
-                                    width:50
+                                    width: 50
                                 }, {
 
                                     title: '序号',
                                     templet: function (d) {
                                         return d.LAY_TABLE_INDEX + 1
                                     },
-                                    width:80
+                                    width: 80
                                 },
                                 {
-                                    field: 'pjtname',
+                                    field: 'name',
                                     title: '项目名称',
-                                    minWidth:250
+                                    minWidth: 250
 
                                 }, {
-                                    field: 'community',
-                                    title: '校区/社区',
+                                    field: 'cmit',
+                                    title: '学校/社区',
                                 }, {
-                                    field: 'dev_seq',
-                                    title: '设备编号',
+                                    field: 'devName',
+                                    title: '设备名称',
+                                }, {
+                                    field: 'buildingNo',
+                                    title: '楼号',
                                 }, {
                                     field: 'cate',
-                                    title: '设备类型',
-                                    templet:'#deviceCate'
+                                    title: '主机类型',
                                 }, {
-                                    field: 'locatename',
-                                    title: '位置',
+                                    field: 'number',
+                                    title: '主机编号',
                                 }, {
-                                    field: 'qrcode',
+                                    field: 'qrCode',
                                     title: '二维码编号',
                                 }, {
-                                    field: 'status',
+                                    field: 'devStatus',
                                     title: '设备状态',
                                     templet: '#deviceState'
                                 }, {
-                                    field: 'online',
+                                    field: 'status',
                                     title: '上下线',
                                     templet: '#checkboxTpl',
                                     // width: 135
@@ -420,18 +446,14 @@
                             });
                         }
                     });
-
                 });
             }
             productsearch(param, curnum, limitcount);
-
-
             // 导出表格数据
             $('.demoTable .layui-btn').on('click', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });
-
             // 全选和反选
             form.on('checkbox(allChoose)', function (data) {
                 console.log(data);
@@ -440,7 +462,6 @@
                     item.checked = data.elem.checked;
                 });
                 form.render('checkbox');
-
             });
             form.on('checkbox(itemChoose)', function (data) {
                 var sib = $(data.elem).parents('table').find('tbody input[name="singItem"]:checked').length;
@@ -458,40 +479,23 @@
             //表单查询提交
             form.on('submit(searchBox)', function (data) {
                 var needData = data.field,
-                param = {
-                    page: 1,
-                    pageSize: 10,
-                    size:10
-                };
+                    param = {
+                        page: 1,
+                        pageSize: 10,
+                        size: 10
+                    };
                 var obj = Object.assign(param, needData);
                 console.log(obj);
                 productsearch(obj, curnum, limitcount);
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
-            //  // 日期
-            //  laydate.render({
-            //     elem: '#beginTime',
-            //     type: 'datetime',
-            //     format: 'yyyy-MM-dd HH:mm:ss',
-            //     theme: '#393D49',
-            // })
-            // laydate.render({
-            //     elem: '#endTime',
-            //     type: 'datetime',
-            //     format: 'yyyy-MM-dd HH:mm:ss',
-            //     theme: '#393D49',
-            // })
             //    控制开关
             form.on('switch(deviceControl)', function (data) {
-                console.log($(data.elem).parents('tr').attr('data-index'));
-                console.log(data.elem.checked); //开关是否开启，true或者false
-                console.log(data.value); //开关value值，也可以通过data.elem.value得到
-                console.log(this.name);
                 common.activeDevice(this.name, function (res) {
                     if (res.code == 200) {
-                        layer.msg('操作成功')
+                        layer.msg(res.message)
                     } else {
-                        layer.msg('操作失败')
+                        layer.msg(res.message)
                     }
                 });
             });
@@ -505,18 +509,13 @@
                     //     '&brandcode=' +
                     //     data.brandcode + '&brandname=' + data.brandname + '&pricing_id=' + data.pricing_id +
                     //     '&device_id=' + data.device_id;
-                        initModal('编辑项目设备','editProject.html?pjt_id=' + data.pjt_id + '&cate=' + data.cate +
-                        '&brandcode=' +data.brandcode + '&brandname=' + data.brandname + '&pricing_id=' + data.pricing_id +
-                        '&device_id=' + data.device_id)
-                } else if (layEvent === 'del') {
-                    layer.confirm('真的删除么', function (index) {
-                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-                        layer.close(index);
-                        //向服务端发送删除指令
-                    });
+                    initModal('编辑项目设备', 'editProject.html?pjt_id=' + data.id + '&priceId=' + data.priceId +
+                        '&modelId=' + data.modelId)
+                } else if (layEvent === 'order') {
+                    initModal('本设备订单', 'deviceOrder.html?id=' + data.id)
                 }
             });
-            
+
 
         });
     </script>

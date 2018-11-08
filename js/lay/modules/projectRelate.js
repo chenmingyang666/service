@@ -15,7 +15,7 @@ layui
                 $(province).html('');
                 $(province).append('<option value="" selected>请选择</option>');
                 for (var i in initData) {
-                    $(province).append('<option value="0' + (Number(i) + Number(1)) + '">' + initData[i].name + '</option>');
+                    $(province).append('<option value="' + initData[i].name + '">' + initData[i].name + '</option>');
                     pca.keys[initData[i].name] = initData[i];
                 }
                 form.render();

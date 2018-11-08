@@ -58,8 +58,8 @@
                     <div class="layui-card-body" style="padding: 15px;">
                         <div class="layui-form-item">
                             <label class="layui-form-label">营业时间名称：</label>
-                            <div class="layui-input-inline" style="width: 50%">
-                                <input type="text" name="name" id="name" lay-verify="hourName|required"  placeholder="输入名称"
+                            <div class="layui-input-inline" style="width: 30%">
+                                <input type="text" name="name" id="name" lay-verify="hourName|required" placeholder="输入名称"
                                     autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid layui-word-aux">*限定21个字符</div>
@@ -74,8 +74,8 @@
 
                                 <div class="layui-input-inline">
 
-                                    <input type="text" name="firstStartTime" class="layui-input firstStartTime" placeholder="开始时间"
-                                        autocomplete="off">
+                                    <input type="text" name="firstStartTime" class="layui-input firstStartTime"
+                                        placeholder="开始时间" autocomplete="off">
                                 </div>
 
                                 <div class="layui-form-mid">
@@ -94,16 +94,16 @@
                                     <input type="checkbox" name="time2" lay-skin="primary" value="">
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="secondStartTime" class="layui-input secondStartTime" placeholder="开始时间"
-                                        autocomplete="off">
+                                    <input type="text" name="secondStartTime" class="layui-input secondStartTime"
+                                        placeholder="开始时间" autocomplete="off">
                                 </div>
 
                                 <div class="layui-form-mid">
                                     至
                                 </div>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="secondEndTime" class="layui-input secondEndTime" placeholder="结束时间"
-                                        autocomplete="off">
+                                    <input type="text" name="secondEndTime" class="layui-input secondEndTime"
+                                        placeholder="结束时间" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -138,7 +138,7 @@
                 window.history.back();
             });
 
-           
+
             // 日期
             laydate.render({
                 elem: '.firstStartTime',
@@ -167,66 +167,51 @@
                 theme: '#393D49',
             });
             form.verify({
-                hourName:function (e) {
-                    if(e.length>21){
+                hourName: function (e) {
+                    if (e.length > 21) {
                         return '名称限定21个字符'
                     }
                 }
             });
             form.render();
             form.on('submit(searchBox)', function (data) {
-                    console.log(data.field);
-                    
-                    layer.open({
-                        content: '确定保存信息?',
-                        btn: ['确定', '取消'],
-                        fixed: true,
-                        offset: '40%',
-                        yes: function (index, layero) {
-                            //do something
-                            common.addRule(data.field, function (res) {
-                                if (res.code == 200) {
-                                    layer.confirm('保存成功，继续添加信息?', {
-                                        icon: 3,
-                                        title: '提示',
-                                        fixed: true,
-                                        offset: '40%',
-                                        btn: ['继续添加', '返回列表'],
-                                        yes: function (index) {
-                                            layer.close(index);
-                                            window.location.reload();
-                                        },
-                                        btn2: function (index) {
-                                            parent.layer.closeAll();
-                                            parent.location.reload()
-                                        }
-
-                                    });
-
-                                } else {
-                                    if (res.message != null || res.message != '') {
-                                        layer.msg(res.message);
-                                    } else {
-                                        layer.msg('保存失败');
+                console.log(data.field);
+                layer.open({
+                    content: '确定保存信息?',
+                    btn: ['确定', '取消'],
+                    fixed: true,
+                    offset: '40%',
+                    yes: function (index, layero) {
+                        common.addRule(data.field, function (res) {
+                            if (res.code == 200) {
+                                layer.confirm('保存成功，继续添加信息?', {
+                                    icon: 3,
+                                    title: '提示',
+                                    fixed: true,
+                                    offset: '40%',
+                                    btn: ['继续添加', '返回列表'],
+                                    yes: function (index) {
+                                        layer.close(index);
+                                        window.location.reload();
+                                    },
+                                    btn2: function (index) {
+                                        parent.layer.closeAll();
+                                        parent.location.reload()
                                     }
-                                    
+                                });
+                            } else {
+                                if (res.message != null || res.message != '') {
+                                    layer.msg(res.message);
+                                } else {
+                                    layer.msg('保存失败');
                                 }
-                            })
-                        },
-                       
-                    });
-                
+                            }
+                        })
+                    },
 
-
-                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                });
+                return false;
             });
-
-
-
-
-
-
-
         });
     </script>
 </body>

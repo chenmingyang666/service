@@ -104,8 +104,7 @@
     <script type="text/html" id="toolBar">
         <a class="layui-btn layui-btn-xs" lay-event="detail">查看详情</a>
     </script>
-
-    <script src="../data.js"></script>
+ 
     <script>
         layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate','main'], function () {
             var $ = layui.$,
@@ -129,7 +128,6 @@
                             title: '提示',
                             btn: ['确认', '取消'],
                             yes: function (index) {
-
                                 var qrCode = $("input[name='qrCode']").val(),
                                     status = $("select[name='status']").next().find(
                                         'dl dd.layui-this').attr('lay-value');
@@ -186,7 +184,7 @@
                 // param.page = start;
                 // param.pageSize = limitsize;
                 param.vendorId = layui.sessionData('id').id;
-                common.getProfitData(param, function (res) {
+                common.getDeviceActivityData(param, function (res) {
                     console.log(res);
                     // 展示搜索结果的表格
                     table.render({
@@ -196,7 +194,6 @@
                                 field: 'name',
                                 title: '项目名称',
                                 minWidth:250
-
                             }, {
                                 field: 'cate_name',
                                 title: '设备名称',
