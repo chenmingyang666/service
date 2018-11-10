@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
     <title>新增产品价格</title>
     <style>
         .site-title fieldset {
@@ -38,8 +39,6 @@
         .layui-word-aux {
             color: red
         }
-    </style>
-    <style>
         .layui-side-menu,
         .layadmin-pagetabs .layui-tab-title li:after,
         .layadmin-pagetabs .layui-tab-title li.layui-this:after,
@@ -111,7 +110,8 @@
                             <label class="layui-form-label">产品项目名称：</label>
                             <div class="layui-input-inline" style="margin-top:5px">
                                 <span id="pjtName" class="pjtName"></span>
-
+                                <input type="text" name="isEntry" 
+                                      class="layui-input hide">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -286,16 +286,16 @@
                     page: 1,
                     size: 10
                 };
-            const url = location.href,urlData = parseURL(url);
- 
+            var url = location.href,urlData = parseURL(url);
+          
             if (urlData) {
                 if (urlData.isTrue) {
                     $('.back').show()
                 } else if (urlData.isEntry) {
+                    $('input[name="isEntry"]').val(urlData.isEntry)
                     $('.pjtNameLine').show();
                     $('#pjtName').text(parent.document.getElementById("entryProject").contentWindow.document.getElementById(
                         'pjtName').value);
-
                 }
             };
             // 初始化三级联动
@@ -336,9 +336,9 @@
                         offset: '40%',
                         yes: function (index, layero) {
                             common.savePricing(chooseData, function (res) {
-                                console.log(urlData);
+                               
                                 if (res.code == 200) {
-                                    if (urlData.isEntry) {
+                                    if (data.field.isEntry) {
                                         transData();
                                     } else {
                                         layer.confirm('保存成功，继续添加产品价格?', {
@@ -473,7 +473,6 @@
                     });
                 });
             };
-
         });
     </script>
 </body>

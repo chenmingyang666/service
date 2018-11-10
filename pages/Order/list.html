@@ -18,6 +18,9 @@
         cite::after {
             content: ')'
         }
+        .hide{
+            display: none;
+        }
     </style>
     <script src="../../js/layui.js"></script>
     <script src="../../js/lay/modules/jquery.js"></script>
@@ -55,7 +58,6 @@
             <button class="layui-btn layui-btn-warm layui-border-box refresh" style="float: right;">刷新</button>
         </ul>
     </div> -->
-
     <form class="layui-form layui-layer-border" style=" padding: 10px 0 0;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item">
             <div class="layui-inline">
@@ -108,20 +110,6 @@
                     </select>
                 </div>
             </div>
-
-            <!-- <div class="layui-inline">
-            <label class="layui-form-label">数据来源：</label>
-            <div class="layui-input-block">
-                <select name="source" lay-verify="">
-                    <option value="">全部</option>
-                    <option value="1">APP下单</option>
-                    <option value="2">APP扫码下单</option>
-                    <option value="3">支付宝下单</option>
-                    <option value="4">微信下单</option>
-                </select>
-            </div>
-        </div> -->
-
         </div>
         <div class="layui-form-item">
             <div class="layui-inline">
@@ -448,8 +436,11 @@
                             none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
                         }
                     });
+                    res.data.income==null ? res.data.income=0 : res.data.income;
+                    res.data.poundage==null ?  res.data.poundage=0 : res.data.poundage;
+                    
                     $('#laypage .layui-laypage-prev').before('<span style="border:none">' +
-                        '订单金额：¥'+res.data.income+'，结算金额：¥'+res.data.poundage + '</span>');
+                        '订单金额：¥'+res.data.income+'，结算金额：¥'+res.data.poundage+ '</span>');
                 });
             }
             productsearch(param, curnum, limitcount);
@@ -503,6 +494,7 @@
                     initModal('订单详情', 'orderDetail.html?order_num=' + data.order_num);
                 } else if (layEvent === 'returnMoney') {
                     var that = $(this);
+                    that.find('.refundBox').show();
                     layui.layer.open({
                         title: '退款原因：',
                         type: 1,

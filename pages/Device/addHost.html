@@ -207,9 +207,7 @@
                                     title: '提示',
                                     btn: ['继续添加', '返回主机列表'],
                                     yes: function (index) {
-                                        layer.closeAll();
-                                        window.location.reload();
-                                        parent.location.reload();
+                                        layer.close(index);
                                     },
                                     btn2: function (index) {
                                         layer.close(index);

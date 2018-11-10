@@ -341,7 +341,7 @@
                 if($('#useStatus').next().is('.layui-form-onswitch')){
                    data.field.useStatus= useStatus
                }else{
-                data.field.useStatus=2
+                data.field.useStatus=3
                } 
                data.field.modelId=data.field.brandCode;
                delete data.field.cate;
@@ -361,12 +361,12 @@
                                     title: '提示',
                                     btn: ['继续添加', '返回主机列表'],
                                     yes: function (index) {
-                                        layer.closeAll();
-                                        window.location.reload();
+                                        layer.close(index); 
                                     },
                                     btn2: function (index) {
                                         layer.close(index);
-                                        parent.layer.closeAll()
+                                        parent.layer.closeAll();
+                                        parent.location.reload();
                                         // window.location.href =
                                         //     'pages/Device/host.html';
                                     }

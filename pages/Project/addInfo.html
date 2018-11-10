@@ -58,6 +58,7 @@
                             <div class="layui-input-inline" style="width: 535px">
                                 <input type="text" name="name" id="pjtName" lay-verify="required" placeholder="输入名称"
                                     autocomplete="off" class="layui-input">
+                                <input type="text" name="isEntry" class="layui-input hide">
                             </div>
                             <div class="layui-form-mid layui-word-aux">*</div>
                         </div>
@@ -214,8 +215,11 @@
                 common = layui.common,
                 address = layui.address(),
                 form = layui.form;
-            var url = location.href,urlData = parseURL(url);
-
+            var url = location.href,
+                urlData = parseURL(url);
+            if (urlData) {
+                urlData.isEntry ? $('input[name="isEntry"]').val(urlData.isEntry) : '';
+            }
             $('body').on('click', '.back', function () {
                 window.history.back();
             }).on('click', '.addTime', function () {
@@ -288,11 +292,13 @@
                 window.parent.postMessage(autoMessage, '*');
             }
             form.on('submit(searchBox)', function (data) {
+
                 if (data.field.school && data.field.schoolArea != '') {
                     data.field.communityId = data.field.schoolArea;
                 } else {
                     data.field.communityId = data.field.term;
-                }
+                };
+                console.log(data.field);
                 delete data.field.province;
                 delete data.field.city;
                 delete data.field.area;
@@ -312,29 +318,28 @@
                         yes: function (index, layero) {
                             //do something
                             common.addProjectInfo(data.field, function (res) {
-                                if (res.code == 200) { 
-                                    if(urlData.isEntry){
-                                       transData();  
-                                   }else{
-                                      layer.confirm('保存成功，继续添加项目信息?', {
-                                        icon: 3,
-                                        title: '提示',
-                                        fixed: true,
-                                        offset: '40%',
-                                        btn: ['继续添加', '返回项目列表'],
-                                        yes: function (index) {
-                                            layer.close(index);
-                                            window.location.reload();
-                                        },
-                                        btn2: function (index) {
-                                            layer.closeAll();
-                                            parent.location.reload();
-                                            // window.location.href =
-                                            //     'pages/Project/info.html';
-                                        }
-                                    }); 
-                                   }
-                                    
+                                if (res.code == 200) {
+                                    if (data.field.isEntry) {
+                                        transData();
+                                    } else {
+                                        layer.confirm('保存成功，继续添加项目信息?', {
+                                            icon: 3,
+                                            title: '提示',
+                                            fixed: true,
+                                            offset: '40%',
+                                            btn: ['继续添加', '返回项目列表'],
+                                            yes: function (index) {
+                                                layer.close(index);
+                                            },
+                                            btn2: function (index) {
+                                                layer.closeAll();
+                                                parent.location.reload();
+                                                // window.location.href =
+                                                //     'pages/Project/info.html';
+                                            }
+                                        });
+                                    }
+
                                 } else {
                                     if (res.message != null || res.message != '') {
                                         layer.msg(res.message);

@@ -114,9 +114,8 @@
     </script>
     <script type="text/html" id="checkboxTpl">
         {{# if(d.status ==0){ }}
-        <input type="checkbox" checked='' value="{{d.id}}" name="open" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl">
-         {{# }else{ }}
-        <input type="checkbox" name="{{d.id}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# } }}
+        <input type="checkbox" checked='' value="{{d.id}}" name="{{d.id}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl">
+         {{# }else{ }}<input type="checkbox" name="{{d.id}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# } }}
     </script>
 
     <!-- <script src="../data.js"></script> -->
@@ -306,8 +305,7 @@
                         true);
                     form.render();
                 } else {
-                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
-                        false);
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",false);
                     form.render();
                 }
             });

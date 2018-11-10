@@ -57,7 +57,7 @@
         <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
     </script>
     <script type="text/html" id="checkboxTpl">
-        {{# if(d.status ===0){ }}
+        {{# if(d.status === 0){ }}
         <input type="checkbox" checked='' value="{{d.status}}" name="open" lay-skin="switch" lay-text="启用|关闭" lay-filter="deviceControl"> {{# }else{ }}
         <input type="checkbox" name="close" lay-skin="switch" lay-text="启用|关闭" lay-filter="deviceControl"> {{# } }}
     </script>
@@ -100,8 +100,7 @@
                         var ids = [];
                         data.forEach(function (ele, index) {
                             ids.push(ele.id);
-                        });
-                        console.log(ids);
+                        }); 
                         if (ids == '') {
                             layer.msg('请选择要删除的价格')
                         } else {

@@ -21,15 +21,22 @@
     <form class="layui-form layui-layer-border" style=" padding: 10px;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item" style="margin-bottom:0">
             <div class="layui-inline">
+                <label class="layui-form-label">学校名称：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" class="layui-input" placeholder="输入学校/社区名称" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-inline">
                 <label class="layui-form-label">项目名称：</label>
                 <div class="layui-input-inline">
                     <input type="text" name="name" class="layui-input" placeholder="输入项目名称" autocomplete="off">
                 </div>
             </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">学校/社区：</label>
+             <div class="layui-inline">
+                <label class="layui-form-label">主机类型：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="name" class="layui-input" placeholder="输入学校/社区名称" autocomplete="off">
+                    <select name="cate" id="cate" lay-filter="cate" lay-verify="">
+                    </select>
                 </div>
             </div>
             <div class="layui-inline">
@@ -39,32 +46,15 @@
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">设备类型：</label>
-                <div class="layui-input-inline">
-                    <select name="cate" lay-filter="cate" lay-verify="">
-                        <option value="">请选择</option>
-                        <option value="01">洗衣机</option>
-                        <option value="02">吹风机</option>
-                        <option value="03">饮水机</option>
-                        <option value="04">充电桩</option>
-                        <option value="05">洗鞋机</option>
-
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline">
                 <label class="layui-form-label">设备状态：</label>
                 <div class="layui-input-inline">
                     <select name="status" id="chooseStatus" lay-filter="status" lay-verify="">
-
                         <option value="">全部</option>
                         <option value="0">空闲</option>
                         <option value="1">支付中</option>
                         <option value="2">运行中</option>
                         <option value="3">离线</option>
                         <option value="4">故障</option>
-
-
                     </select>
                 </div>
             </div>
@@ -72,10 +62,7 @@
                 <button class="layui-btn" lay-submit lay-filter="searchBox">查询</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
-
         </div>
-
-
     </form>
     <!-- 结果显示表格 -->
     <div class="layui-form">
@@ -85,18 +72,8 @@
             </div>
         </table>
         <div id="laypage"></div>
-
     </div>
-    <script type="text/html" id="stateTpl">
-        {{# if(d.status == 0){ }}
-        <button class="layui-btn layui-btn-normal layui-btn-xs">已绑定</button>
-        {{# } else if(d.status==1){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">未使用</button>
-        {{# } else if(d.status==2){ }}
-        <button class="layui-btn layui-btn-danger layui-btn-xs">已废弃</button>
-
-        {{#} }}
-    </script>
+     
     <script type="text/html" id="deviceCate">
         {{# if(d.cate == "01"){ }}
         <span>洗衣机</span>
@@ -126,9 +103,10 @@
         <span>禁用</span>
         {{# } else if(d.status == 6){ }}
         <span>删除</span>
-
         {{# } }}
     </script>
+    <script src="../../js/lay/modules/projectRelate.js"></script>
+
     <script>
         layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
             var $ = layui.$,
@@ -182,7 +160,12 @@
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     }
                 };
-
+     // 主机3级联动
+     common.getDeviceLinked(function (res) {
+                console.log(res);
+                pca.init(res.data, 'select[name=cate]', 'select[name=brandName]',
+                    'select[name=brandCode]', '', '', '');
+            });
             // 日期
             laydate.render({
                 elem: '#startTime',
@@ -212,7 +195,7 @@
             function productsearch(param, start, limitsize) {
                 // param.page = start;
                 // param.size = limitsize;
-                common.getDeviceCountData(function (res) {
+                common.getDeviceDetails(param,function (res) {
                     console.log(res);
                     // 展示搜索结果的表格
                     table.render({
@@ -224,7 +207,7 @@
 
                             },{
                                 field: 'pjtName',
-                                title: '学校',
+                                title: '学校/社区',
 
                             },{
                                 field: 'pjtName',
@@ -236,19 +219,15 @@
 
                             }, {
                                 field: 'cate',
-                                title: '设备类型',
-                                templet: '#deviceCate',
+                                title: '主机类型',
                                 align: 'center',
                             }, {
-                                field: '4',
+                                field: 'status',
                                 title: '设备状态',
                                 align: 'center',
                                 templet: '#deviceState'
-
-
                             }]
                         ],
-
                         data: res.data,
                         done: function (res1, curr, count) {
                             console.log(res1);
@@ -260,7 +239,7 @@
                                 curr: param.page,
                                 limit: limitcount,
                                 theme: 'right',
-                                limits: [10],
+                                limits: [10, 20, 50, 100],
                                 layout: ['prev', 'page', 'next', 'skip', 'count',
                                     'limit'
                                 ],

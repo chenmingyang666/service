@@ -19,6 +19,7 @@
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/global.js"></script>
     <script src="../../js/tool.js"></script>
+    <script src="../../js/lay/modules/projectRelate.js"></script>
 </head>
 <body>
     <div id="codeImg"></div>
@@ -27,33 +28,30 @@
             <div class="layui-inline">
                 <label class="layui-form-label">项目名称：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="pjtname" class="layui-input"  placeholder="输入项目名称" autocomplete="off">
+                    <input type="text" name="pjtname" class="layui-input" placeholder="输入项目名称" autocomplete="off">
                 </div>
             </div>
             <div class="layui-inline">
-                    <label class="layui-form-label">设备类型：</label>
-                    <div class="layui-input-inline">
-                        <select name="cate" lay-filter="cate" lay-verify="">
-                            <option value="">请选择</option>
-                            <option value="01">洗衣机</option>
-                            <option value="02">吹风机</option>
-                            <option value="03">饮水机</option>
-                            <option value="04">充电桩</option>
-                            <option value="05">洗鞋机</option>
-    
-                        </select>
-                    </div>
+                <label class="layui-form-label">主机类型：</label>
+                <div class="layui-input-inline">
+                    <select name="cate" lay-filter="cate" lay-verify="">
+
+
+                    </select>
                 </div>
+            </div>
             <div class="layui-inline">
                 <label class="layui-form-label">开始时间：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="startTime" class="layui-input" id="startTime" placeholder="开始日期" autocomplete="off" lay-key="1">
+                    <input type="text" name="startTime" class="layui-input" id="startTime" placeholder="开始日期"
+                        autocomplete="off" lay-key="1">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">结束时间：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="endTime" class="layui-input" id="endTime" placeholder="结束日期" autocomplete="off" lay-key="2">
+                    <input type="text" name="endTime" class="layui-input" id="endTime" placeholder="结束日期" autocomplete="off"
+                        lay-key="2">
                 </div>
             </div>
 
@@ -92,233 +90,241 @@
 
     <script src="../data.js"></script>
     <script>
-            layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
-                var $ = layui.$,
-                    layer = layui.layer,
-                    form = layui.form,
-                    table = layui.table,
-                    element = layui.element,
-                    layEvent = layui.event,
-                    laypage = layui.laypage,
-                    laydate = layui.laydate,
-                    common = layui.common,
-                    active = {
-                        getCheckData: function () { //获取选中数据
-                            var checkStatus = table.checkStatus('data_demo'),
-                                data = checkStatus.data;
-                            // if (data.length == 0) {
-                            //     return layer.msg('请选择数据')
-                            // }
-                            parent.layer.confirm('确认导出二维码数据?', {
-                                icon: 3,
-                                title: '提示',
-                                btn: ['确认', '取消'],
-                                yes: function (index) {
-    
-                                    var qrCode = $("input[name='qrCode']").val(),
-                                        status = $("select[name='status']").next().find(
-                                            'dl dd.layui-this').attr('lay-value');
-                                    var urlStr = common.baseUrl +
-                                        'common/exportQR?userId=' +
-                                        layui.sessionData('id').id + '&qrCode=' + qrCode +
-                                        '&status=' + status;
-                                    urlStr = urlStr.replace("undefined", '');
-                                    window.location.href = urlStr;
-                                    parent.layer.closeAll();
-                                },
-                                btn2: function (index) {
-                                    parent.layer.closeAll();
-                                }
-    
-                            });
-                        },
-                        getCheckLength: function () { //获取选中数目
-                            var checkStatus = table.checkStatus('data_demo'),
-                                data = checkStatus.data;
-                            // layer.msg('选中了：' + data.length + ' 个');
-                        },
-                        isAll: function () { //验证是否全选
-                            var checkStatus = table.checkStatus('data_demo');
-                            layer.msg(checkStatus.isAll ? '全选' : '未全选')
-                        }
-                    };
-                // 日期
-                laydate.render({
-                    elem: '#startTime',
-                    type: 'date',
-                    format: 'yyyy-MM-dd',
-                    theme: '#393D49',
-                    max: getYestoday(new Date())
-                });
-                laydate.render({
-                    elem: '#endTime',
-                    type: 'date',
-                    format: 'yyyy-MM-dd',
-                    theme: '#393D49',
-                    max: getYestoday(new Date())
-                });
-                
-                // 获取列表
-                var limitcount = 10,
-                    curnum = 1,
-                    param = {
-                        page: 1,
-                        size: 10,
-                        pageSize: 10
-                    };
-    
-                function productsearch(param, start, limitsize) {
-                    // param.page = start;
-                    // param.pageSize = limitsize;
-                    param.vendorId=layui.sessionData('id').id;
-                    common.getProfitData(param, function (res) {
-                        console.log(res);
-                        // 展示搜索结果的表格
-                        table.render({
-                            elem: '#data_demo',
-                            cols: [
-                                [ {
-                                    field: 'name',
-                                    title: '项目名称',
-                                    minWidth:250
-                                    
-                                }, {
-                                    field: 'cate_name',
-                                    title: '设备类型',
-                                    templet: '',
-                                    align: 'center',
-                                }, {
-                                    field: 'money',
-                                    title: '设备数量',
-                                    align: 'center'
-                                }, {
-                                    field: 'order_numer',
-                                    title: '订单总量',
-                                    align: 'center'
-                                }, {
-                                    field: 'purse_income',
-                                    title: '总营收额',
-                                    align: 'center'
-                                }, {
-                                    field: 'buyer_pay_amount',
-                                    title: '均设备订单量',
-                                    align: 'center'
-                                }, {
-                                    field: 'buyer_pay_amount',
-                                    title: '均营收额',
-                                    align: 'center'
-                                }]
-                            ],
-    
-                            data: res.data.list,
-                            done: function (res1, curr, count) {
-                                console.log(res1);
-                                //如果是异步请求数据方式，res即为你接口返回的信息。
-                                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
-                                laypage.render({
-                                    elem: 'laypage',
-                                    count: res.data.count,
-                                    curr: param.page,
-                                    limit: limitcount,
-                                    theme: 'right',
-                                    limits: [10, 20, 50, 100],
-                                    layout: ['prev', 'page', 'next', 'skip', 'count',
-                                        'limit'
-                                    ],
-                                    jump: function (obj, first) {
-                                        if (!first) {
-                                            curnum = obj.curr;
-                                            limitcount = obj.limit;
-                                            param.page = obj.curr;
-                                            param.size = obj.limit;
-                                            productsearch(param, curnum,
-                                                limitcount);
-                                        }
-                                    }
-                                });
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
+            var $ = layui.$,
+                layer = layui.layer,
+                form = layui.form,
+                table = layui.table,
+                element = layui.element,
+                layEvent = layui.event,
+                laypage = layui.laypage,
+                laydate = layui.laydate,
+                common = layui.common,
+                active = {
+                    getCheckData: function () { //获取选中数据
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        // if (data.length == 0) {
+                        //     return layer.msg('请选择数据')
+                        // }
+                        parent.layer.confirm('确认导出二维码数据?', {
+                            icon: 3,
+                            title: '提示',
+                            btn: ['确认', '取消'],
+                            yes: function (index) {
+
+                                var qrCode = $("input[name='qrCode']").val(),
+                                    status = $("select[name='status']").next().find(
+                                        'dl dd.layui-this').attr('lay-value');
+                                var urlStr = common.baseUrl +
+                                    'common/exportQR?userId=' +
+                                    layui.sessionData('id').id + '&qrCode=' + qrCode +
+                                    '&status=' + status;
+                                urlStr = urlStr.replace("undefined", '');
+                                window.location.href = urlStr;
+                                parent.layer.closeAll();
+                            },
+                            btn2: function (index) {
+                                parent.layer.closeAll();
                             }
-    
+
                         });
-                    });
-                }
-                productsearch(param, curnum, limitcount);
-                element.render();
-                form.render();
-                //表单查询提交
-                form.on('submit(searchBox)', function (data) {
-                    var needData = data.field,
+                    },
+                    getCheckLength: function () { //获取选中数目
+                        var checkStatus = table.checkStatus('data_demo'),
+                            data = checkStatus.data;
+                        // layer.msg('选中了：' + data.length + ' 个');
+                    },
+                    isAll: function () { //验证是否全选
+                        var checkStatus = table.checkStatus('data_demo');
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    }
+                };
+            // 日期
+            laydate.render({
+                elem: '#startTime',
+                type: 'date',
+                format: 'yyyy-MM-dd',
+                theme: '#393D49',
+                // max: getYestoday(new Date())
+            });
+            laydate.render({
+                elem: '#endTime',
+                type: 'date',
+                format: 'yyyy-MM-dd',
+                theme: '#393D49',
+                // max: getYestoday(new Date())
+            });
+
+            // 获取列表
+            var limitcount = 10,
+                curnum = 1,
                 param = {
                     page: 1,
-                    pageSize: 10,
-                    size:10
+                    size: 10,
+                    pageSize: 10
                 };
+            // 初始化三级联动
+            common.getDeviceLinked(function (res) {
+                pca.init(res.data, 'select[name=cate]',
+                    'select[name=brandName]',
+                    'select[name=brandCode]', '', '', '');
+                form.render();
+            });
+
+            function productsearch(param, start, limitsize) {
+                // param.page = start;
+                // param.pageSize = limitsize;
+                param.vendor_id = layui.sessionData('id').id;
+                common.getProfitData(param, function (res) {
+                    console.log(res);
+                    // 展示搜索结果的表格
+                    table.render({
+                        elem: '#data_demo',
+                        cols: [
+                            [{
+                                field: 'name',
+                                title: '项目名称',
+                                minWidth: 250
+
+                            }, {
+                                field: 'cate_name',
+                                title: '主机类型',
+                                templet: '',
+                                align: 'center',
+                            }, {
+                                field: 'count',
+                                title: '设备数量',
+                                align: 'center'
+                            }, {
+                                field: 'order_number',
+                                title: '订单总量',
+                                align: 'center'
+                            }, {
+                                field: 'money',
+                                title: '总营收额',
+                                align: 'center'
+                            }, {
+                                field: 'avg_number',
+                                title: '均设备订单量',
+                                align: 'center'
+                            }, {
+                                field: 'avg_money',
+                                title: '均营收额',
+                                align: 'center'
+                            }]
+                        ],
+
+                        data: res.data.content,
+                        done: function (res1, curr, count) {
+                            console.log(res1);
+                            //如果是异步请求数据方式，res即为你接口返回的信息。
+                            //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                            laypage.render({
+                                elem: 'laypage',
+                                count: res.data.totalElements,
+                                curr: param.page,
+                                limit: limitcount,
+                                theme: 'right',
+                                limits: [10, 20, 50, 100],
+                                layout: ['prev', 'page', 'next', 'skip', 'count',
+                                    'limit'
+                                ],
+                                jump: function (obj, first) {
+                                    if (!first) {
+                                        curnum = obj.curr;
+                                        limitcount = obj.limit;
+                                        param.page = obj.curr;
+                                        param.size = obj.limit;
+                                        productsearch(param, curnum,
+                                            limitcount);
+                                    }
+                                }
+                            });
+                        }
+
+                    });
+                });
+            }
+            productsearch(param, curnum, limitcount);
+            element.render();
+            form.render();
+            //表单查询提交
+            form.on('submit(searchBox)', function (data) {
+                data.field.cate_name=data.field.cate;
+                var needData = data.field,
+                    param = {
+                        page: 1,
+                        pageSize: 10,
+                        size: 10
+                    };
                 var obj = Object.assign(param, needData);
                 console.log(obj);
                 productsearch(obj, curnum, limitcount);
-                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-                });
-                // 全选和反选
-                form.on('checkbox(allChoose)', function (data) {
-                    console.log(data);
-                    var child = $(data.elem).parents('table').find('tbody input[name="singItem"]');
-                    child.each(function (index, item) {
-                        item.checked = data.elem.checked;
-                    });
-                    form.render('checkbox');
-                });
-                form.on('checkbox(itemChoose)', function (data) {
-                    var sib = $(data.elem).parents('table').find('tbody input[name="singItem"]:checked').length;
-                    var total = $(data.elem).parents('table').find('tbody input[name="singItem"]').length;
-                    if (sib == total) {
-                        $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
-                            true);
-                        form.render();
-                    } else {
-                        $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
-                            false);
-                        form.render();
-                    }
-                });
-    
-                // 监听表格内编辑
-                table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                    console.log(obj.value); //得到修改后的值
-                    console.log(obj.field); //当前编辑的字段名
-                    console.log(obj.data); //所在行的所有相关数据  
-                    layer.msg('编辑保存')
-                });
-                //监听工具条
-                table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-                    var data = obj.data; //获得当前行数据
-                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-                    var tr = obj.tr; //获得当前行 tr 的DOM对象
-                    if (layEvent === 'obsolete') {
-                        parent.layer.confirm('真的作废本行二维码么', function (index) {
-    
-                            common.updateQrList(data.id, function (res) {
-                                console.log(res);
-                                if (res.code == 200) {
-                                    obj.del();
-                                    productsearch(param, curnum, limitcount);
-                                };
-                            });
-    
-                            obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-    
-                            parent.layer.closeAll();
-                            productsearch(param, curnum, limitcount);
-                            layer.msg('删除成功')
-                            //向服务端发送删除指令
-    
-                        });
-                    }
-                });
-                $('body').on('click', '.demoTable .layui-btn', function () {
-                    var type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
-        </script>
+            // 全选和反选
+            form.on('checkbox(allChoose)', function (data) {
+                console.log(data);
+                var child = $(data.elem).parents('table').find('tbody input[name="singItem"]');
+                child.each(function (index, item) {
+                    item.checked = data.elem.checked;
+                });
+                form.render('checkbox');
+            });
+            form.on('checkbox(itemChoose)', function (data) {
+                var sib = $(data.elem).parents('table').find('tbody input[name="singItem"]:checked').length;
+                var total = $(data.elem).parents('table').find('tbody input[name="singItem"]').length;
+                if (sib == total) {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                        true);
+                    form.render();
+                } else {
+                    $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
+                        false);
+                    form.render();
+                }
+            });
+
+            // 监听表格内编辑
+            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                console.log(obj.value); //得到修改后的值
+                console.log(obj.field); //当前编辑的字段名
+                console.log(obj.data); //所在行的所有相关数据  
+                layer.msg('编辑保存')
+            });
+            //监听工具条
+            table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                if (layEvent === 'obsolete') {
+                    parent.layer.confirm('真的作废本行二维码么', function (index) {
+
+                        common.updateQrList(data.id, function (res) {
+                            console.log(res);
+                            if (res.code == 200) {
+                                obj.del();
+                                productsearch(param, curnum, limitcount);
+                            };
+                        });
+
+                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+
+                        parent.layer.closeAll();
+                        productsearch(param, curnum, limitcount);
+                        layer.msg('删除成功')
+                        //向服务端发送删除指令
+
+                    });
+                }
+            });
+            $('body').on('click', '.demoTable .layui-btn', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+    </script>
 </body>
 
 </html>

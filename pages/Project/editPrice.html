@@ -164,6 +164,12 @@
                         return data;
                     }
                 };
+                var limitcount = 10,
+                curnum = 1,
+                param = {
+                    page: 1,
+                    size: 10
+                };
             $('body').on('click', '.back', function () {
                 window.history.back();
             });
@@ -229,8 +235,97 @@
                 } else {
                     layer.msg('获取数据失败')
                 }
-            })
+            });
+            form.on('select', function (data) {
+                // productsearch(param, curnum, limitcount);
+            });
             form.render();
+            // 重绘定价列表
+            function productsearch(param, start, limitsize) {
+                param.size = start;
+                param.page = limitsize;
+                var id = $('#brandCode').siblings(
+                    "div.layui-form-select").find('dl dd.layui-this').attr('lay-value');
+                common.getPriceFuncs(id, function (res) {
+                    function colsData(param) {
+                        // if (param.cate == '03') {
+                        var data = [
+                            [{
+                                checkbox: true,
+                                fixed: true
+                            }, {
+                                field: 'funcName',
+                                title: '功能名称',
+
+                            }, {
+                                field: 'price',
+                                title: '价格(元)',
+                                width: 150,
+                                edit: true
+
+                            }, {
+                                field: 'remarks',
+                                title: '备注',
+                                edit: true
+                            }]
+                        ];
+                        return data;
+                        // } else {
+                        //     var data = [
+                        //         [{
+                        //             checkbox: true,
+                        //             fixed: true
+                        //         }, {
+                        //             field: 'funcName',
+                        //             title: '功能名称',
+                        //         }, {
+                        //             field: 'runTime',
+                        //             title: '运行时间(分钟)'
+                        //         }, {
+                        //             field: 'price',
+                        //             title: '价格(元)',
+                        //             width: 150,
+                        //             edit: true
+                        //         }, {
+                        //             field: 'remarks',
+                        //             title: '备注',
+                        //             edit: true
+                        //         }, ]
+                        //     ]
+                        //     return data
+                        // }
+                    }
+                    table.render({
+                        elem: '#chooseDevice',
+                        cols: colsData(param),
+                        width: 950,
+                        data: res.data,
+                        done: function (res1, curr, count) {
+                            laypage.render({
+                                elem: 'laypage',
+                                count: res.data.length,
+                                curr: curnum,
+                                limit: limitcount,
+                                theme: 'right',
+                                limits: [10, 20, 50, 100],
+                                layout: ['prev', 'page', 'next', 'skip',
+                                    'count',
+                                    'limit'
+                                ],
+                                jump: function (obj, first) {
+                                    if (!first) {
+                                        curnum = obj.curr;
+                                        limitcount = obj.limit;
+                                        param.page = obj.curr;
+                                        param.size = obj.limit;
+                                        productsearch(param, start, limitsize)
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+            };
             form.on('submit(searchBox)', function (data) {
                 var needData = data.field;
                 var chooseData = active.getCheckData();
@@ -290,6 +385,7 @@
                 }
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
+            
         });
     </script>
 </body>

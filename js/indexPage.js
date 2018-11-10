@@ -24,8 +24,7 @@ layui
                 $('.shadeBg').show();
                 $('.userData').show();
                 form.on('submit(sendInfo)', function (data) {
-                    var field = data.field;
-                    // console.log(field);
+                    var field = data.field; 
                     if (field.email) {
                         if (!/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(field.email)) {
                             layer.tips('请输入正确的邮箱', '#email');
@@ -308,8 +307,7 @@ layui
                     .not('#LAY_app_tabsheader li:first')
                     .each(function () {
                         ids.push($(this).attr('lay-id'));
-                    });
-                console.log(ids);
+                    }); 
                 active.tabDeleteAll(ids);
                 active.leftPage();
             }

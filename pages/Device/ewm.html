@@ -15,7 +15,7 @@
             padding: 9px 0 !important;
         }
 
-        .layui-table-cell {
+        .layui-table-body .layui-table-cell {
             height: 110px;
             line-height: 110px;
             display: flex;
@@ -52,9 +52,9 @@
                 <div class="layui-input-inline">
                     <select name="useStatus" lay-verify="">
                         <option value="">全部</option>
-                        <option value="0">未使用</option>
-                        <option value="1">已使用</option>
-                        <option value="2">已损坏</option>
+                        <option value="0">未分配</option>
+                        <option value="1">未使用</option>
+                        <option value="2">已使用</option>
                         <option value="3">已报废</option>
                     </select>
                 </div>
@@ -85,21 +85,21 @@
 
     <script type="text/html" id="stateTpl">
         {{# if(d.useStatus == 0){ }}
-        <button class="layui-btn layui-btn-normal layui-btn-xs">未使用</button>
+        <button class="layui-btn layui-btn-normal layui-btn-xs">未分配</button>
         {{# } else if(d.useStatus == 1 ){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">已使用</button>
+        <button class="layui-btn layui-btn-primary layui-btn-xs">未使用</button>
         {{# } else if(d.useStatus == 2){ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">已损坏</button>
+        <button class="layui-btn layui-btn-warm layui-btn-xs">使用中</button>
         {{# } else if(d.useStatus == 3){ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">已报废</button>
+        <button class="layui-btn layui-btn-danger layui-btn-xs">报废</button>
         {{# } }}
     </script>
     <script type="text/html" id="toolBar">
-        {{# if(d.useStatus == 3 || d.useStatus == 1){ }}
+        {{# if(d.useStatus == 3 || d.useStatus == 2){ }}
         <!-- <a class="layui-btn layui-btn-danger layui-btn-xs layui-disabled" >作废</a> -->
         <input type="checkbox"  lay-skin="switch" lay-text="报废|正常" checked disabled>
 
-        {{# }else if(d.useStatus == 0 || d.useStatus == 2 ){ }}
+        {{# }else if(d.useStatus == 0 || d.useStatus == 1 ){ }}
          <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="obsolete">作废</a> -->
          <input type="checkbox"  lay-skin="switch" data-qrCode="{{d.qrCode}}" data-id="{{d.id}}" lay-filter="disCard" lay-text="报废|正常">
 
@@ -284,11 +284,9 @@
                     content: '作废本行' + qrCode + '二维码后不能更改',
                     btn: ['确定', '取消'],
                     yes: function (index, layero) {
-
                         //do something
                         common.updateQrList(id, function (res) {
                             if (res.code == 200) {
-
                                 layer.close(index);
                                 layer.msg(res.message)
                                 productsearch(param, curnum, limitcount);
@@ -298,9 +296,10 @@
                             };
                         })
                     },
-
+                    btn2:function(){
+                        productsearch(param, curnum, limitcount);
+                    }
                 });
-             
             });
             //监听工具条
             table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"

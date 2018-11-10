@@ -199,7 +199,7 @@
         {{# if(d.status == 0){ }}
         <span>空闲</span>
         {{# } else if(d.status == 1){ }}
-        <span>锁定</span>
+        <span>支付中</span>
         {{# } else if(d.status == 2){ }}
         <span>使用中</span>
         {{# } else if(d.status == 3){ }}
@@ -210,15 +210,6 @@
         <span>禁用</span>
         {{# } else if(d.status == 6){ }}
         <span>删除</span>
-        {{# } }}
-    </script>
-    <script type="text/html" id="buttonTpl">
-        {{# if(d.state == '已处理'){ }}
-        <button class="layui-btn layui-btn-normal layui-btn-xs">已处理</button>
-        {{# } else if(d.state == '未分配'){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">未分配</button>
-        {{# } else{ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">处理中</button>
         {{# } }}
     </script>
     <script src="../../js/lay/modules/projectRelate.js"></script>
@@ -323,7 +314,6 @@
                                 layer.msg('请选择要删除的信息');
                                 return false;
                             }
-                            console.log(ids.toString());
                             common.deleteProjectDevices(ids.toString(), function (res) {
                                 if (res.code == 200) {
                                     productsearch(param, curnum, limitcount);
@@ -333,17 +323,14 @@
                                 } else {
                                     parent.layer.closeAll();
                                     layer.msg(res.message);
-
                                 }
                             });
                         });
-
                     }
                 };
             // 初始化三级联动
             common.getDeviceLinked(function (res) {
                 console.log(res);
-
                 pca.init(res.data, 'select[name=cate]',
                     'select[name=brandName]',
                     'select[name=brandCode]', '', '', '');
@@ -505,18 +492,12 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
-                    // window.location.href = 'editProject.html?pjt_id=' + data.pjt_id + '&cate=' + data.cate +
-                    //     '&brandcode=' +
-                    //     data.brandcode + '&brandname=' + data.brandname + '&pricing_id=' + data.pricing_id +
-                    //     '&device_id=' + data.device_id;
-                    initModal('编辑项目设备', 'editProject.html?pjt_id=' + data.id + '&priceId=' + data.priceId +
+                    initModal('编辑项目设备', 'editProject.html?pjtId=' + data.pjtId +'&id='+data.id+ '&priceId=' + data.priceId +
                         '&modelId=' + data.modelId)
                 } else if (layEvent === 'order') {
                     initModal('本设备订单', 'deviceOrder.html?id=' + data.id)
                 }
             });
-
-
         });
     </script>
 

@@ -136,6 +136,8 @@
             };
             $('body').on('click', '.back', function () {
                 window.history.back();
+            }).on('click', '[type="reset"]', function () {
+               window.location.reload();
             });
 
 

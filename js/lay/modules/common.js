@@ -15,7 +15,7 @@
             // 注册用户
             regUser: function (field, callback) {
                 $.ajax({
-                    // url: baseUrl + 'vender/register',
+                    // url: baseUrl + 'vendor/register',
                     url: baseUrl + 'vc/register',
                     type: 'post',
                     dataType: 'json',
@@ -42,14 +42,12 @@
                 $.ajax({
                     url: baseUrl + 'vc/forget',
                     type: 'post',
-                    dataType: 'json',
                     data: params,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
                     },
-                    contentType: 'application/json,application/x-www-form-urlencoded',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
                     },
@@ -1893,6 +1891,22 @@
                     success: callback
                 })
             },
+            getOrderTypeData: function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'vendor/order/type/statistics',
+                    data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
             // 获取订单分类统计
             getOrderStaticData: function (params, callback) {
                 $.ajax({
@@ -1909,14 +1923,32 @@
                 })
             },
             // 获取设备状态统计
-            getDeviceCountData: function (callback) {
+            getDeviceStateData: function (params,callback) {
                 $.ajax({
-                    url: baseUrl + 'device/countDeivceByProject',
+                    url: baseUrl + 'rpt/bySts',
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')
                             .token
                     },
+                    data:params,
+                    contentType: 'application/json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                })
+            },
+            // 获取设备状态统计详情
+            getDeviceDetails: function (params,callback) {
+                $.ajax({
+                    url: baseUrl + 'rpt/byStsDetail',
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    data:params,
                     contentType: 'application/json',
                     beforeSend: function (request) {
                         request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);

@@ -258,19 +258,18 @@
             var pjtEntity, typeEntity, picEntity, picFuncList, devList;
             // 刷新设备列表
 
-            common.getProjectSinInfo(mainData.pjt_id, function (res) {
+            common.getProjectSinInfo(mainData.id, function (res) {
                 console.log(res);
                 // typeEntity	型号对象信息
                 // pjtEntity	项目对象信息
                 // picEntity	价格对象信息
                 // picFuncList	价格功能列表对象信息
                 // devList	项目设备列表对象信息
-                pjtEntity = res.data.pjtEntity,
+                    pjtEntity = res.data.pjtEntity,
                     typeEntity = res.data.typeEntity,
                     picEntity = res.data.picEntity,
                     picFuncList = res.data.picFuncList,
                     devList = res.data.devList;
-
                 $('.pjt_name').text(pjtEntity.name);
                 $('.principal').text(pjtEntity.chargePerson);
                 $('.phone').text(pjtEntity.chargePhone);
@@ -279,14 +278,11 @@
                     pjtEntity.endTime));
                 // $('.address').text(pjtEntity.province + pjtEntity.city + pjtEntity.area);
                 $('.address').text(pjtEntity.address);
-                $('.community').text(pjtEntity.cmitName);
+                $('.community').text(res.data.cmit);
                 $('.rule').text(res.data.ruleTime);
-
-
                 $('#cate').text(typeEntity.cate);
                 $('#brandName').text(typeEntity.brand);
                 $('#brandCode').text(typeEntity.model);
-
                 table.render({
                     elem: '#chooseDevice',
                     cols: [
@@ -327,6 +323,8 @@
                 // 获取定价名称列表
                 common.getPricingListby(typeEntity.id, function (res) {
                     console.log(res);
+                    
+                    
                     if (res.data.length == 0) {
                         $('#pricingId').html('');
                         form.render();
@@ -338,19 +336,18 @@
                                     ele.name +
                                     "</option>");
                                 form.render();
-                            };
+                                
+                            }else if(ele.if==picEntity.id){
+                                $('#pricingId').append("<option value=" + ele.id + " selected>" +
+                                    ele.name +
+                                    "</option>");
+                                form.render();
+                            }
                         });
-                    }
-                });
-
-                $('#pricingId').append("<option value=" + picEntity.id + ">" +
-                    picEntity.name +
-                    "</option>");
+                    };
+                   $('#pricingId').next().find('[lay-value="'+picEntity.id+'"]').click();
                 form.render();
-
-
-                $('#pricingId').next().find('dd[lay-value=' + picEntity.id + ']').click();
-
+                });
                 table.render({
                     elem: '#funcList',
                     cols: [
@@ -384,17 +381,14 @@
                     chooseArr = [];
 
                 var submitData = {
-                    "pjtId": mainData.pjt_id,
-                    "priceId": mainData.priceId,
+                    "pjtId": mainData.pjtId,
+                    "priceId":  $('#pricingId').next().find(
+                                        'dl dd.layui-this').attr('lay-value'),
                     "modelId": mainData.modelId,
                     "devIds": []
                 };
-
-
                 checkedData.forEach(function (ele, index) {
-                    chooseArr.push(ele.id)
-                });
-                devList.forEach(function (ele, index) {
+                    chooseArr.push(ele.id);
                     if (ele.id == chooseArr[index]) {
                         let _id = JSON.stringify(ele.id),
                             newObj = {};
@@ -407,6 +401,7 @@
                         submitData.devIds.push(newObj);
                     }
                 });
+               
                 layer.open({
                     content: '确定保存项目?',
                     btn: ['确定', '取消'],

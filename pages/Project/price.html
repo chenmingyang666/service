@@ -59,7 +59,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">产品名称：</label>
                 <div class="layui-input-block">
-                        <input type="text" name="funcName" required placeholder="输入产品名称" autocomplete="off" class="layui-input">
+                    <input type="text" name="funcName" required placeholder="输入产品名称" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
@@ -95,7 +95,7 @@
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
     </script>
-    
+
     <script type="text/html" id="checkboxTpl">
         {{# if(d.status ===0){ }}
         <input type="checkbox" checked='' value="{{d.status}}" name="open" lay-skin="switch" lay-text="启用|关闭" lay-filter="deviceControl"> {{# }else{ }}
@@ -104,7 +104,7 @@
 
     <script src="../../js/lay/modules/projectRelate.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage','main'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'main'], function () {
             var $ = layui.$,
                 layer = layui.layer,
                 form = layui.form,
@@ -132,7 +132,7 @@
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
                     addAddress: function () { //新增设备
-                        initModal('新增定价','addPrice.html')
+                        initModal('新增定价', 'addPrice.html')
                     },
                     delete: function () {
                         var checkStatus = table.checkStatus('data_demo'),
@@ -173,7 +173,6 @@
                 console.log(res);
                 pca.init(res.data, 'select[name=cate]', 'select[name=brandName]',
                     'select[name=brandCode]', '', '', '');
-
             });
             var limitcount = 10,
                 curnum = 1,
@@ -190,45 +189,44 @@
                         elem: '#data_demo',
                         cols: [
                             [{
-                                    checkbox: true,
-                                    fixed: 'left',
-                                    width: 50
-                                }, {
+                                checkbox: true,
+                                fixed: 'left',
+                                width: 50
+                            }, {
 
-                                    title: '序号',
-                                    templet: function (d) {
-                                        return d.LAY_TABLE_INDEX + 1
-                                    },
-                                    width:80
-                                }, {
-                                    field: 'name',
-                                    title: '产品定价名称',
-                                }, {
-                                    field: 'cate',
-                                    title: '主机分类', 
-                                }, {
-                                    field: 'brand',
-                                    title: '主机品牌',
-                                }, {
-                                    field: 'model',
-                                    title: '主机型号',
-                                }, {
-                                    field: 'funcName',
-                                    title: '产品名称',
-                                }, {
-                                    field: 'price',
-                                    title: '产品单价',
-                                }, {
-                                    field: 'remarks',
-                                    title: '备注',
-                                }, {
-                                    // fixed: 'right',
-                                    // width: 150,
-                                    align: 'center',
-                                    title: '操作',
-                                    toolbar: '#toolBar',
-                                }
-                            ]
+                                title: '序号',
+                                templet: function (d) {
+                                    return d.LAY_TABLE_INDEX + 1
+                                },
+                                width: 80
+                            }, {
+                                field: 'name',
+                                title: '产品定价名称',
+                            }, {
+                                field: 'cate',
+                                title: '主机分类',
+                            }, {
+                                field: 'brand',
+                                title: '主机品牌',
+                            }, {
+                                field: 'model',
+                                title: '主机型号',
+                            }, {
+                                field: 'funcName',
+                                title: '产品名称',
+                            }, {
+                                field: 'price',
+                                title: '产品单价',
+                            }, {
+                                field: 'remarks',
+                                title: '备注',
+                            }, {
+                                // fixed: 'right',
+                                // width: 150,
+                                align: 'center',
+                                title: '操作',
+                                toolbar: '#toolBar',
+                            }]
                         ],
                         cellMinWidth: 80,
                         data: res.data.content,
@@ -259,8 +257,6 @@
                                 }
                             });
                         }
-
-
                     });
                 })
             }
@@ -272,10 +268,10 @@
                 // console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
                 // console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
                 // console.log(JSON.stringify(data.field)); //当前容器的全部表单字段，名值对形式：{name: value}
-            //     data.field.brand=data.field.brandName;
-            //    data.field.model=data.field.brandCode;
-            //    delete data.field.brandName;
-            //    delete data.field.brandCode;
+                //     data.field.brand=data.field.brandName;
+                //    data.field.model=data.field.brandCode;
+                //    delete data.field.brandName;
+                //    delete data.field.brandCode;
                 var needData = data.field,
                     param = {
                         page: 1,
@@ -320,7 +316,8 @@
                 if (layEvent === 'edit') { //查看
                     //do somehing
                     // window.location.href = 'editPrice.html?id=' + data.id;
-                    initModal('编辑价格信息','editPrice.html?pid=' + data.pid+'&modelId='+data.modelId+'&id='+data.id)
+                    initModal('编辑价格信息', 'editPrice.html?pid=' + data.pid + '&modelId=' + data.modelId +
+                        '&id=' + data.id)
                 } else if (layEvent === 'del') {
                     console.log(data.id);
                     parent.layer.confirm('确认删除价格"' + data.name + '"吗？', function (index) {
@@ -346,7 +343,7 @@
                 console.log(obj.data); //所在行的所有相关数据  
                 layer.msg('编辑保存')
             });
-           
+
             $('body').on('click', '.demoTable .layui-btn', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';

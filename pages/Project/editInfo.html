@@ -303,12 +303,12 @@
                 $('select[name="city"]').next().find('[lay-value="' + res.data.city + '"]').click();
                 $('select[name="area"]').next().find('[lay-value="' + res.data.area + '"]').click();
                 // 0 学校 1社区
-                if (res.data.type == 0) {
+                if (res.data.type == '学校') {
                     $('select[name="commuType"]').next().find('[lay-value="' + '学校' + '"]').click();
                     $('select[name="school"]').next().find('[lay-value="' + res.data.cmit + '"]').click();
                     $('select[name="schoolArea"]').next().find('[lay-value="' + res.data.cmitId + '"]')
                         .click();
-                } else if (res.data.type == 1) {
+                } else if (res.data.type == '社区') {
 
                     $('select[name="commuType"]').next().find('[lay-value="' + '社区' + '"]').click();
                     $('select[name="community"]').next().find('[lay-value="' + res.data.cmit + '"]').click();
@@ -412,6 +412,7 @@
                                         },
                                         btn2: function (index) {
                                             parent.layer.closeAll();
+                                            parent.location.reload();
                                         }
                                     });
                                 } else {

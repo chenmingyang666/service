@@ -135,8 +135,8 @@
             <div class="layui-inline">
                 <label class="layui-form-label w150">主机型号：</label>
                 <div class="layui-input-inline">
-                        <select name="brandCode" lay-filter="brandCode" lay-verify="" lay-search>
-                        </select>
+                    <select name="brandCode" lay-filter="brandCode" lay-verify="" lay-search>
+                    </select>
                 </div>
             </div>
         </div>
@@ -162,17 +162,12 @@
             <div class="layui-inline">
                 <label class="layui-form-label w150">设备状态：</label>
                 <div class="layui-input-inline">
-                    <select name="status" id="chooseStatus" lay-filter="status" lay-verify="">
+                    <select name="devStatus" id="chooseStatus" lay-filter="status" lay-verify="">
                         <option value="">全部</option>
                         <option value="0">空闲</option>
-                        <option value="1">支付中</option>
-                        <option value="2">使用中</option>
+                        <option value="1">锁定</option>
+                        <option value="2">运行中</option>
                         <option value="3">离线</option>
-                        <option value="4">故障</option>
-                        <option value="5">排水故障</option>
-                        <option value="6">开盖故障</option>
-                        <option value="7">平衡故障</option>
-                        <option value="8">进水故障</option>
                     </select>
                 </div>
             </div>
@@ -189,9 +184,9 @@
                 <button class="layui-btn layui-btn-primary" data-type="add">+新增</button>
                 <button class="layui-btn layui-btn-primary" data-type="delete">删除</button>
                 <!-- <button class="layui-btn layui-btn-primary" data-type="batchEnable">批量启用</button>
-                <button class="layui-btn layui-btn-primary" data-type="batchDisable">批量禁用</button> -->
-                <button class="layui-btn layui-btn-primary" data-type="importData">导入</button>
-                <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出</button>
+                <button class="layui-btn layui-btn-primary" data-type="batchDisable">批量禁用</button>  
+                 <button class="layui-btn layui-btn-primary" data-type="importData">导入</button>
+                <button class="layui-btn layui-btn-primary" data-type="getCheckData">导出</button>   -->
             </div>
         </table>
         <!-- 分页控件 -->
@@ -224,23 +219,9 @@
         {{# } else if(d.status == 1){ }}
         <span>支付中</span>
         {{# } else if(d.status == 2){ }}
-        <span>使用中</span>
+        <span>运行中</span>
         {{# } else if(d.status == 3){ }}
         <span>离线</span>
-        {{# } else if(d.status == 4){ }}
-        <span>故障</span>
-        {{# } else if(d.status == 5){ }}
-        <span>禁用</span>
-        {{# } else if(d.status == 6){ }}
-        <span>删除</span>
-        {{# } else if(d.status == 7){ }}
-        <span>排水故障</span>
-        {{# } else if(d.status == 8){ }}
-        <span>开盖故障</span>
-        {{# } else if(d.status == 9){ }}
-        <span>平衡故障</span>
-        {{# } else if(d.status == 10){ }}
-        <span>进水故障</span>
         {{# } }}
     </script>
     <script type="text/html" id="checkboxTpl">
@@ -248,12 +229,13 @@
         {{# if(d.status ===0){ }}
         <input type="checkbox" checked='' data-id="{{d.id}}" value="{{d.status}}" name="open" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl">
          {{# }else{ }}
-        <input type="checkbox" name="close" data-id="{{d.id}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> {{# } }}
+        <input type="checkbox" name="close" data-id="{{d.id}}" lay-skin="switch" lay-text="上线|下线" lay-filter="deviceControl"> 
+        {{# } }}
     </script>
     <script src="../../js/global.js"></script>
     <script src="../../js/lay/modules/projectRelate.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laytpl', 'laypage','main'], function () {
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laytpl', 'laypage', 'main'], function () {
             var $ = layui.jquery,
                 layer = layui.layer,
                 form = layui.form,
@@ -311,7 +293,7 @@
                         layer.msg(checkStatus.isAll ? '全选' : '未全选')
                     },
                     add: function () { //新增设备
-                        initModal('新增设备','addDevice.html');
+                        initModal('新增设备', 'addDevice.html');
                     },
                     delete: function () { //批量删除设备
                         var checkStatus = table.checkStatus('data_demo'),
@@ -402,65 +384,62 @@
                         elem: '#data_demo',
                         cols: [
                             [{
-                                    checkbox: true,
-                                    fixed: 'left',
-                                    width:50
-                                }, {
-                                    title: '序号',
-                                    templet: function (d) {
-                                        return d.LAY_TABLE_INDEX + 1
-                                    },
-                                }, {
-                                    field: 'devName',
-                                    title: '设备名称',
-                                }
-                                , {
-                                    field: 'cate',
-                                    title: '设备分类',
-                                }, {
-                                    field: 'brand',
-                                    title: '设备品牌',
-                                }, {
-                                    field: 'model',
-                                    title: '设备型号',
-                                }, {
-                                    field: 'imei',
-                                    title: '主板编号',
-                                }, {
-                                    field: 'qrCode',
-                                    title: '二维码编号',
-                                }, {
-                                    field: 'simCode',
-                                    title: '物联网卡号',
-                                }, {
-                                    field: 'rssi',
-                                    title: '信号值',
-                                    align: 'center',
-                                },{
-                                    field: 'status',
-                                    title: '设备状态',
-                                    align: 'center',
-                                    templet: '#deviceState'
-                                }, {
-                                    field: 'status',
-                                    title: '是否上线',
-                                    templet: '#checkboxTpl',
-                                    align: 'center'
-                                }, {
-                                    // fixed: 'right',
-                                    align: 'center',
-                                    title: '操作',
-                                    toolbar: '#toolBar',
-                                }
-                            ]
+                                checkbox: true,
+                                fixed: 'left',
+                                width: 50
+                            }, {
+                                title: '序号',
+                                templet: function (d) {
+                                    return d.LAY_TABLE_INDEX + 1
+                                },
+                            }, {
+                                field: 'devName',
+                                title: '设备名称',
+                            }, {
+                                field: 'cate',
+                                title: '设备分类',
+                            }, {
+                                field: 'brand',
+                                title: '设备品牌',
+                            }, {
+                                field: 'model',
+                                title: '设备型号',
+                            }, {
+                                field: 'imei',
+                                title: '主板编号',
+                            }, {
+                                field: 'qrCode',
+                                title: '二维码编号',
+                            }, {
+                                field: 'simCode',
+                                title: '物联网卡号',
+                            }, {
+                                field: 'rssi',
+                                title: '信号值',
+                                align: 'center',
+                            }, {
+                                field: 'status',
+                                title: '设备状态',
+                                align: 'center',
+                                templet: '#deviceState'
+                            }, {
+                                field: 'status',
+                                title: '是否上线',
+                                templet: '#checkboxTpl',
+                                align: 'center'
+                            }, {
+                                // fixed: 'right',
+                                align: 'center',
+                                title: '操作',
+                                toolbar: '#toolBar',
+                            }]
                         ],
                         cellMinWidth: 80,
                         data: res.data.content,
                         limit: limitcount,
                         done: function (res1, curr, count) {
                             console.log(res1);
-                            //如果是异步请求数据方式，res即为你接口返回的信息。
-                            //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                            //如果是直接赋值的方式
                             laypage.render({
                                 elem: 'laypage',
                                 count: res.data.totalElements,
@@ -494,9 +473,6 @@
             form.render();
             //表单查询提交
             form.on('submit(searchBox)', function (data) {
-                // console.log(data.elem); //被执行事件的元素DOM对象，一般为button对象
-                // console.log(data.form); //被执行提交的form对象，一般在存在form标签时才会返回
-                // console.log(data.field); //当前容器的全部表单字段，名值对形式：{name: value}
                 var needData = data.field;
                 needData.modelId = needData.brandCode;
                 var param = {
@@ -538,7 +514,7 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
                 if (layEvent === 'edit') { //查看
-                    initModal('编辑设备','editDevice.html?id=' + data.id)
+                    initModal('编辑设备', 'editDevice.html?id=' + data.id)
                 } else if (layEvent === 'del') {
                     parent.layer.confirm('确认删除该设备?', function (index) {
 
@@ -592,13 +568,17 @@
             });
             //    设备控制开关
             form.on('switch(deviceControl)', function (data) {
-              
-                var id=$(this).attr('data-id');
+
+                var id = $(this).attr('data-id');
                 common.activeSinDevice(id, function (res) {
                     if (res.code == 200) {
-                        layer.msg(res.message)
+                        layer.msg(res.message);
+                        productsearch(param, curnum, limitcount);
+                        
                     } else {
-                        layer.msg(res.message)
+                        layer.msg(res.message);
+                        productsearch(param, curnum, limitcount);
+                        
                     }
                 });
             });

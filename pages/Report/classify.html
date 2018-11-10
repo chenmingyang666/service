@@ -17,6 +17,7 @@
     <script src="../../js/global.js"></script>
     <script src="../../js/tool.js"></script>
 </head>
+<script src="../../js/lay/modules/projectRelate.js"></script>
 
 <body>
 
@@ -26,33 +27,27 @@
             <div class="layui-inline">
                 <label class="layui-form-label">项目名称：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="name" class="layui-input" placeholder="输入项目名称" autocomplete="off">
+                    <input type="text" name="pjt_name" class="layui-input" placeholder="输入项目名称" autocomplete="off">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">设备类型：</label>
                 <div class="layui-input-inline">
                     <select name="cate" lay-filter="cate" lay-verify="">
-                        <option value="">请选择</option>
-                        <option value="01">洗衣机</option>
-                        <option value="02">吹风机</option>
-                        <option value="03">饮水机</option>
-                        <option value="04">充电桩</option>
-                        <option value="05">洗鞋机</option>
-
+                        
                     </select>
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">楼号：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="startTime" class="layui-input" placeholder="输入楼号" autocomplete="off">
+                    <input type="text" name="building_no" class="layui-input" placeholder="输入楼号" autocomplete="off">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">楼层：</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="startTime" class="layui-input" placeholder="输入楼层" autocomplete="off">
+                    <input type="text" name="floor_no" class="layui-input" placeholder="输入楼层" autocomplete="off">
                 </div>
             </div>
             <div class="layui-inline">
@@ -60,8 +55,8 @@
                 <div class="layui-input-inline">
                     <select name="sex">
                         <option value="">请选择性别</option>
-                        <option value="0">男</option>
-                        <option value="1">女</option>
+                        <option value="01">男</option>
+                        <option value="02">女</option>
                     </select>
                 </div>
             </div>
@@ -105,38 +100,12 @@
 
     </div>
     <script type="text/html" id="sexTpl">
-        {{# if(d.sex === '1'){ }}
-        <span style="color: #F581B1;">{{ d.sex }}</span>
-        {{# } else { }} {{ d.sex }} {{# } }}
+        {{# if(d.sex === '01'){ }}
+        <span>男</span>
+        {{# } else if(d.sex === '02'){ }} 
+        <span style="color: #F581B1;">女</span>
+         {{# } }}
     </script>
-    <script type="text/html" id="stateTpl">
-        {{# if(d.status == 0){ }}
-        <button class="layui-btn layui-btn-normal layui-btn-xs">已绑定</button>
-        {{# } else if(d.status==1){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">未使用</button>
-        {{# } else if(d.status==2){ }}
-        <button class="layui-btn layui-btn-danger layui-btn-xs">已废弃</button>
-
-        {{#} }}
-    </script>
-
-    <script type="text/html" id="toolBar">
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="obsolete">作废</a>
-    </script>
-    <script type="text/html" id="deviceCate">
-        {{# if(d.cate == "01"){ }}
-        <span>洗衣机</span>
-        {{# } else if(d.cate == "02"){ }}
-        <span>吹风机</span>
-        {{# } else if(d.cate == "03"){ }}
-        <span>饮水机</span>
-        {{# } else if(d.cate == "04"){ }}
-        <span>充电桩</span>
-        {{# } else if(d.cate == "05"){ }}
-        <span>洗鞋机</span>
-        {{# } }}
-    </script>
-    <script src="../data.js"></script>
     <script>
         layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate'], function () {
             var $ = layui.$,
@@ -152,9 +121,7 @@
                     getCheckData: function () { //获取选中数据
                         var checkStatus = table.checkStatus('data_demo'),
                             data = checkStatus.data;
-                        // if (data.length == 0) {
-                        //     return layer.msg('请选择数据')
-                        // }
+                       
                         parent.layer.confirm('确认导出二维码数据?', {
                             icon: 3,
                             title: '提示',
@@ -196,18 +163,25 @@
                 type: 'date',
                 format: 'yyyy-MM-dd',
                 theme: '#393D49',
-                 max: getYestoday(new Date())
+                // max: getYestoday(new Date())
             });
             laydate.render({
                 elem: '#endTime',
                 type: 'date',
                 format: 'yyyy-MM-dd',
                 theme: '#393D49',
-                 max: getYestoday(new Date())
+                // max: getYestoday(new Date())
             });
-            //    二维码处理
+            // 初始化三级联动
+            common.getDeviceLinked(function (res) {
+                console.log(res);
 
-            // 获取二维码列表
+                pca.init(res.data, 'select[name=cate]',
+                    'select[name=brandName]',
+                    'select[name=brandCode]', '', '', '');
+                form.render();
+            });
+            // 获取列表
             var limitcount = 10,
                 curnum = 1,
                 param = {
@@ -219,135 +193,57 @@
             function productsearch(param, start, limitsize) {
                 // param.page = start;
                 // param.pageSize = limitsize;
-                param.vendorId = layui.sessionData('id').id;
+                param.vendor_id = layui.sessionData('id').id;
                 common.getOrderTypeData(param, function (res) {
                     console.log(res);
-                    // 展示搜索结果的表格
-                    // table.render({
-                    //     elem: '#data_demo',
-                    //     cols: [
-                    //         [{
-                    //             field: 'address',
-                    //             title: '学校/社区',
-                    //             sort: true,
-                    //         }, {
-                    //             field: 'name',
-                    //             title: '项目名称',
-
-                    //         }, {
-                    //             field: 'cate_name',
-                    //             title: '设备类型',
-                    //             templet: '#deviceCate',
-                    //             align: 'center',
-
-                    //         }, {
-                    //             field: 'server_name',
-                    //             title: '产品名称',
-                    //             align: 'center'
-                    //         }, {
-                    //             field: 'order_numer',
-                    //             title: '订单数',
-                    //             align: 'center'
-                    //         }, {
-                    //             field: 'purse_income',
-                    //             title: '钱包支付',
-                    //             align: 'center'
-                    //         }, {
-                    //             field: 'wechat_income',
-                    //             title: '微信开发（APP）',
-                    //             align: 'center'
-                    //         }, {
-                    //             field: 'status',
-                    //             title: '微信公众（扫码）',
-                    //             align: 'center'
-                    //         }, {
-                    //             field: 'ali_income',
-                    //             title: '支付宝',
-                    //             align: 'center'
-                    //         }, {
-                    //             field: 'buyer_pay_amount',
-                    //             title: '订单总额数',
-                    //             align: 'center'
-                    //         }]
-                    //     ],
-
-                    //     data: res.data.list,
-                    //     done: function (res1, curr, count) {
-                    //         console.log(res1);
-                    //         //如果是异步请求数据方式，res即为你接口返回的信息。
-                    //         //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
-                    //         laypage.render({
-                    //             elem: 'laypage',
-                    //             count: res.data.count,
-                    //             curr: param.page,
-                    //             limit: limitcount,
-                    //             theme: 'right',
-                    //             limits: [10, 20, 50, 100],
-                    //             layout: ['prev', 'page', 'next', 'skip', 'count',
-                    //                 'limit'
-                    //             ],
-                    //             jump: function (obj, first) {
-                    //                 if (!first) {
-                    //                     curnum = obj.curr;
-                    //                     limitcount = obj.limit;
-                    //                     param.page = obj.curr;
-                    //                     param.size = obj.limit;
-                    //                     productsearch(param, curnum,
-                    //                         limitcount);
-                    //                 }
-                    //             }
-                    //         });
-                    //     }
-
-                    // });
                     table.render({
                         elem: '#data_demo',
                         cols: [
                             [{
                                 field: 'name',
                                 title: '项目名称',
-                                minWidth:250
+                                minWidth: 250
                             }, {
                                 field: 'cate_name',
                                 title: '主机类型',
                                 align: 'center',
 
                             }, {
-                                field: 'buildingNo',
+                                field: 'building_no',
                                 title: '楼号',
                                 align: 'center'
                             }, {
-                                field: 'order_numer',
+                                field: 'floor_no',
                                 title: '楼层',
                                 align: 'center'
                             }, {
-                                field: 'purse_income',
+                                field: 'sex',
                                 title: '性别',
                                 align: 'center',
-                                templet:'#sexTpl'
+                                templet: '#sexTpl'
                             }, {
-                                field: 'wechat_income',
+                                field: 'device_count',
                                 title: '设备数量',
                                 align: 'center'
                             }, {
-                                field: 'status',
+                                field: 'order_count',
                                 title: '订单数量',
                                 align: 'center'
                             }, {
-                                field: 'buyer_pay_amount',
+                                field: 'rate',
                                 title: '平均订单数',
                                 align: 'center'
                             }]
                         ],
 
-                        data: res.data.list,
+                        data: res.data.content,
                         done: function (res1, curr, count) {
                             console.log(res1);
                             //如果是异步请求数据方式，res即为你接口返回的信息。
                             //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                             laypage.render({
                                 elem: 'laypage',
-                                count: res.data.count,
+                                count: res.data.totalElements,
                                 curr: param.page,
                                 limit: limitcount,
                                 theme: 'right',
@@ -376,6 +272,7 @@
             form.render();
             //表单查询提交
             form.on('submit(searchBox)', function (data) {
+                data.field.cate_name = data.field.cate;
                 var needData = data.field,
                     param = {
                         page: 1,
@@ -407,40 +304,6 @@
                     $(data.elem).parents('table').find('thead input[name="singItem"]').prop("checked",
                         false);
                     form.render();
-                }
-            });
-
-            // 监听表格内编辑
-            table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                console.log(obj.value); //得到修改后的值
-                console.log(obj.field); //当前编辑的字段名
-                console.log(obj.data); //所在行的所有相关数据  
-                layer.msg('编辑保存')
-            });
-            //监听工具条
-            table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-                var data = obj.data; //获得当前行数据
-                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-                var tr = obj.tr; //获得当前行 tr 的DOM对象
-                if (layEvent === 'obsolete') {
-                    parent.layer.confirm('真的作废本行二维码么', function (index) {
-
-                        common.updateQrList(data.id, function (res) {
-                            console.log(res);
-                            if (res.code == 200) {
-                                obj.del();
-                                productsearch(param, curnum, limitcount);
-                            };
-                        });
-
-                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-
-                        parent.layer.closeAll();
-                        productsearch(param, curnum, limitcount);
-                        layer.msg('删除成功')
-                        //向服务端发送删除指令
-
-                    });
                 }
             });
             $('body').on('click', '.demoTable .layui-btn', function () {

@@ -41,9 +41,10 @@
                 <div class="layui-input-inline">
                     <select name="status" lay-filter="state" lay-verify="">
                         <option value="">全部</option>
-                        <option value="0">已分配</option>
-                        <option value="1">未分配</option>
-                        <!-- <option value="2">已废弃</option> -->
+                        <option value="0">未分配</option>
+                        <option value="1">未使用</option>
+                        <option value="2">已使用</option>
+                        <option value="3">已报废</option>
                     </select>
                 </div>
             </div>
@@ -106,24 +107,31 @@
         {{# } }}
     </script>
     <script type="text/html" id="sourceTpl">
-        {{# if(d.source == 0){ }}
+        {{# if(d.owned == 0){ }}
         <button class="layui-btn layui-btn-blue layui-btn-sm">平台</button>
-        {{# } else if(d.source==1){ }}
+        {{# } else if(d.owned==1){ }}
         <button class="layui-btn layui-btn-warm layui-btn-sm">自有</button>
         {{# } }}
     </script>
     <script type="text/html" id="activeStateTpl">
-        {{# if(d.status == 0){ }}
-        <button class="layui-btn layui-btn-normal layui-btn-xs">已分配</button>
-        {{# } else if(d.status==1){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">未分配</button>
-        {{# } else if(d.status==2){ }}
-        <button class="layui-btn layui-btn-danger layui-btn-xs">已废弃</button>
-        {{#} }}
+       {{# if(d.useStatus == 0){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs">未分配</button>
+        {{# } else if(d.useStatus == 1 ){ }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs">未使用</button>
+        {{# } else if(d.useStatus == 2){ }}
+        <button class="layui-btn layui-btn-warm layui-btn-xs">使用中</button>
+        {{# } else if(d.useStatus == 3){ }}
+        <button class="layui-btn layui-btn-danger layui-btn-xs">报废</button>
+        {{# } }}
     </script>
     <script type="text/html" id="toolBar">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
+        {{# if(d.useStatus == 3 || d.useStatus == 2){ }}
+        <input type="checkbox"  lay-skin="switch" lay-text="报废|正常" checked disabled>
+
+        {{# }else if(d.useStatus == 0 || d.useStatus == 1 ){ }}
+         <input type="checkbox"  lay-skin="switch" data-qrCode="{{d.qrCode}}" data-id="{{d.id}}" lay-filter="disCard" lay-text="报废|正常">
+
+        {{#} }}
     </script>
     <script>
         layui.use(['layer', 'form', 'jquery', 'element', 'table', 'laydate', 'common', 'laypage', 'main'], function () {
@@ -228,6 +236,30 @@
                     page: 1,
                     size: 10
                 };
+                form.on('switch(disCard)', function (data) {
+                var id = $(this).attr('data-id');
+                var qrCode = $(this).attr('data-qrCode');
+                layer.open({
+                    content: '作废本行' + qrCode + '物联网卡后不能更改',
+                    btn: ['确定', '取消'],
+                    yes: function (index, layero) {
+                        //do something
+                        common.updateQrList(id, function (res) {
+                            if (res.code == 200) {
+                                layer.close(index);
+                                layer.msg(res.message)
+                                productsearch(param, curnum, limitcount);
+                            } else {
+                                layer.msg(res.message)
+                                layer.close(index)
+                            };
+                        })
+                    },
+                    btn2:function(){
+                        productsearch(param, curnum, limitcount);
+                    }
+                });
+            });
             //列表查询方法
             function productsearch(param, start, limitsize) {
                 common.getSimList(param, function (res) {
@@ -249,7 +281,7 @@
                                     field: 'simCode',
                                     title: '物联网卡号码',
                                 }, {
-                                    field: 'source',
+                                    field: 'owned',
                                     title: '设备归属方',
                                     templet: '#sourceTpl'
                                 }, {

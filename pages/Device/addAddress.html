@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
     <title>添加地址</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -197,7 +198,7 @@
                                     </select>
                                 </div>
                             </span>
- 
+
                             <div class="layui-form-mid layui-word-aux">*</div>
                         </div>
                         <div class="layui-form-item" style="display: flex;align-items: center;">
@@ -321,13 +322,13 @@
                 form = layui.form,
                 common = layui.common,
                 address = layui.address(),
-                element = layui.element;   
-            var url = location.href,urlData = parseURL(url);
-            // 监听完区县然后加载学校
-            // form.on('select(area)', function (data) {
-            //     console.log(data.value);
-            //     getSchool();
-            // });
+                element = layui.element;
+            var url = location.href,
+                urlData = parseURL(url);
+            if (urlData) {
+                urlData.isEntry ? $('input[name="isEntry"]').val(urlData.isEntry) : '';
+            }
+           
             // 获取学校信息
             function getSchool() {
                 var data = {
@@ -372,10 +373,10 @@
                 var position = data.field.coordinate.split(',');
                 data.field.slng = position[0];
                 data.field.slat = position[1];
-                if(data.field.school && data.field.schoolArea !=''){
-                    data.field.communityId=data.field.schoolArea;
-                }else{
-                    data.field.communityId=data.field.term;
+                if (data.field.school && data.field.schoolArea != '') {
+                    data.field.communityId = data.field.schoolArea;
+                } else {
+                    data.field.communityId = data.field.term;
                 }
                 delete data.field.province;
                 delete data.field.city;
@@ -392,30 +393,30 @@
                     yes: function (index, layero) {
                         common.addLocate(data.field, function (res) {
                             // console.log(res);
-                             
+
                             if (res.code == 200) {
-                                if(urlData.isEntry){
-                                       transData();  
-                                   }else {
-                                       layer.confirm('保存成功，继续添加地址?', {
-                                    icon: 3,
-                                    title: '提示',
-                                    fixed: true,
-                                    btn: ['继续添加', '返回地址列表'],
-                                    yes: function (index) {
-                                        layer.close(index);
-                                        window.location.reload();
-                                    },
-                                    btn2: function (index) {
-                                        layer.close(index);
-                                        parent.layer.closeAll();
-                                        parent.location.reload();
-                                        // window.location.href =
-                                        //     'pages/Device/address.html';
-                                    }
-                                });
-                                   };
-                                
+                                if (data.field.isEntry) {
+                                    transData();
+                                } else {
+                                    layer.confirm('保存成功，继续添加地址?', {
+                                        icon: 3,
+                                        title: '提示',
+                                        fixed: true,
+                                        btn: ['继续添加', '返回地址列表'],
+                                        yes: function (index) {
+                                            layer.close(index);
+                                            window.location.reload();
+                                        },
+                                        btn2: function (index) {
+                                            layer.close(index);
+                                            parent.layer.closeAll();
+                                            parent.location.reload();
+                                            // window.location.href =
+                                            //     'pages/Device/address.html';
+                                        }
+                                    });
+                                };
+
                             } else {
                                 layer.msg(res.message)
                             }
@@ -423,12 +424,12 @@
 
 
                     },
-                    
-                   
+
+
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
-            
+
 
 
         });

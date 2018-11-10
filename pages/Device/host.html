@@ -14,8 +14,6 @@
         label.layui-form-label {
             padding: 9px 0 !important;
         }
-    </style>
-    <style>
         .layui-side-menu,
         .layadmin-pagetabs .layui-tab-title li:after,
         .layadmin-pagetabs .layui-tab-title li.layui-this:after,
@@ -98,9 +96,10 @@
                 <div class="layui-input-inline" style="width: 100px;">
                     <select name="useStatus" lay-filter="state" lay-verify="">
                         <option value="">全部</option>
-                        <option value="0">未使用</option>
-                        <option value="1">使用中</option>
-                        <option value="2">已报废</option>
+                        <option value="0">未分配</option>
+                        <option value="1">未使用</option>
+                        <option value="2">已使用</option>
+                        <option value="3">已报废</option>
                     </select>
                 </div>
             </div>
@@ -122,7 +121,6 @@
         <!-- 分页控件 -->
         <div id="laypage"></div>
     </div>
-    
     <script type="text/html" id="owned">
         {{# if(d.owned == 1){ }}
         <button class="layui-btn layui-btn-normal layui-btn-xs">服务商</button>
@@ -131,17 +129,19 @@
         {{# } }}
     </script>
     <script type="text/html" id="toolBar">
-        {{# if(d.owned==1 && d.useStatus == 0){ }}
+        {{# if(d.owned==1 && d.useStatus == 1){ }}
          <a class="layui-btn layui-btn-xs" title="仅自有主机可编辑" lay-event="edit">编辑</a>
         {{# } }}
     </script>
     <script type="text/html" id="stateTpl">
         {{# if(d.useStatus == 0){ }}
-        <button class="layui-btn layui-btn-normal layui-btn-xs">未使用</button>
+        <button class="layui-btn layui-btn-normal layui-btn-xs">未分配</button>
         {{# } else if(d.useStatus == 1 ){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">使用中</button>
+        <button class="layui-btn layui-btn-primary layui-btn-xs">未使用</button>
         {{# } else if(d.useStatus == 2){ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">已报废</button>
+        <button class="layui-btn layui-btn-warm layui-btn-xs">使用中</button>
+        {{# } else if(d.useStatus == 3){ }}
+        <button class="layui-btn layui-btn-danger layui-btn-xs">报废</button>
         {{# } }}
     </script>
     <script>

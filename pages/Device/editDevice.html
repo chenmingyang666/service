@@ -126,12 +126,12 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label w50">楼号：</label>
                                 <div class="layui-input-inline" style="width: 100px">
-                                    <input class="layui-input" name="buildingNo"  >
+                                    <input class="layui-input" name="buildingNo" lay-verify="required" >
     
                                 </div>
                                     <label class="layui-form-label">楼层：</label>
                                     <div class="layui-input-inline" style="width: 100px;">
-                                        <input class="layui-input" name="floorNo" id="floorNo" lay-filter="floorNo" lay-verify="">
+                                        <input class="layui-input" name="floorNo" id="floorNo" lay-filter="floorNo" lay-verify="required">
                                              
                                     </div>
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
@@ -391,6 +391,7 @@
                     'brandname': res.data.brandname,
                     'brand_code': res.data.brand_code,
                     'floorNo': res.data.floorNo,
+                    'buildingNo': res.data.buildingNo,
                 });
                 form.render();
                 deviceId = res.data.id;
@@ -408,37 +409,7 @@
                 }else{
                     $('.wulianwang').hide();
                 }
-                // common.getSimDropList(function (resSim) {
-                //     console.log(resSim);
-                //     if (res.data.source == 0) {
-                //         $('#simId').html('');
-                //         resSim.data.forEach(function (ele, index) {
-                //             if (ele.simCode == res.data.sim_id) {
-                //                 $('#simId').append("<option value=" + ele.id +
-                //                     " selected>" + ele.simCode +
-                //                     "</option>");
-                //             } else {
-                //                 $('#simId').append("<option value=" + ele.id + ">" +
-                //                     ele.simCode +
-                //                     "</option>");
-                //             }
-                //         });
-                //         form.render();
-                //     } else {
-                //         resSim.data.forEach(function (ele, index) {
-                //             if (ele.simCode == res.data.sim_id) {
-                //                 $('#simId').append("<option value=" + ele.id +
-                //                     " selected>" + ele.simCode +
-                //                     "</option>");
-                //             } else {
-                //                 $('#simId').append("<option value=" + ele.id + ">" +
-                //                     ele.simCode +
-                //                     "</option>");
-                //             }
-                //         });
-                //         form.render();
-                //     }
-                // });
+                
                 // 品牌的3级联动
                 common.getDeviceLinked(function (res1) {
                     console.log(res1);
@@ -551,61 +522,6 @@
                 locateId = data.value;
             });
             form.on('select(number)', function (data) {
-                // common.getBindByNumber(data.value, function (res) {
-                //     var data = res.data;
-                //     console.log(data);
-                //     if ($.isEmptyObject(data)) {
-                //         $('#simId').find('option[selected]').remove();
-                //         $('#qrCode').find('option[selected]').remove();
-                //         $('#locateId').find('option[selected]').remove();
-                //         $('#simId').removeAttr('disabled');
-                //         $('#qrCode').removeAttr('disabled');
-                //         $('#locateId').removeAttr('disabled');
-                //         form.render();
-                //     } else {
-                //         if (!$('select#simId').siblings("div.layui-form-select").find('dl dd')
-                //             .is('[lay-value=' + data.simId + ']') && pingtai) {
-                //             $('#simId').append("<option value='" + data.simId +
-                //                 "' selected >" + data.simCode +
-                //                 "</option>");
-                //             form.render();
-                //         } else {
-                //             $('select#simId').siblings("div.layui-form-select").find(
-                //                 'dl dd[lay-value=' +
-                //                 data.simCode + ']').click();
-                //             form.render();
-                //         }
-                //         if (!$('select#qrCode').siblings("div.layui-form-select").find('dl dd')
-                //             .is('[lay-value=' +
-                //                 data.qrId + ']')) {
-                //             $('#qrCode').append("<option value='" + data.qrId + "'selected >" +
-                //                 data.qrCode +
-                //                 "</option>");
-                //             form.render()
-
-                //         } else {
-                //             $('select#qrCode').siblings("div.layui-form-select").find(
-                //                 'dl dd[lay-value=' +
-                //                 data.qrId + ']').click()
-                //             form.render()
-                //         }
-                //         if (!$('select#locateId').siblings("div.layui-form-select").find(
-                //                 'dl dd').is('[lay-value=' +
-                //                 data.locateId + ']')) {
-                //             $('#locateId').append("<option value='" + data.locateId +
-                //                 "'selected >" + data.locateName +
-                //                 "</option>");
-                //             form.render()
-
-                //         } else {
-                //             $('select#locateId').siblings("div.layui-form-select").find(
-                //                 'dl dd[lay-value=' +
-                //                 data.locateId + ']').click();
-                //             form.render()
-                //         }
-                //         form.render();
-                //     }
-                // })
             });
             form.on('submit(searchBox)', function (data) {
                 data.field.id=trData.id;

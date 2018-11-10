@@ -72,7 +72,7 @@
     <form class="layui-form layui-layer-border" style=" padding: 10px;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item" style="margin-bottom: 0">
             <div class="layui-inline">
-                <label class="layui-form-label" style="width:100px ;">主机类型：</label>
+                <label class="layui-form-label" style="width:100px ;">主板类型：</label>
                 <div class="layui-input-block">
                     <!-- <input type="text" name="cate" placeholder="输入类型" autocomplete="off" class="layui-input"> -->
                     <select name="cate" lay-filter="cate" lay-verify="">
@@ -82,7 +82,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label" style="width:100px ;">品牌：</label>
                 <div class="layui-input-block">
-                    <!-- <input type="text" name="brandName" placeholder="输入品牌" autocomplete="off" class="layui-input"> -->
+                    <!-- <input type="text" name="brand" placeholder="输入品牌" autocomplete="off" class="layui-input"> -->
                     <select name="brandName" lay-filter="brandName" lay-verify="">
                     </select>
                 </div>
@@ -106,9 +106,10 @@
                 <div class="layui-input-inline" style="width: 100px;">
                     <select name="useStatus" lay-filter="state" lay-verify="">
                         <option value="">全部</option>
-                        <option value="0">未使用</option>
-                        <option value="1">使用中</option>
-                        <option value="2">已报废</option>
+                        <option value="0">未分配</option>
+                        <option value="1">未使用</option>
+                        <option value="2">已使用</option>
+                        <option value="3">已报废</option>
                     </select>
                 </div>
             </div>
@@ -131,12 +132,15 @@
         <div id="laypage"></div>
     </div>
     <script type="text/html" id="stateTpl">
+        
         {{# if(d.useStatus == 0){ }}
-        <button class="layui-btn layui-btn-normal layui-btn-xs">未使用</button>
+        <button class="layui-btn layui-btn-normal layui-btn-xs">未分配</button>
         {{# } else if(d.useStatus == 1 ){ }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">使用中</button>
+        <button class="layui-btn layui-btn-primary layui-btn-xs">未使用</button>
         {{# } else if(d.useStatus == 2){ }}
-        <button class="layui-btn layui-btn-warm layui-btn-xs">已报废</button>
+        <button class="layui-btn layui-btn-warm layui-btn-xs">使用中</button>
+        {{# } else if(d.useStatus == 3){ }}
+        <button class="layui-btn layui-btn-danger layui-btn-xs">报废</button>
         {{# } }}
     </script>
     <script type="text/html" id="owned">
@@ -147,7 +151,7 @@
         {{# } }}
     </script>
     <script type="text/html" id="toolBar">
-        {{# if(d.useStatus ==0 && d.owned==1){ }}
+        {{# if(d.useStatus ==1 && d.owned==1){ }}
          <a class="layui-btn layui-btn-xs" title="仅自有主板可编辑" lay-event="edit">编辑</a>
         {{# } }}
        
@@ -176,22 +180,22 @@
                                    var imei = $("input[name='imei']").val()
                                    , status = $("select[name='useStatus']").next().find(
                                         'dl dd.layui-this').attr('lay-value')
-                                        , cate = $(
-                                        "select[name='cate']").next().find(
+                                        , brand = $(
+                                        "select[name='brand']").next().find(
                                         'dl dd.layui-this').attr('lay-value')
-                                        , brand = $("select[name='brandName']").next().find(
+                                        , classify = $("select[name='classify']").next().find(
                                         '.layui-select-title input').val()
                                         
                                         , modelId = $(
-                                        "select[name='brandCode']").next().find(
+                                        "select[name='type']").next().find(
                                         '.layui-select-title input').val();
                                    
                                 var urlStr = common.baseUrl +
                                     'me/export?userId=' +
                                     layui.sessionData('id').id 
                                     + '&imei=' +imei 
-                                    + '&cate='+cate
-                                    +'&brand=' + brand 
+                                    + '&brand='+brand
+                                    +'&classify=' + classify 
                                     +'&useStatus=' + status 
                                     + '&modelId=' +modelId ;
                                 urlStr = urlStr.replace(/undefined/g, '');
@@ -294,11 +298,11 @@
                                 templet: '#owned'
 
                             }, {
-                                field: 'cate',
+                                field: 'brand',
                                 title: '主板类型',
                                 templet: '#',
                             }, {
-                                field: 'brand',
+                                field: 'classify',
                                 title: '品牌'
                             }, {
                                 field: 'type',
@@ -358,6 +362,11 @@
             form.render();
             //表单查询提交
             form.on('submit(searchBox)', function (data) {
+			console.log(data.field);
+			//data.field.brand=data.field.cate;
+			//data.field.classify=data.field.brandName;
+			data.field.typeId=data.field.brandCode;
+			
                 var needData = data.field,
                     param = {
                         page: 1,
@@ -386,7 +395,7 @@
                     initModal('编辑主板', 'editBoard.html?id=' + data.id +
                         "&owned=" + data.owned +
                         "&imei=" + data.imei +
-                        "&meBrand=" + data.meBrand +
+                        "&brand=" + data.brand +
                         '&classify=' + data.classify +
                         '&type=' + data.type +
                         '&typeId=' + data.typeId +

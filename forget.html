@@ -62,7 +62,7 @@
                         <div class="layui-row">
                             <div class="layui-col-xs7">
                                 <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
-                                <input type="text" name="code" id="LAY-user-login-vercode" lay-verify="required"
+                                <input type="text" name="smsCode" id="LAY-user-login-vercode" lay-verify="required"
                                     placeholder="验证码" class="layui-input">
                             </div>
                             <div class="layui-col-xs5">
@@ -155,9 +155,9 @@
                 $.ajax({
                     async: false,
                     type: "GET",
-                    url: common.baseUrl + "sms/send",
+                    url: common.baseUrl + "code/sms",
                     data: {
-                        phone: $("#LAY-user-login-cellphone").val()
+                        mobile: $("#LAY-user-login-cellphone").val()
                     },
                     dataType: "json",
                     async: false,
@@ -212,12 +212,13 @@
 
                                 yes: function (index) {
                                     layer.close(index);
+                                    layer.msg(res.message);
                                     window.location.href = 'login.html';
                                 }
 
                             });
                         } else {
-                            layer.msg('请重试')
+                            layer.msg(res.message)
                         }
                     })
                 }

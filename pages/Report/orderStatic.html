@@ -10,12 +10,16 @@
         .layui-laypage-right {
             float: right !important;
         }
+        
     </style>
     <script src="../../js/layui.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/global.js"></script>
     <script src="../../js/tool.js"></script>
+    <script src="../../js/lay/modules/projectRelate.js"></script>
+
 </head>
+
 <body>
     <form class="layui-form layui-layer-border" style=" padding: 10px;background-color: white" lay-filter="searchBox">
         <div class="layui-form-item" style="margin:0">
@@ -28,13 +32,8 @@
             <div class="layui-inline">
                 <label class="layui-form-label">设备类型：</label>
                 <div class="layui-input-inline">
-                    <select name="cate_name" xm-select="cate" xm-select-skin="normal" lay-filter="cate" lay-verify="">
-                        <option value="">请选择</option>
-                        <option value="01">洗衣机</option>
-                        <option value="02">吹风机</option>
-                        <option value="03">饮水机</option>
-                        <option value="04">充电桩</option>
-                        <option value="05">洗鞋机</option>
+                    <select name="cate" xm-select="cate" xm-select-skin="normal" lay-filter="cate" lay-verify="">
+
                     </select>
                 </div>
             </div>
@@ -103,7 +102,7 @@
     </script>
     <script src="../data.js"></script>
     <script>
-        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate', 'formSelects','main'],
+        layui.use(['layer', 'form', 'jquery', 'element', 'table', 'common', 'laypage', 'laydate', 'formSelects', 'main'],
             function () {
                 var $ = layui.$,
                     layer = layui.layer,
@@ -114,7 +113,8 @@
                     laypage = layui.laypage,
                     laydate = layui.laydate,
                     common = layui.common,
-                    formSelects = layui.formSelects,multiCate='',
+                    formSelects = layui.formSelects,
+                    multiCate = '',
                     active = {
                         getCheckData: function () { //获取选中数据
                             var checkStatus = table.checkStatus('data_demo'),
@@ -122,7 +122,7 @@
                             // if (data.length == 0) {
                             //     return layer.msg('请选择数据')
                             // }
-                           
+
                         },
                         getCheckLength: function () { //获取选中数目
                             var checkStatus = table.checkStatus('data_demo'),
@@ -153,13 +153,22 @@
                     //     return new Date().getMonth()+1
                     // }
                 });
+                // 初始化三级联动
+                common.getDeviceLinked(function (res) {
+                    console.log(res);
+
+                    pca.init(res.data, 'select[name=cate]',
+                        'select[name=brandName]',
+                        'select[name=brandCode]', '', '', '');
+                    form.render();
+                });
+                // 查询多选
                 formSelects.render({
                     name: 'cate', //xm-select的值
                     type: 1, //等效xm-select-type, 选择样式
                     on: function (data, arr) { //监听数据变化
                         var selectArr = [];
                         arr.forEach(function (item) {
-                            console.log(item);
                             selectArr.push(item.name)
                         });
                         multiCate = selectArr.toString();
@@ -173,6 +182,7 @@
                         size: 10,
                         pageSize: 10
                     };
+
                 function productsearch(param, start, limitsize) {
                     // param.page = start;
                     // param.pageSize = limitsize;
@@ -193,9 +203,7 @@
                                 }, {
                                     field: 'cate_name',
                                     title: '主机类型',
-                                    templet: '#deviceCate',
                                     align: 'center',
-
                                 }, {
                                     field: 'ali_income',
                                     title: '支付宝',
@@ -225,23 +233,23 @@
                                     title: '订单总额数',
                                     align: 'center'
                                 }, {
-                                    field: 'buyer_pay_amount',
+                                    field: 'avgnumber',
                                     title: '日均订单量',
                                     align: 'center'
                                 }, {
-                                    field: 'buyer_pay_amount',
+                                    field: 'avgmoney',
                                     title: '日均订单金额',
                                     align: 'center'
                                 }]
                             ],
-                            data: res.data.list,
+                            data: res.data.content,
                             done: function (res1, curr, count) {
                                 console.log(res1);
                                 //如果是异步请求数据方式，res即为你接口返回的信息。
                                 //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
                                 laypage.render({
                                     elem: 'laypage',
-                                    count: res.data.count,
+                                    count: res.data.totalElements,
                                     curr: param.page,
                                     limit: limitcount,
                                     theme: 'right',
@@ -271,7 +279,7 @@
                 form.render();
                 //表单查询提交
                 form.on('submit(searchBox)', function (data) {
-                    data.field.cate=multiCate;
+                    data.field.cate_name = multiCate;
                     var needData = data.field,
                         param = {
                             page: 1,
@@ -306,13 +314,7 @@
                     }
                 });
 
-                // 监听表格内编辑
-                table.on('edit(datatable)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                    console.log(obj.value); //得到修改后的值
-                    console.log(obj.field); //当前编辑的字段名
-                    console.log(obj.data); //所在行的所有相关数据  
-                    layer.msg('编辑保存')
-                });
+
                 //监听工具条
                 table.on('tool(datatable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
                     var data = obj.data; //获得当前行数据
@@ -342,6 +344,22 @@
                 $('body').on('click', '.demoTable .layui-btn', function () {
                     var type = $(this).data('type');
                     active[type] ? active[type].call(this) : '';
+                }).on('click', '[type="reset"]', function () {
+                    $('select[name="cate"]').next('dd').find("[lay-value='']").click();
+                    $('select[xm-select] + div .layui-select-title > input').css('display','block!important');
+                    form.render();
+                    formSelects.render();
+                    // formSelects.render({
+                    //     name: 'cate', //xm-select的值
+                    //     type: 1, //等效xm-select-type, 选择样式
+                    //     on: function (data, arr) { //监听数据变化
+                    //         var selectArr = [];
+                    //         arr.forEach(function (item) {
+                    //             selectArr.push(item.name)
+                    //         });
+                    //         multiCate = selectArr.toString();
+                    //     },
+                    // });
                 });
             });
     </script>

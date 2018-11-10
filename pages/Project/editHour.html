@@ -173,6 +173,8 @@
             var url = location.href;
             $('body').on('click', '.back', function () {
                 window.history.back();
+            }).on('click', '[type="reset"]', function () {
+               window.location.reload();
             });
             // 初始化三级联动
             // pca.init('select[name=P1]', 'select[name=C1]', 'select[name=A1]', '北京', '北京', '朝阳区');

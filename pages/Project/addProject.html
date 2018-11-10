@@ -353,9 +353,6 @@
                 window.pca = pca;
                 return pca;
             })($);
-            // $('body').on('click', '.back', function () {
-            //     window.history.back();
-            // });
             const queryCondition = {};
             // 获取项目下拉列表
             common.getProjectDropList(function (res) {
@@ -377,9 +374,8 @@
                     $('.phone').text(res.data.chargePhone);
                     $('.contract').text(res.data.number);
                     $('.contractPeriod').text(timeChange(res.data.startTime) + ' 至 ' +
-                        timeChange(
-                            res.data.endTime));
-                    $('.address').text(res.data.province + res.data.city + res.data.area);
+                        timeChange(res.data.endTime));
+                    $('.address').text(res.data.province + res.data.city + res.data.area+res.data.cmit);
                     $('.community').text(res.data.cmitName);
                     $('.rule').text(res.data.ruleTime);
                 });

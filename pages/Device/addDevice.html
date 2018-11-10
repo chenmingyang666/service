@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="../../css/layui.css">
+    <link rel="stylesheet" href="../../css/main.css">
     <link rel="stylesheet" href="../../css/bootstrap.min.css">
     <title>添加设备</title>
     <style>
@@ -89,7 +90,6 @@
 
 <body>
 
-
     <form class="layui-form" lay-filter="searchBox">
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
@@ -101,6 +101,7 @@
                                 <label class="layui-form-label">设备名称：</label>
                                 <div class="layui-input-inline" style="width: 50%;">
                                     <input type="tel" name="devName" lay-verify="required" autocomplete="off" class="layui-input">
+                                    <input type="text" name="isEntry" class="layui-input hide">
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
                             </div>
@@ -162,13 +163,13 @@
 
                                 <label class="layui-form-label w50">楼号：</label>
                                 <div class="layui-input-inline" style="width: 100px">
-                                    <input class="layui-input" name="buildingNo">
+                                    <input class="layui-input" name="buildingNo" lay-verify="required">
 
                                 </div>
                                 <label class="layui-form-label">楼层：</label>
                                 <div class="layui-input-inline" style="width: 100px;">
                                     <input class="layui-input" name="floorNo" id="floorNo" lay-filter="floorNo"
-                                        lay-verify="">
+                                        lay-verify="required">
 
                                 </div>
                                 <div class="layui-form-mid layui-word-aux">*必填</div>
@@ -257,6 +258,9 @@
                 common = layui.common;
             var url = location.href,
                 urlData = parseURL(url);
+            if (urlData) {
+                urlData.isEntry ? $('input[name="isEntry"]').val(urlData.isEntry) : '';
+            }
             $('body').on('click', '.showPingtaibtn', function () {
                 $(this).addClass('layui-btn-danger').siblings('a').removeClass('layui-btn-danger');
                 $(this).parent().parent().find('.showPingtai').show().siblings('.showSelf').hide();
@@ -408,6 +412,7 @@
                 common.getHostList(data, function (res) {
                     console.log(res);
                     if (res.data.length > 0) {
+                        $('#eqptId').html("<option value=''></option>");
                         res.data.forEach(function (ele, index) {
                             $('#eqptId').append("<option value=" + ele.id +
                                 ">" + ele.number +
@@ -576,7 +581,7 @@
                         common.addDeviceInfo(data.field, function (res) {
 
                             if (res.code == 200) {
-                                if (urlData.isEntry) {
+                                if (data.field.isEntry) {
                                     transData();
                                 } else {
                                     layer.confirm('保存成功，继续添加设备?', {
