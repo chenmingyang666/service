@@ -15,7 +15,6 @@
             // 注册用户
             regUser: function (field, callback) {
                 $.ajax({
-                    // url: baseUrl + 'vendor/register',
                     url: baseUrl + 'vc/register',
                     type: 'post',
                     dataType: 'json',
@@ -28,12 +27,10 @@
                 $.ajax({
                     url: baseUrl + 'vc/login',
                     type: 'post',
-                    // dataType: 'json',
                     data: field,
                     xhrFields: {
                         withCredentials: true
                     },
-                    // contentType: 'application/json,application/x-www-form-urlencoded',
                     success: callback
                 });
             },
@@ -198,6 +195,23 @@
                 $.ajax({
                     url: baseUrl + 'vendor/order/pricing',
                     data: params,
+                    headers: {
+                        'Authorization': 'Bearer ' + layui
+                            .sessionData('token')
+                            .token
+                    },
+                    contentType: 'application/json,application/x-www-form-urlencoded',
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", 'Bearer ' + layui.sessionData("token").token);
+                    },
+                    success: callback
+                });
+            },
+            // 首页设备活跃度
+            getActiveData: function (params, callback) {
+                $.ajax({
+                    url: baseUrl + 'rpt/getRate?day='+params,
+                    // data: params,
                     headers: {
                         'Authorization': 'Bearer ' + layui
                             .sessionData('token')

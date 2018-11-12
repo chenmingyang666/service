@@ -102,7 +102,9 @@
             background: #333;
             color: white;
         }
-        #sale,#deviceUse{
+
+        #sale,
+        #deviceUse {
             border-radius: 5px;
         }
     </style>
@@ -208,14 +210,13 @@
             <div class="layui-col-md6">
                 <!-- 设备活跃度 -->
                 <div class="layui-card" style="height:100%">
-                    <div class="layui-card-header" style="font-weight:600">设备活跃度<span class="fr activity">
-                            <button class="layui-btn layui-btn-sm ">今天</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-primary">7天</button>
-                            <button class="layui-btn layui-btn-sm layui-btn-primary">30天</button><span class="gray more"
-                                data-title="设备活跃度" title="设备活跃度" data-url="../Report/activity.html" style="margin:0 15px"><i
-                                    class="fa fas fa-angle-double-right"></i></span></div>
+                    <div class="layui-card-header" style="font-weight:600">设备活跃度<span class="fr deviceActivity">
+                            <button class="layui-btn layui-btn-sm " data-type="1">今天</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="7">7天</button>
+                            <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="30">30天</button><span
+                                class="gray more" data-title="设备活跃度" title="设备活跃度" data-url="../Report/activity.html"
+                                style="margin:0 15px"><i class="fa fas fa-angle-double-right"></i></span></div>
                     <table class="layui-table" id="deviceActivity" style="margin:0;">
-
                     </table>
                 </div>
             </div>
@@ -254,9 +255,7 @@
                             <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="2">7天</button>
                             <button class="layui-btn layui-btn-sm layui-btn-primary" data-type="3">30天</button></span></div>
                     <div class="layui-card-body" style="padding:2px 0">
-
                         <div id="programData" style="width: 70%;height:360px;"></div>
-
                     </div>
                 </div>
             </div>
@@ -441,8 +440,6 @@
                 })
             });
             $('.trend button[data-type="1"]').click();
-
-
             //   设备情况统计
             common.getMonthDeviceUseData(function (res) {
                 // console.log(res);
@@ -480,51 +477,55 @@
                 // $('td.bad').text(res.data[4]);
             });
             // 获取设备活跃度
-            table.render({
-                elem: '#deviceActivity',
-                skin: 'nob',
-                size: 'lg',
-                cols: [
-                    [{
-                        field: 'name',
-                        title: '设备/次数',
-                    }, {
-                        field: 'low',
-                        title: '低频',
-                    }, {
-                        field: 'normal',
-                        title: '正常',
-
-                    }, {
-                        field: 'high',
-                        title: '高频',
-
-                    }]
-                ],
-                height: 300,
-                data: [{
-                    name: '洗衣机',
-                    low: '20',
-                    normal: '50',
-                    'high': '30'
-                }, {
-                    name: '吹风机',
-                    low: '20',
-                    normal: '50',
-                    'high': '30'
-                }, {
-                    name: '洗衣机',
-                    low: '20',
-                    normal: '50',
-                    'high': '30'
-                }, {
-                    name: '洗衣机',
-                    low: '20',
-                    normal: '50',
-                    'high': '30'
-                }]
-
-            });
+            function getActiveData(type) {
+                common.getActiveData(type, function (res) {
+                    console.log(type,res);
+                    table.render({
+                        elem: '#deviceActivity',
+                        skin: 'nob',
+                        size: 'lg',
+                        cols: [
+                            [{
+                                field: 'name',
+                                title: '设备/次数',
+                            }, {
+                                field: 'low',
+                                title: '低频',
+                            }, {
+                                field: 'normal',
+                                title: '正常',
+                            }, {
+                                field: 'high',
+                                title: '高频',
+                                
+                            }]
+                        ],
+                        height: 300,
+                        data: res.data
+                        // data: [{
+                        //     name: '洗衣机',
+                        //     low: '20',
+                        //     normal: '50',
+                        //     'high': '30'
+                        // }, {
+                        //     name: '吹风机',
+                        //     low: '20',
+                        //     normal: '50',
+                        //     'high': '30'
+                        // }, {
+                        //     name: '洗衣机',
+                        //     low: '20',
+                        //     normal: '50',
+                        //     'high': '30'
+                        // }, {
+                        //     name: '洗衣机',
+                        //     low: '20',
+                        //     normal: '50',
+                        //     'high': '30'
+                        // }]
+                    });
+                });
+            }
             //获取产品订购统计  
             function getProductData(type, cate) {
                 var params = {
@@ -575,7 +576,6 @@
             getProductData($('.product button').not('.layui-btn-primary').attr('data-type'), $(
                 '.layui-tab[lay-filter="product"]').find('.layui-this').attr(
                 'data-cate'));
-
             function getProgramData() {
                 var params = {
                     "vendor_id": layui.sessionData('id').id,
@@ -618,7 +618,6 @@
                     "vendor_id": layui.sessionData('id').id,
                     "timeType": $('.pay_way button').not('.layui-btn-primary').attr('data-type')
                 };
-                // console.log(params);
                 common.getPaywayData(params, function (res) {
                     console.log(res);
                     // 获取功能
@@ -646,14 +645,10 @@
                         });
                         return arr;
                     };
-
-
                     initPayway(getSinData(res.data.list), getMoneyData(res.data.list))
-
                 });
             };
             getProgramData();
-
             function initPayway(data1, data2) {
                 var programChart = echarts.init(document.getElementById(
                     "programData"));
@@ -678,8 +673,8 @@
                             })
                             return name + ' ' + scale + '%' + ' ' + '￥' + money;
                         },
-                        textStyle:{
-                            fontSize:'16'
+                        textStyle: {
+                            fontSize: '16'
                         }
                     },
                     series: [{
@@ -718,9 +713,6 @@
                 };
                 programChart.setOption(option2);
             }
-
-
-
             $('.tip1').on('click', function () {
                 var that = this;
                 layer.tips('所有设备截止当前产生的销售金额；<br>7天环比：近7天和上一个7天的数据比', that); //在元素的事件回调体中，follow直接赋予this即可
@@ -737,23 +729,16 @@
                 var that = this;
                 layer.tips('近7天和近30天被使用过的设备占总设备的占比<br>7天环比：近7天和上一个7天的数据比', that); //在元素的事件回调体中，follow直接赋予this即可
             });
-
-
             $("#sale").change(function () {
                 var selected = $(this).children('option:selected').val();
-
                 saleChange(selected);
-
             });
-
             function saleChange(selected) {
                 common.getSaleDataByDate(selected, function (res) {
                     $('.static_num.month').text(res.data.money)
                 })
             };
             saleChange($("#sale").children('option:selected').val());
-
-
             $("#deviceUse").change(function () {
                 var selected = $(this).children('option:selected').val();
                 useRate(selected);
@@ -784,10 +769,14 @@
                     }
                 });
             });
-            $('.changeType button,.activity button').on('click', function () {
+            $('.changeType button,.activity button,.deviceActivity button').on('click', function () {
                 $(this).removeClass('layui-btn-primary').siblings('button').addClass(
-                    'layui-btn-primary')
+                    'layui-btn-primary');
             });
+            $('.deviceActivity button').on('click', function () {
+                getActiveData($(this).attr('data-type'))
+            });
+            getActiveData(1);
             $('.activity button').on('click', function () {
                 getProductData($(this).attr('data-type'), $('.layui-tab[lay-filter="product"]').find(
                     '.layui-this').attr(
@@ -801,7 +790,7 @@
             $('.profit_t:last').on('click', function () {
                 getPaywayData();
             });
-
+            
             $('.pay_way button').on('click', function () {
 
                 $(this).removeClass('layui-btn-primary').siblings().addClass('layui-btn-primary');
